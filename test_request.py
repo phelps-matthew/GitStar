@@ -1,10 +1,9 @@
-""" Module doctring! """
 import json
 import requests
 
 # Globals
 ENDPOINT_URL = "https://api.github.com/graphql"
-PAT = "a20a63ae728bf49e6cb5f097a6832de4f70595b9"
+PAT = "PERSONAL_ACCESS_TOKEN"
 
 header = {"Authorization": "token " + PAT}
 

@@ -47,7 +47,7 @@ class GitHubGraphQLQuery(GraphQLQuery):
 
 
 class GitStarQuery(GitHubGraphQLQuery):
-    """ Implements graphql query to fetch filtered repos\
+    """ Implements graphql query to fetch filtered repos
         and fields based on GitStar criterium """
 
     QUERY = """\
@@ -98,12 +98,12 @@ class GitStarQuery(GitHubGraphQLQuery):
        }
      }
      """
-
     VARIABLES = {
         "myq": "archived:false mirror:false stars:>0\
          created:>=2015-01-01 pushed:>=2019-01-01 fork:true",
         "maxItems": 5,
     }
 
-    def __init__(self, PAT):
+    def __init__(self, PAT, hasNextPage=True):
         super().__init__(PAT=PAT, query=QUERY, variables=VARIABLES)
+        self.hasNextPage = hasNextPage

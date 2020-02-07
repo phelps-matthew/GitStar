@@ -51,26 +51,59 @@ class GitStarQuery(GitHubGraphQLQuery):
         and fields based on GitStar criterium """
 
     QUERY = """\
-    {
-        viewer {
-            name
-        }
-        rateLimit {
-            limit
-            cost
-            remaining
-            resetAt
-        }
-        rep2: repository(name: "nbconvert", owner: "jupyter") {
-            nameWithOwner
-        }
-        rep1: repository(name: "ace", owner: "ajaxorg") {
-            nameWithOwner
-        }
-    }
-    """
+    query searchmp($myq: String!, $maxItems: Int, $cursor: String) {
+       rateLimit {
+         limit
+         cost
+         remaining
+         resetAt
+       }
+       search(query: $myq, type: REPOSITORY, first: $maxItems, after: $cursor) {
+         pageInfo {
+           endCursor
+           hasNextPage
+         }
+         repositoryCount
+         edges {
+           node {
+             ... on Repository {
+               nameWithOwner
+               readme: object(expression: "master:README.md") {
+                 ... on Blob {
+                   byteSize
+                 }
+               }
+               shortDescriptionHTML
+               id
+               databaseId
+               createdAt
+               updatedAt
+               forkCount
+               diskUsage
+               releases {
+                 totalCount
+               }
+               stargazers {
+                 totalCount
+               }
+               watchers {
+                 totalCount
+               }
+               deployments {
+                 totalCount
+               }
+             }
+           }
+         }
+       }
+     }
+     """
 
-    VARIABLES = {tbd}
+    VARIABLES = {
+        "myq": "archived:false mirror:false stars:>0\
+         created:>=2015-01-01 pushed:>=2019-01-01 fork:true",
+        "maxItems": 5,
+    }
 
     def __init__(self, PAT):
         super().__init__(PAT=PAT, query=QUERY, variables=VARIABLES)

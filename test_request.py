@@ -16,13 +16,18 @@ class GraphQLQuery:
         # returns empty dict() if variables=None
         self.variables = variables or dict()
 
-
-    def request():
-        # Returns a requests.Reponse() object
-        r = requests.post(
-            self.url, 
+    def request(self):
+        """ Returns a requests.Reponse() object """
+        return requests.post(
+            url=self.url,
             json={"query": self.query, "variables": self.variables},
-            headers=self.headers)
+            headers=self.headers,
+        )
+
+    def print_json(self, obj):
+        """ prints nice json using json.dumps to convert json to str """
+        text = json.dumps(obj, indent=4)
+        print(text)
 
 
 class GitHubGraphQLQuery(GraphQLQuery):
@@ -31,10 +36,12 @@ class GitHubGraphQLQuery(GraphQLQuery):
     ENDPOINT_URL = "https://api.github.com/graphql"
 
     def __init__(self, PAT, query, variables):
-        super().__init__(headers={"Authorization": "token {}".format(PAT)},\
-                         url=ENDPOINT_URL,
-                         query=query, 
-                         variables=variables)
+        super().__init__(
+            headers={"Authorization": "token {}".format(PAT)},
+            url=ENDPOINT_URL,
+            query=query,
+            variables=variables,
+        )
 
 
 class GitStarQuery(GitHubGraphQLQuery):
@@ -64,12 +71,15 @@ class GitStarQuery(GitHubGraphQLQuery):
     def __init__(self, PAT):
         super().__init__(PAT=PAT, query=QUERY, variables=None)
 
-def print_json(obj):
-    """ prints nice json using json.dumps to convert json to str """
-    text = json.dumps(obj, indent=4)
-    print(text)
+def main():
+    """ Test the class implementations """
+    print(r.status_code)
+    print_json(r.json())
 
 
-
-print(r.status_code)
-print_json(r.json())
+# Run Main
+if __name__ == "__main__":
+    try:
+        main()
+    except KeyboardInterrupt:
+        exit()

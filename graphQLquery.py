@@ -48,7 +48,13 @@ class GitHubGraphQLQuery(GraphQLQuery):
 
 class GitStarQuery(GitHubGraphQLQuery):
     """ Implements graphql query to fetch filtered repos
-        and fields based on GitStar criterium """
+        and fields based on GitStar criterium.
+
+        Input: PAT. 
+        Methods: .next, .json, .text, .status_code
+
+        Each instance should be a different generator """
+
 
     QUERY = """\
     query searchmp($myq: String!, $maxItems: Int, $cursor: String) {

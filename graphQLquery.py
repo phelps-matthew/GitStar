@@ -23,10 +23,13 @@ class GraphQLQuery:
             headers=self.headers,
         )
 
-    def print_json(self, obj):
-        """ prints nice json using json.dumps to convert json to str """
-        text = json.dumps(obj, indent=4)
-        print(text)
+    def text(self):
+        """ printable text output using json.dumps to convert json to str """
+        return request(self).json().dumps(self, indent=4)
+
+    def status_code(self):
+        """ printable text output using json.dumps to convert json to str """
+        return request(self).status_code
 
 
 class GitHubGraphQLQuery(GraphQLQuery):
@@ -67,5 +70,7 @@ class GitStarQuery(GitHubGraphQLQuery):
     }
     """
 
+    VARIABLES = {tbd}
+
     def __init__(self, PAT):
-        super().__init__(PAT=PAT, query=QUERY, variables=None)
+        super().__init__(PAT=PAT, query=QUERY, variables=VARIABLES)

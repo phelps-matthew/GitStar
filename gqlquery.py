@@ -34,7 +34,6 @@ class GraphQLQuery:
             raise err
 
 
-
 class GitHubGraphQLQuery(GraphQLQuery):
     """ Incorporates github header and endpoint """
 
@@ -53,17 +52,11 @@ class GitStarQuery(GitHubGraphQLQuery):
     """ Implements graphql query to fetch filtered repos
         and fields based on GitStar criterium.
 
-        Input: PAT.
-        Methods: .next, .json, .text, .status_code
-
-        generators have to be methods
-
-        Each instance should be a different generator.
-
         cursors, nextpages is query specific. put here
     """
 
-    QUERY = """\
+    QUERY = (
+    """\
     query searchmp($search_query: String!, $maxitems: Int, $cursor: String) {
        rateLimit {
          limit
@@ -71,8 +64,7 @@ class GitStarQuery(GitHubGraphQLQuery):
          remaining
          resetAt
        }
-       search(query: $search_query, type: REPOSITORY, first: $maxitems, """\
-       """after: $cursor)
+       search(query: $search_query, type: REPOSITORY, first: $maxitems, after: $cursor)
        {
          pageInfo {
            endCursor
@@ -81,7 +73,7 @@ class GitStarQuery(GitHubGraphQLQuery):
          repositoryCount
          edges {
            node {
-             ... on Repository {
+
                nameWithOwner
                readme: object(expression: "master:README.md") {
                  ... on Blob {
@@ -110,34 +102,63 @@ class GitStarQuery(GitHubGraphQLQuery):
              }
            }
          }
-       }
-     }
+      }
      """
+    )
+
+    TEST_QUERY = (
+    """\
+    query searchmp($search_query: String!, $maxitems: Int, $cursor: String) {
+        rateLimit {
+          limit
+          cost
+          remaining
+          resetAt
+        }
+        search(query: $search_query, type: REPOSITORY, \
+        first: $maxitems, after: $cursor) {
+          pageInfo {
+            endCursor
+            hasNextPage
+          }
+          repositoryCount
+          edges {
+            node {
+              # Only __typename is Repository
+              ... on Repository {
+                nameWithOwner
+              }
+            }
+          }
+        }
+    }
+    """
+    )
 
     VARIABLES = {
-        "search_query": "archived:false mirror:false stars:>0 "\
-        "created:>=2015-01-01 pushed:>=2019-01-01 fork:true",
+        "search_query": "archived:false mirror:false stars:>0 "
+        "created:>=2020-02-01 pushed:>=2020-01-01 fork:true",
         "maxitems": 1,
-        "after": None,
+        "cursor": None,
     }
 
     def __init__(self, PAT, maxitems=1):
         super().__init__(
-            PAT=PAT, query=GitStarQuery.QUERY, variables=GitStarQuery.VARIABLES
+            PAT=PAT, query=GitStarQuery.TEST_QUERY, variables=GitStarQuery.VARIABLES
         )
         self.variables["maxitems"] = maxitems
 
-    def my_gen(self):
-        """ Pagination generator iterated upon query response boolean hasNextPage.
+    def generator(self):
+        """ Pagination generator iterated upon query response boolean 'hasNextPage'.
             Calls gql_response() then updates cursor and hasNextPage.
-            Exceptions (e.g. StopIteration) are to be handled outside of class
+            Exceptions (e.g. StopIteration) are to be handled outside of class.
         """
-        hasnextpage = True
-        while hasnextpage:
-            resp = self.gql_response()
+        hasNextPage = True
+        while hasNextPage:
+            gen = self.gql_response()
+            print(gen)
             # Update cursor
-            self.variables["after"] =\
-                resp["data"]["search"]["pageInfo"]["endCursor"]
+            self.variables["cursor"] = gen["data"]["search"]["pageInfo"]["endCursor"]
             # Update hasNextPage
-            hasnextpage = resp["data"]["search"]["pageInfo"]["hasNextPage"]
-            yield resp
+            hasNextPage = gen["data"]["search"]["pageInfo"]["hasNextPage"]
+            yield gen

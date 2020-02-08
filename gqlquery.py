@@ -1,5 +1,5 @@
 """ Implementation of graphQL HTTP POST queries based on 'streaming' generator
-    approach. GitHub API classes available.  """
+    approach. Includes pagination handling and GitHub API querying.  """
 import requests
 
 
@@ -15,8 +15,8 @@ class GraphQLQuery:
         self.variables = variables or dict()
 
     def response_json(self):
-        """ Returns a requests.Reponse() object.
-            Acts as generator to be iterated upon. """
+        """ Sends HTTP POST query. Returns generator containing a
+            requests.Reponse() object """
         while True:
             try:
                 yield requests.post(
@@ -24,6 +24,7 @@ class GraphQLQuery:
                     headers=self.headers,
                     json={"query": self.query, "variables": self.variables},
                 ).json()
+            # ! Need to look into these exceptions more
             except requests.exceptions.HTTPError as http_err:
                 raise http_err
             except Exception as err:
@@ -31,7 +32,7 @@ class GraphQLQuery:
 
 
 class GitHubGraphQLQuery(GraphQLQuery):
-    """ has github header, endpoint """
+    """ Incorporates github header and endpoint """
 
     ENDPOINT_URL = "https://api.github.com/graphql"
 
@@ -65,7 +66,8 @@ class GitStarQuery(GitHubGraphQLQuery):
          remaining
          resetAt
        }
-       search(query: $myq, type: REPOSITORY, first: $maxItems, after: $cursor) {
+       search(query: $myq, type: REPOSITORY, first: $maxItems, after: $cursor)\
+       {
          pageInfo {
            endCursor
            hasNextPage

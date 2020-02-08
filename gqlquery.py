@@ -1,4 +1,5 @@
-""" Implementation of graphQL HTTP POST queries, includes GitHub API  """
+""" Implementation of graphQL HTTP POST queries based on 'streaming' generator
+    approach. GitHub API classes available.  """
 import requests
 
 

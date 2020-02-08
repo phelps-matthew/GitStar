@@ -15,21 +15,28 @@ class GraphQLQuery:
         # returns empty dict() if variables=None
         self.variables = variables or dict()
 
-    def request(self):
-        """ Returns a requests.Reponse() object """
-        return requests.post(
-            url=self.url,
-            json={"query": self.query, "variables": self.variables},
-            headers=self.headers,
-        )
+#    def text(self):
+#        """ printable text output using json.dumps to convert json to str """
+#        return request(self).json().dumps(self, indent=4)
+#
+#    def status_code(self):
+#        """ printable text output using json.dumps to convert json to str """
+#        return request(self).status_code
 
-    def text(self):
-        """ printable text output using json.dumps to convert json to str """
-        return request(self).json().dumps(self, indent=4)
-
-    def status_code(self):
-        """ printable text output using json.dumps to convert json to str """
-        return request(self).status_code
+    def response_json(self):
+        """ Returns a requests.Reponse() object.
+            Acts as generator to be iterated upon. """
+        while True:
+            try:
+                yield requests.post(
+                    url=self.url,
+                    headers=self.headers,
+                    json={"query": self.query, "variables": self.variables},
+                ).json()
+            except requests.exceptions.HTTPError as http_err:
+                raise http_err
+            except Exception as err:
+                raise err
 
 
 class GitHubGraphQLQuery(GraphQLQuery):
@@ -50,11 +57,14 @@ class GitStarQuery(GitHubGraphQLQuery):
     """ Implements graphql query to fetch filtered repos
         and fields based on GitStar criterium.
 
-        Input: PAT. 
+        Input: PAT.
         Methods: .next, .json, .text, .status_code
 
-        Each instance should be a different generator """
+        generators have to be methods
 
+        Each instance should be a different generator.
+
+        cursors, nextpages is query specific. put here """
 
     QUERY = """\
     query searchmp($myq: String!, $maxItems: Int, $cursor: String) {

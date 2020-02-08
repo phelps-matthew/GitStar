@@ -1,16 +1,13 @@
-import graphQLquery
+""" Extract and print graphql query response from GitHub """
+import gqlquery
 
-# PAT = "PERSONAL_ACCESS_TOKEN"
+PAT = "PERSONAL_ACCESS_TOKEN"
 
 
 def main():
     """ Test the class implementations """
-    myq = graphQLquery.GitStarQuery(PAT)
-    myq.json
-    print(myq.text)
-    print(myq.status_code)
-    print(r.status_code)
-    print_json(r.json())
+    myq = gqlquery.GitStarQuery(PAT)
+    print(next(myq.response_json()))
 
 
 # Run Main

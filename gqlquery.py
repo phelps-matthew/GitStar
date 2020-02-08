@@ -1,11 +1,13 @@
 """ Implementation of graphQL HTTP POST queries based on 'streaming' generator
-    approach. Includes pagination handling and GitHub API specific methods. """
+    approach. Includes pagination handling and GitHub API specific methods.
+"""
 import requests
 
 
 class GraphQLQuery:
-    """ Send json graphql query request and
-        query variables dict via HTTP POST requests """
+    """ Send json graphql query request and query variables dict via HTTP POST
+    requests
+    """
 
     def __init__(self, headers, url, query, variables=None):
         self.headers = headers
@@ -14,21 +16,23 @@ class GraphQLQuery:
         # returns empty dict() if variables=None
         self.variables = variables or dict()
 
-    def response_json(self):
+    def gql_response(self):
         """ Sends HTTP POST query. Returns generator containing a
-            requests.Reponse() object """
-        while True:
-            try:
-                yield requests.post(
-                    url=self.url,
-                    headers=self.headers,
-                    json={"query": self.query, "variables": self.variables},
-                ).json()
-            # ! Need to look into these exceptions more
-            except requests.exceptions.HTTPError as http_err:
-                raise http_err
-            except Exception as err:
-                raise err
+            requests.Reponse().json() object """
+        try:
+            return requests.post(
+                url=self.url,
+                headers=self.headers,
+                json={"query": self.query, "variables": self.variables},
+            ).json()
+
+        # ! Need to look into these exceptions more
+
+        except requests.exceptions.HTTPError as http_err:
+            raise http_err
+        except Exception as err:
+            raise err
+
 
 
 class GitHubGraphQLQuery(GraphQLQuery):
@@ -56,17 +60,19 @@ class GitStarQuery(GitHubGraphQLQuery):
 
         Each instance should be a different generator.
 
-        cursors, nextpages is query specific. put here """
+        cursors, nextpages is query specific. put here
+    """
 
     QUERY = """\
-    query searchmp($myq: String!, $maxItems: Int, $cursor: String) {
+    query searchmp($search_query: String!, $maxitems: Int, $cursor: String) {
        rateLimit {
          limit
          cost
          remaining
          resetAt
        }
-       search(query: $myq, type: REPOSITORY, first: $maxItems, after: $cursor)\
+       search(query: $search_query, type: REPOSITORY, first: $maxitems, """\
+       """after: $cursor)
        {
          pageInfo {
            endCursor
@@ -107,14 +113,31 @@ class GitStarQuery(GitHubGraphQLQuery):
        }
      }
      """
+
     VARIABLES = {
-        "myq": "archived:false mirror:false stars:>0\
-         created:>=2015-01-01 pushed:>=2019-01-01 fork:true",
-        "maxItems": 5,
+        "search_query": "archived:false mirror:false stars:>0 "\
+        "created:>=2015-01-01 pushed:>=2019-01-01 fork:true",
+        "maxitems": 1,
+        "after": None,
     }
 
-    def __init__(self, PAT, hasNextPage=True):
+    def __init__(self, PAT, maxitems=1):
         super().__init__(
             PAT=PAT, query=GitStarQuery.QUERY, variables=GitStarQuery.VARIABLES
         )
-        self.hasNextPage = hasNextPage
+        self.variables["maxitems"] = maxitems
+
+    def my_gen(self):
+        """ Pagination generator iterated upon query response boolean hasNextPage.
+            Calls gql_response() then updates cursor and hasNextPage.
+            Exceptions (e.g. StopIteration) are to be handled outside of class
+        """
+        hasnextpage = True
+        while hasnextpage:
+            resp = self.gql_response()
+            # Update cursor
+            self.variables["after"] =\
+                resp["data"]["search"]["pageInfo"]["endCursor"]
+            # Update hasNextPage
+            hasnextpage = resp["data"]["search"]["pageInfo"]["hasNextPage"]
+            yield resp

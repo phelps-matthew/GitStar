@@ -1,13 +1,20 @@
 """ Extract and print graphql query response from GitHub """
+import json
 import gqlquery
 
-PAT = "PERSONAL_ACCESS_TOKEN"
+# PAT = "PERSONAL_ACCESS_TOKEN"
+
+
+def json_to_str(json_obj):
+    """ Use json.dumps to convert json to str """
+    return json.dumps(json_obj, indent=4)
 
 
 def main():
     """ Test the class implementations """
     myq = gqlquery.GitStarQuery(PAT)
-    print(next(myq.response_json()))
+    print(json_to_str(next(myq.response_json())))
+    print(json_to_str(next(myq.response_json())))
 
 
 # Run Main

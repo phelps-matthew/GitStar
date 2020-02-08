@@ -15,13 +15,13 @@ class GraphQLQuery:
         # returns empty dict() if variables=None
         self.variables = variables or dict()
 
-#    def text(self):
-#        """ printable text output using json.dumps to convert json to str """
-#        return request(self).json().dumps(self, indent=4)
-#
-#    def status_code(self):
-#        """ printable text output using json.dumps to convert json to str """
-#        return request(self).status_code
+    #    def text(self):
+    #        """ printable text output using json.dumps to convert json to str """
+    #        return request(self).json().dumps(self, indent=4)
+    #
+    #    def status_code(self):
+    #        """ printable text output using json.dumps to convert json to str """
+    #        return request(self).status_code
 
     def response_json(self):
         """ Returns a requests.Reponse() object.
@@ -47,7 +47,7 @@ class GitHubGraphQLQuery(GraphQLQuery):
     def __init__(self, PAT, query, variables):
         super().__init__(
             headers={"Authorization": "token {}".format(PAT)},
-            url=ENDPOINT_URL,
+            url=GitHubGraphQLQuery.ENDPOINT_URL,
             query=query,
             variables=variables,
         )
@@ -121,5 +121,7 @@ class GitStarQuery(GitHubGraphQLQuery):
     }
 
     def __init__(self, PAT, hasNextPage=True):
-        super().__init__(PAT=PAT, query=QUERY, variables=VARIABLES)
+        super().__init__(
+            PAT=PAT, query=GitStarQuery.QUERY, variables=GitStarQuery.VARIABLES
+        )
         self.hasNextPage = hasNextPage

@@ -1,12 +1,10 @@
-""" module docstring """
-import json
+""" Implementation of graphQL HTTP POST queries, includes GitHub API  """
 import requests
 
 
 class GraphQLQuery:
-    """ Send json graphql queries via HTTP POST requests.\
-        This class is probably redundant as it only simplifies\
-        use of query and variables as solely compared to requests """
+    """ Send json graphql query request and
+        query variables dict via HTTP POST requests """
 
     def __init__(self, headers, url, query, variables=None):
         self.headers = headers
@@ -14,14 +12,6 @@ class GraphQLQuery:
         self.query = query
         # returns empty dict() if variables=None
         self.variables = variables or dict()
-
-    #    def text(self):
-    #        """ printable text output using json.dumps to convert json to str """
-    #        return request(self).json().dumps(self, indent=4)
-    #
-    #    def status_code(self):
-    #        """ printable text output using json.dumps to convert json to str """
-    #        return request(self).status_code
 
     def response_json(self):
         """ Returns a requests.Reponse() object.

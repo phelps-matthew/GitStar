@@ -1,5 +1,5 @@
 """ Implementation of graphQL HTTP POST queries based on 'streaming' generator
-    approach. Includes pagination handling and GitHub API querying.  """
+    approach. Includes pagination handling and GitHub API specific methods. """
 import requests
 
 

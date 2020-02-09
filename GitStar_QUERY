@@ -1,0 +1,46 @@
+query GitStarSearch($search_query: String!, $maxitems: Int, $cursor: String) {
+  rateLimit {
+    limit
+    cost
+    remaining
+    resetAt
+  }
+  search(query: $search_query, type: REPOSITORY, first: $maxitems, after: $cursor) {
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+    repositoryCount
+    edges {
+      node {
+        ... on Repository {
+          nameWithOwner
+          readme: object(expression: "master:README.md") {
+            ... on Blob {
+              byteSize
+            }
+          }
+          shortDescriptionHTML
+          id
+          databaseId
+          createdAt
+          updatedAt
+          forkCount
+          diskUsage
+          releases {
+            totalCount
+          }
+          stargazers {
+            totalCount
+          }
+          watchers {
+            totalCount
+          }
+          deployments {
+            totalCount
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,22 @@
+query GitStarTest($search_query: String!, $maxitems: Int, $cursor: String) {
+  rateLimit {
+    limit
+    cost
+    remaining
+    resetAt
+  }
+  search(query: $search_query, type: REPOSITORY, first: $maxitems, after: $cursor) {
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+    repositoryCount
+    edges {
+      node {
+        ... on Repository {
+          nameWithOwner
+        }
+      }
+    }
+  }
+}

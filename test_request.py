@@ -19,15 +19,11 @@ def print_json(json_dict):
 
 def main():
     """ Test the class implementations """
-    print(PAT)
-    # fmt: off
-    import ipdb,os; ipdb.set_trace(context=5)  # noqa
-    # fmt: on
     a2 = gqlquery.GitStarQuery(PAT, maxitems=1)
     b = a2.generator()
-    jprint(next(b))
-    jprint(next(b))
-    jprint(next(b))
+    print_json(next(b))
+    print_json(next(b))
+    print_json(next(b))
 
 
 if __name__ == "__main__":
@@ -35,6 +31,3 @@ if __name__ == "__main__":
         main()
     except KeyboardInterrupt:
         exit()
-nextpage
-printjson
-print_json

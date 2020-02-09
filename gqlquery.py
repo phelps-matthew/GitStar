@@ -67,97 +67,20 @@ class GitStarQuery(GitHubGraphQLQuery):
         cursors, nextpages is query specific. put here
     """
 
-    QUERY = """\
-    query searchmp($search_query: String!, $maxitems: Int, $cursor: String) {
-       rateLimit {
-         limit
-         cost
-         remaining
-         resetAt
-       }
-       search(query: $search_query, type: REPOSITORY, """\
-        """first: $maxitems, after: $cursor)
-       {
-         pageInfo {
-           endCursor
-           hasNextPage
-         }
-         repositoryCount
-         edges {
-           node {
-              # Only __typename is Repository
-              ... on Repository {
-               nameWithOwner
-               readme: object(expression: "master:README.md") {
-                 ... on Blob {
-                   byteSize
-                 }
-               }
-               shortDescriptionHTML
-               id
-               databaseId
-               createdAt
-               updatedAt
-               forkCount
-               diskUsage
-               releases {
-                 totalCount
-               }
-               stargazers {
-                 totalCount
-               }
-               watchers {
-                 totalCount
-               }
-               deployments {
-                 totalCount
-               }
-             }
-           }
-         }
-        }
-      }
-     """
-
-    TEST_QUERY = """\
-    query searchmp($search_query: String!, $maxitems: Int, $cursor: String) {
-        rateLimit {
-          limit
-          cost
-          remaining
-          resetAt
-        }
-        search(query: $search_query, type: REPOSITORY, \
-        first: $maxitems, after: $cursor) {
-          pageInfo {
-            endCursor
-            hasNextPage
-          }
-          repositoryCount
-          edges {
-            node {
-              # Only __typename is Repository
-              ... on Repository {
-                nameWithOwner
-              }
-            }
-          }
-        }
-    }
-    """
+    with open("GitStar_QUERY") as qfile, open("GitStar_TEST_QUERY") as tqfile:
+        QUERY = qfile.read()
+        TEST_QUERY = tqfile.read()
 
     VARIABLES = {
         "search_query": "archived:false mirror:false stars:>0 "
-        "created:>=2020-02-01 pushed:>=2020-01-01 fork:true",
+                        "created:>=2020-02-01 pushed:>=2020-01-01 fork:true",
         "maxitems": 1,
         "cursor": None,
     }
 
     def __init__(self, PAT, maxitems=1):
         super().__init__(
-            PAT=PAT,
-            query=GitStarQuery.TEST_QUERY,
-            variables=GitStarQuery.VARIABLES,
+            PAT=PAT, query=GitStarQuery.TEST_QUERY, variables=GitStarQuery.VARIABLES,
         )
         self.variables["maxitems"] = maxitems
 
@@ -170,8 +93,7 @@ class GitStarQuery(GitHubGraphQLQuery):
         while nextpage:
             gen = self.gql_response()
             # Update cursor
-            self.variables["cursor"] = \
-                gen["data"]["search"]["pageInfo"]["endCursor"]
+            self.variables["cursor"] = gen["data"]["search"]["pageInfo"]["endCursor"]
             # Update hasNextPage
             nextpage = gen["data"]["search"]["pageInfo"]["hasNextPage"]
             yield gen

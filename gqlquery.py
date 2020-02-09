@@ -66,7 +66,8 @@ class GitStarQuery(GitHubGraphQLQuery):
 
         cursors, nextpages is query specific. put here
     """
-
+    
+    # Read in queries from text file
     with open("GitStar_QUERY") as qfile, open("GitStar_TEST_QUERY") as tqfile:
         QUERY = qfile.read()
         TEST_QUERY = tqfile.read()
@@ -82,6 +83,7 @@ class GitStarQuery(GitHubGraphQLQuery):
         super().__init__(
             PAT=PAT, query=GitStarQuery.TEST_QUERY, variables=GitStarQuery.VARIABLES,
         )
+        # Add configurable maxitems instance attribute
         self.variables["maxitems"] = maxitems
 
     def generator(self):

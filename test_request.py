@@ -1,9 +1,10 @@
 """ Extract and print graphql query response from GitHub """
+import config
 import json
 import gqlquery
 
 # PAT = "PERSONAL_ACCESS_TOKEN"
-PAT = "423f853ce3ba7ed0bb0588e3fa8588f970a58923"
+PAT = config.PAT
 
 
 def json_str(json_dict):
@@ -18,6 +19,10 @@ def print_json(json_dict):
 
 def main():
     """ Test the class implementations """
+    print(PAT)
+    # fmt: off
+    import ipdb,os; ipdb.set_trace(context=5)  # noqa
+    # fmt: on
     a2 = gqlquery.GitStarQuery(PAT, maxitems=1)
     b = a2.generator()
     jprint(next(b))

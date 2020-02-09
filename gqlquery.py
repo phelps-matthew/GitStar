@@ -6,12 +6,12 @@ import requests
 
 
 def json_str(json_dict):
-    """ Use json.dumps to convert json to printable str """
+    """Use json.dumps to convert json to printable str"""
     return json.dumps(json_dict, indent=4)
 
 
 def print_json(json_dict):
-    """ Prints nice json string """
+    """Prints nice json string"""
     print(json.dumps(json_dict, indent=4))
 
 
@@ -28,30 +28,30 @@ class GraphQLQuery:
         self.variables = variables or dict()
 
     def gql_response(self):
-        """Sends HTTP POST query. Returns generator containing a
-            requests.Reponse().json() object.
-        """
-        req = requests.post(
+        """Sends HTTP POST query. Returns requests.Reponse().json() object."""
+        response = requests.post(
             url=self.url,
             headers=self.headers,
             json={"query": self.query, "variables": self.variables},
         ).json()
-        if "errors" in req:
-            print_json(req)
+
+        # Check json response dict for errors from query
+        if "errors" in response:
+            print_json(response)
             raise requests.RequestException(
-                "Error graphql response from endpoint. Check query"
+                "Error graphql response from endpoint. Check query!"
             )
-        return req
+        return response
 
 
 class GitHubGraphQLQuery(GraphQLQuery):
-    """Base class for any GitHub graphQL query. Incorporates github header and
-        endpoint
+    """Base class specific to GitHub graphQL queries. Incorporates github
+        authorization header and endpoint
     """
 
     ENDPOINT_URL = "https://api.github.com/graphql"
 
-    def __init__(self, PAT, query, variables):
+    def __init__(self, PAT, query, variables=None):
         super().__init__(
             headers={"Authorization": "token {}".format(PAT)},
             url=GitHubGraphQLQuery.ENDPOINT_URL,

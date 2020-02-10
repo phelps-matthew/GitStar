@@ -7,11 +7,13 @@ import requests
 import arrow
 
 
+# For troubleshooting
 def json_str(json_dict):
     """Use json.dumps to convert json to printable str"""
     return json.dumps(json_dict, indent=4)
 
 
+# For troubleshooting
 def print_json(json_dict):
     """Prints nice json string"""
     print(json.dumps(json_dict, indent=4))

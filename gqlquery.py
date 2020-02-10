@@ -87,7 +87,7 @@ class GitHubSearchQuery(GitHubGraphQLQuery):
 
     def __init__(self, PAT, maxitems=1):
         super().__init__(
-            PAT=PAT, query=GitHubSearchQuery.TEST_QUERY, variables=GitHubSearchQuery.VARIABLES,
+            PAT=PAT, query=GitHubSearchQuery.QUERY, variables=GitHubSearchQuery.VARIABLES,
         )
         # Add configurable maxitems instance attribute
         self.variables["maxitems"] = maxitems

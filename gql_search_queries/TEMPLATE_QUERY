@@ -1,0 +1,98 @@
+query GitStarmaster($search_query: String!, $maxitems: Int) {
+  rateLimit {
+    limit
+    cost
+    remaining
+    resetAt
+  }
+  search(query: $search_query, type: REPOSITORY, first: $maxitems) {
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+    repositoryCount
+    edges {
+      node {
+        ... on Repository {
+          nameWithOwner
+          descriptionHTML
+          id
+          databaseId
+          createdAt
+          updatedAt
+          forkCount
+          hasIssuesEnabled
+          hasWikiEnabled
+          homepageUrl
+          isDisabled
+          isLocked
+          diskUsage
+          readme: object(expression: "master:README.md") {
+            ... on Blob {
+              byteSize
+            }
+          }
+          commitnum: object(expression: "master") {
+            ... on Commit {
+              history {
+                totalCount
+              }
+            }
+          }
+          licenseInfo {
+            description
+          }
+          primaryLanguage {
+            name
+          }
+          releases {
+            totalCount
+          }
+          stargazers {
+            totalCount
+          }
+          watchers {
+            totalCount
+          }
+          deployments {
+            totalCount
+          }
+          repositoryTopics(first: 2) {
+            totalCount
+            edges {
+              node {
+                topic {
+                  name
+                }
+              }
+            }
+          }
+          pullRequests {
+            totalCount
+          }
+          projects {
+            totalCount
+          }
+          milestones {
+            totalCount
+          }
+          issuelabels: labels(first: 2) {
+            totalCount
+            nodes {
+              name
+            }
+          }
+          closedissues: issues(states: [CLOSED], first: 1) {
+            totalCount
+          }
+          openissues: issues(states: [OPEN], first: 1) {
+            totalCount
+          }
+          commitComments(first: 1) {
+            totalCount
+          }
+        }
+      }
+    }
+  }
+}

@@ -70,13 +70,14 @@ class GitStarQuery(GitHubGraphQLQuery):
     """
 
     # Read in queries from text file
-    with open("GitStar_QUERY") as qfile, open("GitStar_TEST_QUERY") as tqfile:
+    with open("gql_queries/QUERY") as qfile,\
+         open("gql_queries/TEST_QUERY") as tqfile:
         QUERY = qfile.read()
         TEST_QUERY = tqfile.read()
 
     VARIABLES = {
         "search_query": "archived:false mirror:false stars:>100 "
-        "created:>=2020-02-01 pushed:>=2020-01-01 fork:true",
+                        "created:>=2020-02-01 pushed:>=2020-01-01 fork:true",
         "maxitems": 1,
         "cursor": None,
     }
@@ -104,7 +105,7 @@ class GitStarQuery(GitHubGraphQLQuery):
             # Update hasNextPage
             nextpage = gen["data"]["search"]["pageInfo"]["hasNextPage"]
             # Handle rate limiting
-            if fuel == 1:
+            if fuel <= 1:
                 # returns datetime.timedelta obj
                 delta = arrow.get(refuel_time) - arrow.utcnow()
                 extra = 10  # additional delay

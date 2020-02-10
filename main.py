@@ -24,7 +24,8 @@ def main():
     fetch_github = gqlquery.GitStarQuery(PAT, maxitems=1)
     fetch_github_gen = fetch_github.generator()
 
-    while True:
+    #while True:
+    for _ in range(3):
         # Print until StopIteration generator exception
         print_json(next(fetch_github_gen))
 

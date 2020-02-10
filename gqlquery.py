@@ -1,16 +1,16 @@
 """ Implementation of graphQL HTTP POST queries based on 'streaming' generator
     approach. Includes pagination handling and GitHub API specific methods.
+
+    TODO:
+        Input QUERY file directory should be class init. parameter
+        Put generator in parent class, initialized with query specific connection
+        parameters
+        Improve docstrings
 """
 import json
 from time import sleep
 import requests
 import arrow
-
-
-# For troubleshooting
-def json_str(obj):
-    """Serialize python object to json formatted str"""
-    return json.dumps(obj, indent=4)
 
 
 # For troubleshooting
@@ -73,21 +73,24 @@ class GitHubSearchQuery(GitHubGraphQLQuery):
     """
 
     # Read in custom queries from text file
-    with open("gql_search_queries/QUERY") as qfile,\
-         open("gql_search_queries/TEST_QUERY") as tqfile:
+    with open("gql_search_queries/QUERY") as qfile, open(
+        "gql_search_queries/TEST_QUERY"
+    ) as tqfile:
         QUERY = qfile.read()
         TEST_QUERY = tqfile.read()
 
     VARIABLES = {
         "search_query": "archived:false mirror:false stars:>100 "
-                        "created:>=2020-02-01 pushed:>=2020-01-01 fork:true",
+        "created:>=2020-02-01 pushed:>=2020-01-01 fork:true",
         "maxitems": 1,
         "cursor": None,
     }
 
     def __init__(self, PAT, maxitems=1):
         super().__init__(
-            PAT=PAT, query=GitHubSearchQuery.QUERY, variables=GitHubSearchQuery.VARIABLES,
+            PAT=PAT,
+            query=GitHubSearchQuery.QUERY,
+            variables=GitHubSearchQuery.VARIABLES,
         )
         # Add configurable maxitems instance attribute
         self.variables["maxitems"] = maxitems

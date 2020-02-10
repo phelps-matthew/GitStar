@@ -1,4 +1,4 @@
-query GitStarSearch($search_query: String!, $maxitems: Int, $cursor: String) {
+query GitStarv1($search_query: String!, $maxitems: Int, $cursor: String) {
   rateLimit {
     limit
     cost
@@ -15,18 +15,36 @@ query GitStarSearch($search_query: String!, $maxitems: Int, $cursor: String) {
       node {
         ... on Repository {
           nameWithOwner
-          readme: object(expression: "master:README.md") {
-            ... on Blob {
-              byteSize
-            }
-          }
-          shortDescriptionHTML
+          descriptionHTML
           id
           databaseId
           createdAt
           updatedAt
           forkCount
+          hasIssuesEnabled
+          hasWikiEnabled
+          homepageUrl
+          isDisabled
+          isLocked
           diskUsage
+          readme: object(expression: "master:README.md") {
+            ... on Blob {
+              byteSize
+            }
+          }
+          commitnum: object(expression: "master") {
+            ... on Commit {
+              history {
+                totalCount
+              }
+            }
+          }
+          licenseInfo {
+            description
+          }
+          primaryLanguage {
+            name
+          }
           releases {
             totalCount
           }
@@ -37,6 +55,27 @@ query GitStarSearch($search_query: String!, $maxitems: Int, $cursor: String) {
             totalCount
           }
           deployments {
+            totalCount
+          }
+          repositoryTopics(first: 2) {
+            totalCount
+          }
+          pullRequests {
+            totalCount
+          }
+          projects {
+            totalCount
+          }
+          milestones {
+            totalCount
+          }
+          issuelabels: labels(first: 2) {
+            totalCount
+          }
+          closedissues: issues(states: [CLOSED], first: 1) {
+            totalCount
+          }
+          openissues: issues(states: [OPEN], first: 1) {
             totalCount
           }
         }

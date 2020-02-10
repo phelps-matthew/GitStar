@@ -1,11 +1,11 @@
-query GitStarmaster($search_query: String!, $maxitems: Int) {
+query GitStarmaster($search_query: String!, $maxitems: Int, $cursor: String) {
   rateLimit {
     limit
     cost
     remaining
     resetAt
   }
-  search(query: $search_query, type: REPOSITORY, first: $maxitems) {
+  search(query: $search_query, type: REPOSITORY, first: $maxitems, after: $cursor) {
     pageInfo {
       endCursor
       hasNextPage

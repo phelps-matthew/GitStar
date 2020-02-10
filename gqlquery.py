@@ -8,15 +8,15 @@ import arrow
 
 
 # For troubleshooting
-def json_str(json_dict):
-    """Use json.dumps to convert json to printable str"""
-    return json.dumps(json_dict, indent=4)
+def json_str(obj):
+    """Serialize python object to json formatted str"""
+    return json.dumps(obj, indent=4)
 
 
 # For troubleshooting
-def print_json(json_dict):
+def print_json(obj):
     """Prints nice json string"""
-    print(json.dumps(json_dict, indent=4))
+    print(json.dumps(obj, indent=4))
 
 
 class GraphQLQuery:
@@ -32,7 +32,9 @@ class GraphQLQuery:
         self.variables = variables or dict()
 
     def gql_response(self):
-        """Sends HTTP POST query. Returns requests.Reponse().json() object."""
+        """Sends HTTP POST query. Returns requests.Reponse().json() object.
+            The return is a deserialized json object, i.e. a python dict
+        """
         response = requests.post(
             url=self.url,
             headers=self.headers,
@@ -64,16 +66,15 @@ class GitHubGraphQLQuery(GraphQLQuery):
         )
 
 
-class GitStarQuery(GitHubGraphQLQuery):
-    """Implements graphql query to fetch filtered repos
-        and fields based on GitStar criterium.
-
-        cursors, nextpages is query specific. put here
+class GitHubSearchQuery(GitHubGraphQLQuery):
+    """Implements graphql search query to fetch fields from GitHub. Pagination field
+        'pageInfo' is specific to GitHub's 'search' connection, hence this subclass is
+        made for searches only.
     """
 
-    # Read in queries from text file
-    with open("gql_queries/QUERY") as qfile,\
-         open("gql_queries/TEST_QUERY") as tqfile:
+    # Read in custom queries from text file
+    with open("gql_search_queries/QUERY") as qfile,\
+         open("gql_search_queries/TEST_QUERY") as tqfile:
         QUERY = qfile.read()
         TEST_QUERY = tqfile.read()
 
@@ -86,7 +87,7 @@ class GitStarQuery(GitHubGraphQLQuery):
 
     def __init__(self, PAT, maxitems=1):
         super().__init__(
-            PAT=PAT, query=GitStarQuery.TEST_QUERY, variables=GitStarQuery.VARIABLES,
+            PAT=PAT, query=GitHubSearchQuery.TEST_QUERY, variables=GitHubSearchQuery.VARIABLES,
         )
         # Add configurable maxitems instance attribute
         self.variables["maxitems"] = maxitems
@@ -95,6 +96,7 @@ class GitStarQuery(GitHubGraphQLQuery):
         """Pagination generator iterated upon query response boolean 'hasNextPage'.
             Calls gql_response() then updates cursor and hasNextPage.
             Exceptions (e.g. StopIteration) are to be handled outside of class.
+            Generator is composed of py dict objects, deserialized from json response.
         """
         nextpage = True
         while nextpage:

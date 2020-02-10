@@ -1,4 +1,6 @@
-""" Extract and print graphql query response from GitHub """
+""" ETL main application entry point. Extract github data. Transform and clean relevant
+fields. Load into SQL database
+"""
 import json
 import config
 import gqlquery
@@ -19,12 +21,12 @@ def print_json(json_dict):
 
 def main():
     """ Test the class implementations """
-    gs = gqlquery.GitStarQuery(PAT, maxitems=1)
-    gs_gen = gs.generator()
+    fetch_github = gqlquery.GitStarQuery(PAT, maxitems=1)
+    fetch_github_gen = fetch_github.generator()
 
     while True:
         # Print until StopIteration generator exception
-        print_json(next(gs_gen))
+        print_json(next(fetch_github_gen))
 
 
 if __name__ == "__main__":

@@ -1,6 +1,6 @@
 """ Extract and print graphql query response from GitHub """
-import config
 import json
+import config
 import gqlquery
 
 # PAT = "PERSONAL_ACCESS_TOKEN"
@@ -19,11 +19,12 @@ def print_json(json_dict):
 
 def main():
     """ Test the class implementations """
-    a2 = gqlquery.GitStarQuery(PAT, maxitems=1)
-    b = a2.generator()
-    print_json(next(b))
-    print_json(next(b))
-    print_json(next(b))
+    gs = gqlquery.GitStarQuery(PAT, maxitems=1)
+    gs_gen = gs.generator()
+
+    while True:
+        # Print until StopIteration generator exception
+        print_json(next(gs_gen))
 
 
 if __name__ == "__main__":

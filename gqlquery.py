@@ -2,7 +2,9 @@
     approach. Includes pagination handling and GitHub API specific methods.
 """
 import json
+from time import sleep
 import requests
+import arrow
 
 
 def json_str(json_dict):
@@ -66,15 +68,15 @@ class GitStarQuery(GitHubGraphQLQuery):
 
         cursors, nextpages is query specific. put here
     """
-    
+
     # Read in queries from text file
     with open("GitStar_QUERY") as qfile, open("GitStar_TEST_QUERY") as tqfile:
         QUERY = qfile.read()
         TEST_QUERY = tqfile.read()
 
     VARIABLES = {
-        "search_query": "archived:false mirror:false stars:>0 "
-                        "created:>=2020-02-01 pushed:>=2020-01-01 fork:true",
+        "search_query": "archived:false mirror:false stars:>100 "
+        "created:>=2020-02-01 pushed:>=2020-01-01 fork:true",
         "maxitems": 1,
         "cursor": None,
     }
@@ -94,8 +96,25 @@ class GitStarQuery(GitHubGraphQLQuery):
         nextpage = True
         while nextpage:
             gen = self.gql_response()
+            # Acquire rate limits
+            fuel = gen["data"]["rateLimit"]["remaining"]
+            refuel_time = gen["data"]["rateLimit"]["resetAt"]
             # Update cursor
             self.variables["cursor"] = gen["data"]["search"]["pageInfo"]["endCursor"]
             # Update hasNextPage
             nextpage = gen["data"]["search"]["pageInfo"]["hasNextPage"]
-            yield gen
+            # Handle rate limiting
+            if fuel == 1:
+                # returns datetime.timedelta obj
+                delta = arrow.get(refuel_time) - arrow.utcnow()
+                extra = 10  # additional delay
+                print(
+                    "[{}] Out of fuel. Will resume in {} seconds.".format(
+                        arrow.now(), delta.seconds + extra
+                    )
+                )
+                sleep(delta.seconds + extra)
+                print("[{}] Refueled, resuming operation.".format(arrow.now()))
+                yield gen
+            else:
+                yield gen

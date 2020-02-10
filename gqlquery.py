@@ -13,7 +13,7 @@ import requests
 import arrow
 
 
-# For troubleshooting
+# Used to print graphql response error
 def print_json(obj):
     """Prints nice json string"""
     print(json.dumps(obj, indent=4))

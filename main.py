@@ -3,8 +3,8 @@ fields. Load into SQL database
 
     TODO:
         There is a balance between maximizing the output of a single query vs. how much
-        of that query we want to store in RAM. 100 nodes worth of data seems like a
-        reasonable amount to store in RAM for transformation process.
+        of that query we want to store in RAM. 100 nodes worth of data (~ 100 KB) seems
+        like a reasonable amount to store in RAM for transformation process.
 """
 import json
 import logging

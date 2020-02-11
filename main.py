@@ -22,8 +22,6 @@ def print_json(obj):
     """Serialize python object to json formatted str and print"""
     print(json.dumps(obj, indent=4))
 
-    pd.option_context
-
 
 def print_pd(df):
     """Print pandas dataframe object"""

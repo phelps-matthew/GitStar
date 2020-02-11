@@ -10,7 +10,7 @@
 import json
 from time import sleep
 import requests
-import arrow
+import arrow  # simple alt. to datetime
 
 
 # Used to print graphql response error

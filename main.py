@@ -1,5 +1,5 @@
 """ ETL main application entry point. Extract github data. Transform and clean
-relevant fields. Load into SQL database
+    relevant fields. Load into SQL database
 
     TODO:
         There is a balance between maximizing the output of a single query vs.

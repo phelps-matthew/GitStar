@@ -8,40 +8,58 @@
         transformation process.
 """
 import json
-import logging
+import arrow
 import config
 import gqlquery
 from gstransform import GitStarTransform
+import pandas as pd
 
-# PAT = "PERSONAL_ACCESS_TOKEN"
+# Load GitHub PERSONAL ACCESS TOKEN
 PAT = config.PAT
 
 
-def json_str(obj):
-    """Serialize python object to json formatted str"""
-    return json.dumps(obj, indent=4)
-
-
 def print_json(obj):
-    """Prints nice json string"""
+    """Serialize python object to json formatted str and print"""
     print(json.dumps(obj, indent=4))
+
+    pd.option_context
+
+
+def print_pd(df):
+    """Print pandas dataframe object"""
+    with pd.option_context(
+            "display.max_rows", None,
+            "display.max_columns", None,
+            "max_colwidth", 6
+    ):
+        print(df)
 
 
 def main():
-    """Test the class implementations"""
-
-    gql_generator = gqlquery.GitHubSearchQuery(PAT, maxitems=1).generator()
-    clean_data = GitStarTransform(next(gql_generator)).transform()
+    """Execute ETL process"""
+    # Construct graphql query response generator
+    gql_generator = gqlquery.GitHubSearchQuery(PAT, maxitems=3).generator()
+    raw_data = next(gql_generator)
+    clean_data = GitStarTransform(raw_data).transform()
+    pd_data = pd.DataFrame(data=clean_data)
     print_json(clean_data)
-    #print_json(transform(gdata))
-    #
+    print_pd(pd_data)
+
+    # print("[{}] ETL begin.".format(arrow.now()))
+    # while True:
+    #    try:
+    #        # Iterate generator. Normalize nested fields
+    #        clean_data = GitStarTransform(next(gql_generator)).transform()
+    #        print_json(clean_data)
+    #    except StopIteration:
+    #        print(
+    #            "[{}] Reached end of query response. ETL done.".format(
+    #                arrow.now()
+    #            )
+    #        )
+    #        break
     # with open("gql_search_queries/query_out_sample", mode='w') as tfile:
     #   tfile.write(json.dumps(gdata, indent=4))
-
-    # while True:
-    # for _ in range(3):
-    #     # Print until StopIteration generator exception
-    #     print_json(next(github_generator))
 
 
 if __name__ == "__main__":

@@ -39,6 +39,7 @@ class GitStarTransform:
             ndict = ndict["node"]
             # List of keys with nested dicts of depth=2
             dict_keys_d2 = [
+                "licenseInfo",
                 "readme",
                 "primaryLanguage",
                 "releases",

@@ -75,8 +75,8 @@ class GitHubSearchQuery(GitHubGraphQLQuery):
     """
 
     # Read in custom queries from text file
-    with open("gql_search_queries/QUERY") as qfile,\
-         open("gql_search_queries/TEST_QUERY") as tqfile:
+    with open("GQL_QUERIES/QUERY") as qfile,\
+         open("GQL_QUERIES/TEST_QUERY") as tqfile:
         QUERY = qfile.read()
         TEST_QUERY = tqfile.read()
 

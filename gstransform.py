@@ -19,17 +19,19 @@ class GitStarTransform:
 
     def transform(self):
         """Normalizes json decoded graphql data (a nested dictionary) from
-            GitHubSearchQuery.generator() iteration output.
+            GitHubSearchQuery.generator() iteration output. Input is mutable
+            object!
 
-            Returns a list. Each element in the list is a single dictionary representing
-            an individual repository's heuristics.
+            Returns a list. Each element in the list is a single dictionary
+            representing an individual repository's heuristics.
         """
 
         # ------------- Begin normalize sub-function -------- #
         def normalize(ndict):
-            """Take in single node (nested dictionary representing a single repo) and remove
-                nested fields. Hard coded keylists for speed, as opposed to iterating
-                through all keys. Less general, but faster.
+            """Take in single node (nested dictionary representing a single repo)
+                and remove nested fields. Hard coded keylists for speed, as
+                opposed to iterating through all keys. Less general, but
+                faster.
 
                 Returns single dictionary.
             """
@@ -54,13 +56,14 @@ class GitStarTransform:
             # List of keys with nested dicts of depth=3
             dict_keys_d3 = [("commitnum", "history")]
             #
-            # Two for loops are ugly, but again.. speed! We don't want comparisons on
-            # all possible fields. Also faster to catch isolated exception
+            # Two for loops are ugly, but again.. speed! We don't want
+            # comparisons on all possible fields. Also faster to catch isolated
+            # exception
             #
             # Restructure to depth=1.
             for key in dict_keys_d2:
-                # Catch null values that would otherwise be nested dicts. Log null
-                # errors.
+                # Catch null values that would otherwise be nested dicts. Log
+                # null errors.
                 try:
                     value = ndict[key].popitem()[1]
                     ndict[key] = value
@@ -71,8 +74,8 @@ class GitStarTransform:
                         )
                     )
             for key in dict_keys_d3:
-                # Catch null values that would otherwise be nested dicts. Log null
-                # errors.
+                # Catch null values that would otherwise be nested dicts. Log
+                # null errors.
                 try:
                     value = ndict[key[0]][key[1]].popitem()[1]
                     ndict[key[0]] = value
@@ -83,7 +86,7 @@ class GitStarTransform:
                         )
                     )
             return ndict
-        # ------------- End of normalize -------- #
+        # ------------- End of normalize -------------------- #
 
         # Remove headers for pagination, etc.
         ndicts = self.decoded_json["data"]["search"]["edges"]

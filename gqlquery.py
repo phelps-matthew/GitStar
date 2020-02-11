@@ -3,8 +3,10 @@
 
     TODO:
         Input QUERY file directory should be class init. parameter
-        Put generator in parent class, initialized with query specific connection
-        parameters
+
+        Put generator in parent class, initialized with query specific
+        connection parameters
+
         Improve docstrings
 """
 import json
@@ -67,21 +69,20 @@ class GitHubGraphQLQuery(GraphQLQuery):
 
 
 class GitHubSearchQuery(GitHubGraphQLQuery):
-    """Implements graphql search query to fetch fields from GitHub. Pagination field
-        'pageInfo' is specific to GitHub's 'search' connection, hence this subclass is
-        made for searches only.
+    """Implements graphql search query to fetch fields from GitHub. Pagination
+        field 'pageInfo' is specific to GitHub's 'search' connection, hence
+        this subclass is made for searches only.
     """
 
     # Read in custom queries from text file
-    with open("gql_search_queries/QUERY") as qfile, open(
-        "gql_search_queries/TEST_QUERY"
-    ) as tqfile:
+    with open("gql_search_queries/QUERY") as qfile,\
+         open("gql_search_queries/TEST_QUERY") as tqfile:
         QUERY = qfile.read()
         TEST_QUERY = tqfile.read()
 
     VARIABLES = {
         "search_query": "archived:false mirror:false stars:>100 "
-        "created:>=2020-02-01 pushed:>=2020-01-01 fork:true",
+                        "created:>=2020-02-01 pushed:>=2020-01-01 fork:true",
         "maxitems": 1,
         "cursor": None,
     }
@@ -99,7 +100,8 @@ class GitHubSearchQuery(GitHubGraphQLQuery):
         """Pagination generator iterated upon query response boolean 'hasNextPage'.
             Calls gql_response() then updates cursor and hasNextPage.
             Exceptions (e.g. StopIteration) are to be handled outside of class.
-            Generator is composed of py dict objects, deserialized from json response.
+            Generator is composed of py dict objects, deserialized from json
+            response.
         """
         nextpage = True
         while nextpage:
@@ -108,7 +110,8 @@ class GitHubSearchQuery(GitHubGraphQLQuery):
             fuel = gen["data"]["rateLimit"]["remaining"]
             refuel_time = gen["data"]["rateLimit"]["resetAt"]
             # Update cursor
-            self.variables["cursor"] = gen["data"]["search"]["pageInfo"]["endCursor"]
+            self.variables["cursor"] =\
+                gen["data"]["search"]["pageInfo"]["endCursor"]
             # Update hasNextPage
             nextpage = gen["data"]["search"]["pageInfo"]["hasNextPage"]
             # Handle rate limiting

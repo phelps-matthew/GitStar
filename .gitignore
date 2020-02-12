@@ -2,7 +2,7 @@ config.py
 error_test.py
 mytest.py
 sample.json
-__pycache__/*
+*__pycache__/*
 */__pycache__/*
 btest.py
 venv/*

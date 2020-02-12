@@ -19,12 +19,6 @@ Star predictor based on GitHub heuristics
 │   └── main.py
 ├── README.md
 ├── __init__.py
-├── __pycache__
-│   ├── QUERY.cpython-36.pyc
-│   ├── TEST_QUERY.cpython-36.pyc
-│   ├── config.cpython-36.pyc
-│   ├── gqlquery.cpython-36.pyc
-│   └── gstransform.cpython-36.pyc
 ├── config.py
 └── test
     ├── ETL_test
@@ -34,5 +28,5 @@ Star predictor based on GitHub heuristics
     │   └── sql_test.py
     └── __init__.py
 
-7 directories, 24 files
+6 directories, 19 files
 ```

@@ -2,13 +2,12 @@
     upon gitstar specific json decoded data
 """
 
-import json
 import logging
 
 
 # Log null return errors from graphql fields
 logging.basicConfig(
-    filename="logs/errors.log",
+    filename="/home/mgp/Documents/projects/GitStar/ETL/logs/errors.log",
     filemode="w",
     level=logging.DEBUG,
     format="[%(asctime)s] %(name)s - %(levelname)s - %(message)s",
@@ -85,9 +84,6 @@ def transform(ndicts):
         Returns a list. Each element in the list is a single dictionary
         representing an individual repository's heuristics.
     """
-
-    # ------------- Begin normalize sub-function -------- #
-
     # Remove headers for pagination, etc.
     ndicts = ndicts["data"]["search"]["edges"]
     # Iterate over list of nodes (repos). Length will vary

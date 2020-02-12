@@ -10,7 +10,7 @@
 import json
 import arrow
 import pandas as pd
-from . import config
+import config
 from . import gqlquery
 from .gstransform import transform
 

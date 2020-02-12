@@ -2,6 +2,7 @@
 Star predictor based on GitHub heuristics
 ```
 .
+├── README.md
 ├── gitstar
 │   ├── ETL
 │   │   ├── GQL_QUERIES
@@ -11,27 +12,22 @@ Star predictor based on GitHub heuristics
 │   │   │   └── TEST_QUERY
 │   │   ├── SQL_SCHEMA
 │   │   │   └── SCHEMA_v0
-│   │   ├── logs
-│   │   │   └── errors.log
-│   │   ├── ETL_test_import.py
 │   │   ├── __init__.py
 │   │   ├── gqlquery.py
 │   │   ├── gsload.py
 │   │   ├── gstransform.py
+│   │   ├── logs
+│   │   │   └── errors.log
 │   │   └── run_ETL.py
-│   ├── configtest
-│   │   ├── __init__.py
-│   │   ├── config.py
-│   │   └── configx.py
-│   ├── models
-│   │   └── models_test_import.py
 │   ├── __init__.py
-│   └── config.py
-├── tests
-│   ├── btest.py
-│   ├── error_test.py
-│   └── sql_test.py
-└── README.md
+│   ├── config.py
+│   └── models
+│       └── __init__.py
+├── setup.py
+└── tests
+    ├── btest.py
+    ├── error_test.py
+    └── sql_test.py
 
-8 directories, 22 files
+7 directories, 19 files
 ```

@@ -1,5 +1,6 @@
 # GitStar
 Star predictor based on GitHub heuristics
+```bash
 .
 ├── ETL
 │   ├── GQL_QUERIES
@@ -34,3 +35,4 @@ Star predictor based on GitHub heuristics
     └── __init__.py
 
 7 directories, 24 files
+```

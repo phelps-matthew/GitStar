@@ -5,3 +5,6 @@ sample.json
 __pycache__/*
 */__pycache__/*
 btest.py
+venv/*
+tree.sh
+*.egg*/

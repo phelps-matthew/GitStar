@@ -14,23 +14,23 @@ query GitStarv1($search_query: String!, $maxitems: Int, $cursor: String) {
     edges {
       node {
         ... on Repository {
-          nameWithOwner
-          descriptionHTML
           id
           databaseId
+          nameWithOwner
+          stargazers {
+            totalCount
+          }
           createdAt
           updatedAt
+          openissues: issues(states: [OPEN], first: 1) {
+            totalCount
+          }
+          closedissues: issues(states: [CLOSED], first: 1) {
+            totalCount
+          }
           forkCount
-          hasIssuesEnabled
-          hasWikiEnabled
-          homepageUrl
-          isDisabled
-          isLocked
-          diskUsage
-          readme: object(expression: "master:README.md") {
-            ... on Blob {
-              byteSize
-            }
+          pullRequests {
+            totalCount
           }
           commitnum: object(expression: "master") {
             ... on Commit {
@@ -39,28 +39,16 @@ query GitStarv1($search_query: String!, $maxitems: Int, $cursor: String) {
               }
             }
           }
-          licenseInfo {
-            description
-          }
-          primaryLanguage {
-            name
-          }
-          releases {
-            totalCount
-          }
-          stargazers {
-            totalCount
-          }
           watchers {
             totalCount
           }
-          deployments {
-            totalCount
+          diskUsage_kb: diskUsage
+          readme_bytes: object(expression: "master:README.md") {
+            ... on Blob {
+              byteSize
+            }
           }
-          repositoryTopics(first: 2) {
-            totalCount
-          }
-          pullRequests {
+          releases {
             totalCount
           }
           projects {
@@ -69,15 +57,27 @@ query GitStarv1($search_query: String!, $maxitems: Int, $cursor: String) {
           milestones {
             totalCount
           }
+          deployments {
+            totalCount
+          }
+          primaryLanguage {
+            name
+          }
           issuelabels: labels(first: 2) {
             totalCount
           }
-          closedissues: issues(states: [CLOSED], first: 1) {
+          repositoryTopics(first: 2) {
             totalCount
           }
-          openissues: issues(states: [OPEN], first: 1) {
-            totalCount
+          licenseInfo {
+            description
           }
+          homepageUrl
+          descriptionHTML
+          hasIssuesEnabled
+          hasWikiEnabled
+          isLocked
+          isDisabled
         }
       }
     }

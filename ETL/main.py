@@ -9,10 +9,10 @@
 """
 import json
 import arrow
-import config
-import gqlquery
-from gstransform import GitStarTransform
 import pandas as pd
+from . import config
+from . import gqlquery
+from .gstransform import transform
 
 # Load GitHub PERSONAL ACCESS TOKEN
 PAT = config.PAT
@@ -36,12 +36,18 @@ def print_pd(df):
 def main():
     """Execute ETL process"""
     # Construct graphql query response generator
-    gql_generator = gqlquery.GitHubSearchQuery(PAT, maxitems=3).generator()
+    gql_generator = gqlquery.GitHubSearchQuery(PAT, maxitems=10).generator()
     raw_data = next(gql_generator)
-    clean_data = GitStarTransform(raw_data).transform()
-    pd_data = pd.DataFrame(data=clean_data)
+    clean_data = transform(raw_data)
+    print_json(raw_data)
     print_json(clean_data)
-    print_pd(pd_data)
+    # fmt: off
+    import ipdb,os; ipdb.set_trace(context=5)  # noqa
+    # fmt: on
+
+    #pd_data = pd.DataFrame(data=clean_data)
+    #print_json(clean_data)
+    #print_pd(pd_data)
 
     # print("[{}] ETL begin.".format(arrow.now()))
     # while True:

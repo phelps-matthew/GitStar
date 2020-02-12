@@ -75,14 +75,14 @@ class GitHubSearchQuery(GitHubGraphQLQuery):
     """
 
     # Read in custom queries from text file
-    with open("GQL_QUERIES/QUERY") as qfile,\
-         open("GQL_QUERIES/TEST_QUERY") as tqfile:
+    with open("/home/mgp/Documents/projects/GitStar/GQL_QUERIES/QUERY") as qfile,\
+         open("/home/mgp/Documents/projects/GitStar/GQL_QUERIES/TEST_QUERY") as tqfile:
         QUERY = qfile.read()
         TEST_QUERY = tqfile.read()
 
     VARIABLES = {
-        "search_query": "archived:false mirror:false stars:>100 "
-                        "created:>=2020-02-01 pushed:>=2020-01-01 fork:true",
+        "search_query": "archived:false mirror:false stars:>0 "
+                        "created:>=2020-02-01 pushed:>=2020-02-01 fork:true",
         "maxitems": 1,
         "cursor": None,
     }
@@ -114,6 +114,7 @@ class GitHubSearchQuery(GitHubGraphQLQuery):
                 gen["data"]["search"]["pageInfo"]["endCursor"]
             # Update hasNextPage
             nextpage = gen["data"]["search"]["pageInfo"]["hasNextPage"]
+            print("Cursor: {} hasNextPage:{}".format(self.variables["cursor"],nextpage))
             # Handle rate limiting
             if fuel <= 1:
                 # returns datetime.timedelta obj

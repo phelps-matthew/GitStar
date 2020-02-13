@@ -1,15 +1,15 @@
-[2020-02-12 19:55:59,500] urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.github.com:443
-[2020-02-12 19:56:01,249] urllib3.connectionpool - DEBUG - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
-[2020-02-12 19:56:01,251] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:2019ncovmemory/nCovMemory
-[2020-02-12 19:56:01,251] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:teivah/algodeck
-[2020-02-12 19:56:01,251] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:teivah/algodeck
-[2020-02-12 19:56:01,251] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:KikiLetGo/VirusBroadcast
-[2020-02-12 19:56:01,251] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:cycz/jdBuyMask
-[2020-02-12 19:56:01,251] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:davidfowl/Todos
-[2020-02-12 19:56:01,251] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:smodnix/31-days-of-API-Security-Tips
-[2020-02-12 19:56:01,251] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:smodnix/31-days-of-API-Security-Tips
-[2020-02-12 19:56:01,251] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:pingcap/awesome-database-learning
-[2020-02-12 19:56:01,251] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:pingcap/awesome-database-learning
-[2020-02-12 19:56:01,580] asyncio - DEBUG - Using selector: EpollSelector
-[2020-02-12 19:56:01,746] asyncio - DEBUG - Using selector: EpollSelector
-[2020-02-12 19:56:01,765] asyncio - DEBUG - Using selector: EpollSelector
+[2020-02-12 19:58:21,493] urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-12 19:58:23,037] urllib3.connectionpool - DEBUG - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-12 19:58:23,041] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:2019ncovmemory/nCovMemory
+[2020-02-12 19:58:23,041] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:teivah/algodeck
+[2020-02-12 19:58:23,041] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:teivah/algodeck
+[2020-02-12 19:58:23,041] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:KikiLetGo/VirusBroadcast
+[2020-02-12 19:58:23,041] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:cycz/jdBuyMask
+[2020-02-12 19:58:23,041] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:davidfowl/Todos
+[2020-02-12 19:58:23,042] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:smodnix/31-days-of-API-Security-Tips
+[2020-02-12 19:58:23,042] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:smodnix/31-days-of-API-Security-Tips
+[2020-02-12 19:58:23,042] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:pingcap/awesome-database-learning
+[2020-02-12 19:58:23,042] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:pingcap/awesome-database-learning
+[2020-02-12 19:58:23,395] asyncio - DEBUG - Using selector: EpollSelector
+[2020-02-12 19:58:23,561] asyncio - DEBUG - Using selector: EpollSelector
+[2020-02-12 19:58:23,580] asyncio - DEBUG - Using selector: EpollSelector

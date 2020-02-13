@@ -7,7 +7,7 @@ import logging
 
 # Log null return errors from graphql fields
 logging.basicConfig(
-    filename="/home/mgp/Documents/projects/GitStar/ETL/logs/errors.log",
+    filename="logs/errors.log",
     filemode="w",
     level=logging.DEBUG,
     format="[%(asctime)s] %(name)s - %(levelname)s - %(message)s",

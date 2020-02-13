@@ -11,11 +11,16 @@ import json
 import arrow
 import pandas as pd
 from gitstar import config
-from . import gqlquery
-from .gstransform import transform
+from gitstar.ETL import gqlquery
+from gitstar.ETL.gstransform import transform
 
 # Load GitHub PERSONAL ACCESS TOKEN
 PAT = config.PAT
+# Repo creation start, end, and last pushed
+#CREATED_START = 
+#CREATED_END = 
+#LAST_PUSHED = 
+
 
 
 def print_json(obj):

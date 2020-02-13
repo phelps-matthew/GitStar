@@ -75,8 +75,8 @@ class GitHubSearchQuery(GitHubGraphQLQuery):
     """
 
     # Read in custom queries from text file
-    with open("/home/mgp/Documents/projects/GitStar/gitstar/ETL/GQL_QUERIES/QUERY") as qfile,\
-         open("/home/mgp/Documents/projects/GitStar/gitstar/ETL/GQL_QUERIES/TEST_QUERY") as tqfile:
+    with open("GQL_QUERIES/QUERY") as qfile,\
+         open("GQL_QUERIES/TEST_QUERY") as tqfile:
         QUERY = qfile.read()
         TEST_QUERY = tqfile.read()
 
@@ -87,7 +87,7 @@ class GitHubSearchQuery(GitHubGraphQLQuery):
         "cursor": None,
     }
 
-    def __init__(self, PAT, maxitems=1):
+    def __init__(self, PAT, created_end=None, maxitems=1):
         super().__init__(
             PAT=PAT,
             query=GitHubSearchQuery.QUERY,

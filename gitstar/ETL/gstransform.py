@@ -5,15 +5,6 @@
 import logging
 
 
-# Log null return errors from graphql fields
-logging.basicConfig(
-    filename="logs/errors.log",
-    filemode="w",
-    level=logging.DEBUG,
-    format="[%(asctime)s] %(name)s - %(levelname)s - %(message)s",
-)
-
-
 def normalize(ndict):
     """Take in single node (nested dictionary representing a single repo)
         and remove nested fields. Hard coded keylists for speed, as

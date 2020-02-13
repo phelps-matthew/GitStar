@@ -13,12 +13,7 @@ import json
 from time import sleep
 import requests
 import arrow  # simple alt. to datetime
-
-
-# Used to print graphql response error
-def print_json(obj):
-    """Prints nice json string"""
-    print(json.dumps(obj, indent=4))
+import logging
 
 
 class GraphQLQuery:
@@ -45,9 +40,13 @@ class GraphQLQuery:
 
         # Check json response dict for errors from query
         if "errors" in response:
-            print_json(response)
+            logging.warning(
+                "Error graphql response from endpoint. Check query.\n{}".format(
+                    json.dumps(response, indent=4)
+                )
+            )
             raise requests.RequestException(
-                "Error graphql response from endpoint. Check query!"
+                "GitHut error response. Check logs."
             )
         return response
 
@@ -84,12 +83,12 @@ class GitHubSearchQuery(GitHubGraphQLQuery):
     SEARCH_QUERY = ["archived:false", "mirror:false", "stars:>0", "fork:true"]
 
     def __init__(
-            self,
-            PAT,
-            created_start=arrow.get("2020-01-01"),
-            created_end=arrow.get("2020-02-01"),
-            last_pushed=arrow.get("2020-01-01"),
-            maxitems=1
+        self,
+        PAT,
+        created_start=arrow.get("2020-01-01"),
+        created_end=arrow.get("2020-02-01"),
+        last_pushed=arrow.get("2020-01-01"),
+        maxitems=1,
     ):
         super().__init__(
             PAT=PAT, query=GitHubSearchQuery.QUERY, variables=None,
@@ -118,9 +117,16 @@ class GitHubSearchQuery(GitHubGraphQLQuery):
             response.
         """
         nextpage = True
+        index = 1  # For debugging
         while nextpage:
             gen = self.gql_response()
-            print("Repositories: {}".format(gen["data"]["search"]["repositoryCount"]))
+            # log repository count
+            if index == 1:
+                logging.info(
+                    "Repository Count: {}".format(
+                        gen["data"]["search"]["repositoryCount"]
+                    )
+                )
             # Acquire rate limits
             fuel = gen["data"]["rateLimit"]["remaining"]
             refuel_time = gen["data"]["rateLimit"]["resetAt"]
@@ -130,11 +136,12 @@ class GitHubSearchQuery(GitHubGraphQLQuery):
             ]
             # Update hasNextPage
             nextpage = gen["data"]["search"]["pageInfo"]["hasNextPage"]
-            print(
+            logging.info(
                 "Cursor: {} hasNextPage:{}".format(
                     self.variables["cursor"], nextpage
                 )
             )
+            index += 1
             # Handle rate limiting
             if fuel <= 1:
                 # returns datetime.timedelta obj

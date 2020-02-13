@@ -1,11 +1,3 @@
-[2020-02-12 21:14:17,452] urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.github.com:443
-[2020-02-12 21:14:19,326] urllib3.connectionpool - DEBUG - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
-[2020-02-12 21:14:19,330] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:wuhan2020/wuhan2020
-[2020-02-12 21:14:19,330] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:fpereiro/backendlore
-[2020-02-12 21:14:19,331] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:fpereiro/backendlore
-[2020-02-12 21:14:19,331] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:fpereiro/backendlore
-[2020-02-12 21:14:19,331] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:bradtraversy/vanillawebprojects
-[2020-02-12 21:14:19,331] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:bradtraversy/vanillawebprojects
-[2020-02-12 21:14:19,331] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:teivah/algodeck
-[2020-02-12 21:14:19,331] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:teivah/algodeck
-[2020-02-12 21:14:19,331] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:gofiber/fiber
+[2020-02-12 23:43:35,777] asyncio - DEBUG - Using selector: EpollSelector
+[2020-02-12 23:43:35,948] asyncio - DEBUG - Using selector: EpollSelector
+[2020-02-12 23:43:35,968] asyncio - DEBUG - Using selector: EpollSelector

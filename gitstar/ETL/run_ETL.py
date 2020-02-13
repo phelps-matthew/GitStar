@@ -37,22 +37,28 @@ def print_pd(df):
 
 def main():
     """Execute ETL process"""
+    # Intialize root logger. Used by dependent modules 
+    logging.basicConfig(
+        filename="run_ETL.log",
+        filemode="w",
+        level=logging.DEBUG,
+        format="[%(asctime)s] %(name)s - %(levelname)s - %(message)s",
+    )
+    print(CREATED_START)
+    # fmt: off
+    import ipdb,os; ipdb.set_trace(context=5)  # noqa
+    # fmt: on
     # Construct graphql query response generator
-    gql_generator = gqlquery.GitHubSearchQuery(PAT, maxitems=10).generator()
-    raw_data = next(gql_generator)
-    clean_data = transform(raw_data)
-    print_json(raw_data)
-    print_json(clean_data)
-
+    #gql_generator = gqlquery.GitHubSearchQuery(PAT, maxitems=100).generator()
     # pd_data = pd.DataFrame(data=clean_data)
     # print_json(clean_data)
     # print_pd(pd_data)
 
-    # print("[{}] ETL begin.".format(arrow.now()))
-    # while True:
+    #print("[{}] ETL begin.".format(arrow.now()))
+    #while True:
     #    try:
     #        # Iterate generator. Normalize nested fields
-    #        clean_data = GitStarTransform(next(gql_generator)).transform()
+    #        clean_data = transform(next(gql_generator))
     #        print_json(clean_data)
     #    except StopIteration:
     #        print(
@@ -61,8 +67,6 @@ def main():
     #            )
     #        )
     #        break
-    # with open("gql_search_queries/query_out_sample", mode='w') as tfile:
-    #   tfile.write(json.dumps(gdata, indent=4))
 
 
 if __name__ == "__main__":

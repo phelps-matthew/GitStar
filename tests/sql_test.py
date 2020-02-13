@@ -3,7 +3,7 @@
 import json
 import pyodbc
 import arrow
-from ETL.config import PAT
+from gitstar import config
 from ...ETL import gqlquery
 from ...ETL.gstransform import transform
 

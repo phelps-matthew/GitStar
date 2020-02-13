@@ -38,16 +38,15 @@ class GraphQLQuery:
             json={"query": self.query, "variables": self.variables},
         ).json()
 
-        # Check json response dict for errors from query
+        # Check json response dict for errors from query. Recursive.
         if "errors" in response:
-            logging.warning(
-                "Error graphql response from endpoint. Check query.\n{}".format(
+            logging.error(
+                "Error graphql response from endpoint. Check logs.\n{}".format(
                     json.dumps(response, indent=4)
                 )
             )
-            raise requests.RequestException(
-                "GitHut error response. Check logs."
-            )
+            sleep(60)
+            return self.gql_response()
         return response
 
 

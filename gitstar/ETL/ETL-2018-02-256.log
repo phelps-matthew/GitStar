@@ -1,0 +1,501 @@
+[2020-02-13 12:04:07,718] root - INFO - --------------------------------------------------
+[2020-02-13 12:04:07,719] root - INFO - Begin main(). Created start date:2018-02-25
+[2020-02-13 12:04:07,724] urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-13 12:04:14,672] urllib3.connectionpool - DEBUG - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-13 12:04:14,678] root - INFO - Repository Count: 423
+[2020-02-13 12:04:14,678] root - INFO - Cursor: Y3Vyc29yOjUw hasNextPage:True
+[2020-02-13 12:04:14,679] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:30-seconds/30-seconds-of-css
+[2020-02-13 12:04:14,679] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:andrew--r/frontend-case-studies
+[2020-02-13 12:04:14,679] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:andrew--r/frontend-case-studies
+[2020-02-13 12:04:14,679] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:andrew--r/frontend-case-studies
+[2020-02-13 12:04:14,679] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:alibaba/GCanvas
+[2020-02-13 12:04:14,679] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:zorlan/skycaiji
+[2020-02-13 12:04:14,679] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:zorlan/skycaiji
+[2020-02-13 12:04:14,679] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:sjvasquez/handwriting-synthesis
+[2020-02-13 12:04:14,680] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:sjvasquez/handwriting-synthesis
+[2020-02-13 12:04:14,680] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:vuejs/jsx
+[2020-02-13 12:04:14,680] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:zslucky/awesome-AI-books
+[2020-02-13 12:04:14,680] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:madalinabuzau/tensorflow-eager-tutorials
+[2020-02-13 12:04:14,680] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:Ph055a/OSINT_Collection
+[2020-02-13 12:04:14,680] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:Ph055a/OSINT_Collection
+[2020-02-13 12:04:14,680] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:satwikkansal/python_blockchain_app
+[2020-02-13 12:04:14,681] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:cachix/cachix
+[2020-02-13 12:04:14,681] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:lordmauve/pgzero
+[2020-02-13 12:04:14,681] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:mykiwi/symfony-bootstrapped
+[2020-02-13 12:04:14,681] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:rivafarabi/deckboard
+[2020-02-13 12:04:14,681] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:rivafarabi/deckboard
+[2020-02-13 12:04:14,681] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:plangrid/flask-rebar
+[2020-02-13 12:04:14,681] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:silvandeleemput/memcnn
+[2020-02-13 12:04:16,270] root - INFO - Executed SQL query. Affected row(s):-1
+[2020-02-13 12:04:16,303] urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-13 12:04:23,729] urllib3.connectionpool - DEBUG - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-13 12:04:23,734] root - INFO - Cursor: Y3Vyc29yOjEwMA== hasNextPage:True
+[2020-02-13 12:04:23,734] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:rohanray/next-fonts
+[2020-02-13 12:04:23,734] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:resloved/dots
+[2020-02-13 12:04:23,734] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:Vadorequest/serverless-with-next5-boilerplate
+[2020-02-13 12:04:23,734] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:aws-samples/aws-golden-ami-pipeline-sample
+[2020-02-13 12:04:23,735] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:coreui/coreui-angular
+[2020-02-13 12:04:23,735] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:bestRenekton/taoLand
+[2020-02-13 12:04:23,735] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:ceykmc/pytorch_model_summary
+[2020-02-13 12:04:23,735] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:Atcold/pytorch-PPUU
+[2020-02-13 12:04:23,735] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:microsoft/vscode-docs-authoring
+[2020-02-13 12:04:23,735] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:erikdubois/arcolinux-nemesis
+[2020-02-13 12:04:23,735] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:EssentialOpenSource/linux
+[2020-02-13 12:04:23,735] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:mikma/lxd-openwrt
+[2020-02-13 12:04:23,736] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:johnnyzhang1992/gushi_lite
+[2020-02-13 12:04:23,736] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:rahnumaa18/https-github.com-avramit-Instahack
+[2020-02-13 12:04:25,240] root - INFO - Executed SQL query. Affected row(s):-1
+[2020-02-13 12:04:25,275] urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-13 12:04:32,957] urllib3.connectionpool - DEBUG - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-13 12:04:32,964] root - INFO - Cursor: Y3Vyc29yOjE1MA== hasNextPage:True
+[2020-02-13 12:04:32,965] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:pythonprogramming-group/python_group
+[2020-02-13 12:04:32,965] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:pythonprogramming-group/python_group
+[2020-02-13 12:04:32,965] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:fullcalendar/fullcalendar-site-static
+[2020-02-13 12:04:32,965] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:The-Evil-Pickle/Replay-the-Spire
+[2020-02-13 12:04:32,965] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:djrobstep/logx
+[2020-02-13 12:04:32,965] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:EssentialOpenSource/kernel-manifest
+[2020-02-13 12:04:32,965] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:EssentialOpenSource/kernel-manifest
+[2020-02-13 12:04:32,965] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:woytu/UseNotes-vuepress
+[2020-02-13 12:04:32,966] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:Aleksoid1978/VideoRenderer
+[2020-02-13 12:04:32,966] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:awsdocs/aws-codebuild-user-guide
+[2020-02-13 12:04:32,966] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:jefrydco/nuxt-pwa-vuetify-starter
+[2020-02-13 12:04:32,966] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:JackD83/PyMenu
+[2020-02-13 12:04:32,966] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:JingyuHe/XBART
+[2020-02-13 12:04:32,966] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:awsdocs/amazon-sqs-developer-guide
+[2020-02-13 12:04:32,966] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:AlexGyver/LEDcube
+[2020-02-13 12:04:32,966] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:mrantonwinter/lawndroid
+[2020-02-13 12:04:32,967] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:mrantonwinter/lawndroid
+[2020-02-13 12:04:32,967] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:tower1229/frontend-weekly
+[2020-02-13 12:04:32,967] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:tower1229/frontend-weekly
+[2020-02-13 12:04:32,967] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:Azure/azure-uamqp-python
+[2020-02-13 12:04:32,967] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:osamu38/react-ssr-starter
+[2020-02-13 12:04:32,967] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:tarsius/frameshot
+[2020-02-13 12:04:32,967] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:VadimDez/Counter-Strike-JS
+[2020-02-13 12:04:32,967] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:franrruiz/shopper-src
+[2020-02-13 12:04:32,967] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:kjb085/MMM-Reddit
+[2020-02-13 12:04:32,968] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:marbl/meryl
+[2020-02-13 12:04:32,968] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:RelaJet/Job-Description
+[2020-02-13 12:04:32,968] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:RelaJet/Job-Description
+[2020-02-13 12:04:34,598] root - INFO - Executed SQL query. Affected row(s):-1
+[2020-02-13 12:04:34,630] urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-13 12:04:41,802] urllib3.connectionpool - DEBUG - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-13 12:04:41,810] root - INFO - Cursor: Y3Vyc29yOjIwMA== hasNextPage:True
+[2020-02-13 12:04:41,810] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:NLeSC/XAI
+[2020-02-13 12:04:41,810] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:jheling/freeathome
+[2020-02-13 12:04:41,810] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:ejnshtein/vk-to-telegram
+[2020-02-13 12:04:41,810] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:Ultimate-Blocks/Ultimate-Blocks
+[2020-02-13 12:04:41,811] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:Esri/cim-spec
+[2020-02-13 12:04:41,811] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:jparkie/Programming-Notebook
+[2020-02-13 12:04:41,811] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:laymain/kafka-tool-avro
+[2020-02-13 12:04:41,811] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:EssentialOpenSource/qcacld-3.0
+[2020-02-13 12:04:41,811] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:EssentialOpenSource/qcacld-3.0
+[2020-02-13 12:04:41,811] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:Arusekk/pwntools
+[2020-02-13 12:04:41,811] root - WARNING - TypeError. Null field found. key:('commitnum', 'history') repo:Arusekk/pwntools
+[2020-02-13 12:04:41,811] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:mvysny/beverage-buddy-vok
+[2020-02-13 12:04:41,811] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:EssentialOpenSource/qca-wifi-host-cmn
+[2020-02-13 12:04:41,812] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:EssentialOpenSource/qca-wifi-host-cmn
+[2020-02-13 12:04:41,812] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:criciumadev/criciumadev.com.br
+[2020-02-13 12:04:41,812] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:rangyu/TIL
+[2020-02-13 12:04:41,812] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:rangyu/TIL
+[2020-02-13 12:04:41,812] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:ozguryazilimas/telve4
+[2020-02-13 12:04:41,812] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:tifa9fan/JavaEE-Interview
+[2020-02-13 12:04:41,812] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:tifa9fan/JavaEE-Interview
+[2020-02-13 12:04:41,812] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:EssentialOpenSource/fw-api
+[2020-02-13 12:04:41,813] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:EssentialOpenSource/fw-api
+[2020-02-13 12:04:41,813] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:juanparati/Sendinblue
+[2020-02-13 12:04:41,813] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:svakulenk0/semantic_coherence
+[2020-02-13 12:04:41,813] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:jnxyp/Starsector-Translation
+[2020-02-13 12:04:41,813] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:yanyue404/blog
+[2020-02-13 12:04:41,813] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:yanyue404/blog
+[2020-02-13 12:04:41,813] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:rileytestut/NESDeltaCore
+[2020-02-13 12:04:41,813] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:rileytestut/NESDeltaCore
+[2020-02-13 12:04:41,814] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:rewe-digital-incubator/composer
+[2020-02-13 12:04:43,392] root - INFO - Executed SQL query. Affected row(s):-1
+[2020-02-13 12:04:43,432] urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-13 12:04:53,746] urllib3.connectionpool - DEBUG - https://api.github.com:443 "POST /graphql HTTP/1.1" 502 None
+[2020-02-13 12:04:53,749] root - ERROR - Error graphql response from endpoint. Check logs.
+{
+    "data": null,
+    "errors": [
+        {
+            "message": "Something went wrong while executing your query. This may be the result of a timeout, or it could be a GitHub bug. Please include `C666:3986:8E595F:1186A52:5E4581BD` when reporting this issue."
+        }
+    ]
+}
+[2020-02-13 12:05:53,812] urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-13 12:06:01,877] urllib3.connectionpool - DEBUG - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-13 12:06:01,883] root - INFO - Cursor: Y3Vyc29yOjI1MA== hasNextPage:True
+[2020-02-13 12:06:01,883] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:vctrchu/Rival
+[2020-02-13 12:06:01,883] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:GSA/search-gov
+[2020-02-13 12:06:01,883] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:GSA/search-gov
+[2020-02-13 12:06:01,883] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:multiscale/muscle3
+[2020-02-13 12:06:01,883] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:ghinks/mod-dep-mod
+[2020-02-13 12:06:01,883] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:4meta5/notes
+[2020-02-13 12:06:01,884] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:MaigoAkisame/enumerate-expressions
+[2020-02-13 12:06:01,884] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:YosysHQ/yosys-tests
+[2020-02-13 12:06:01,884] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:igorseabra4/HeroesPowerPlant
+[2020-02-13 12:06:01,884] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:awsdocs/amazon-mq-developer-guide
+[2020-02-13 12:06:01,884] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:RattyDAVE/alpine-multics
+[2020-02-13 12:06:01,884] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:dagraham/etm-dgraham
+[2020-02-13 12:06:01,884] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:amagovpt/docs.dados.gov.pt
+[2020-02-13 12:06:01,884] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:amagovpt/docs.dados.gov.pt
+[2020-02-13 12:06:01,885] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:NetTopologySuite/NetTopologySuite.IO.ShapeFile
+[2020-02-13 12:06:01,885] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:timschofield/webERP-svn
+[2020-02-13 12:06:01,885] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:hackclub/dns
+[2020-02-13 12:06:01,885] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:avramovic/breadly
+[2020-02-13 12:06:01,885] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:RuleWorld/BNGTutorial
+[2020-02-13 12:06:01,885] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:RuleWorld/BNGTutorial
+[2020-02-13 12:06:01,885] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:Melipayamak/melipayamak-Csharp
+[2020-02-13 12:06:01,885] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:ailice001/nodejs_GraphQLFor_es-mysql
+[2020-02-13 12:06:01,886] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:maxima-project-on-github/maxima-packages
+[2020-02-13 12:06:01,886] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:Simicart/pwacommerce
+[2020-02-13 12:06:03,427] root - INFO - Executed SQL query. Affected row(s):-1
+[2020-02-13 12:06:03,495] urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-13 12:06:10,307] urllib3.connectionpool - DEBUG - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-13 12:06:10,312] root - INFO - Cursor: Y3Vyc29yOjMwMA== hasNextPage:True
+[2020-02-13 12:06:10,313] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:underlx/data
+[2020-02-13 12:06:10,313] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:franciscofranco/HomeAgenda-translations
+[2020-02-13 12:06:10,313] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:franciscofranco/HomeAgenda-translations
+[2020-02-13 12:06:10,313] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:MurakumoIndustries/Actress
+[2020-02-13 12:06:10,313] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:robertke/httpclient
+[2020-02-13 12:06:10,313] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:cherti/ibutex
+[2020-02-13 12:06:10,313] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:IronsDu/protoc-gen-gayrpc
+[2020-02-13 12:06:10,313] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:darshanbhatta/Fortnite-Dropper
+[2020-02-13 12:06:10,314] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:darshanbhatta/Fortnite-Dropper
+[2020-02-13 12:06:10,314] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:Xnco/GameDevStory
+[2020-02-13 12:06:10,314] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:Xnco/GameDevStory
+[2020-02-13 12:06:10,314] root - WARNING - TypeError. Null field found. key:('commitnum', 'history') repo:Xnco/GameDevStory
+[2020-02-13 12:06:10,314] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:dimstudio/visual-inspection-tool
+[2020-02-13 12:06:10,314] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:wfhu/newbie-book
+[2020-02-13 12:06:10,314] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:wfhu/newbie-book
+[2020-02-13 12:06:10,315] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:Pectojin/transmission-openvpn
+[2020-02-13 12:06:10,315] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:alswl/toodledo_a
+[2020-02-13 12:06:10,315] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:niermann/holoaverage
+[2020-02-13 12:06:10,315] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:tmpim/KristPay
+[2020-02-13 12:06:10,315] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:tmpim/KristPay
+[2020-02-13 12:06:10,315] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:goravbhootra/Phoenix-deployment
+[2020-02-13 12:06:10,315] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:zchen24/tutorial
+[2020-02-13 12:06:10,315] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:EkoCommunications/EkoMessagingSDKDocs
+[2020-02-13 12:06:10,315] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:EkoCommunications/EkoMessagingSDKDocs
+[2020-02-13 12:06:10,315] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:AngelLiang/python-web-test
+[2020-02-13 12:06:10,316] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:FrankD412/frankd412.github.io
+[2020-02-13 12:06:10,316] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:pwmarcz/zeus
+[2020-02-13 12:06:10,316] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:L0Lock/OCModerationScript
+[2020-02-13 12:06:10,316] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:vtt3-research/konantech
+[2020-02-13 12:06:10,316] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:QUIQQER/rabbitmqserver
+[2020-02-13 12:06:10,316] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:VKCOM/vkui-styleguide
+[2020-02-13 12:06:10,316] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:VKCOM/vkui-styleguide
+[2020-02-13 12:06:11,790] root - INFO - Executed SQL query. Affected row(s):-1
+[2020-02-13 12:06:11,825] urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-13 12:06:18,370] urllib3.connectionpool - DEBUG - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-13 12:06:18,373] root - INFO - Cursor: Y3Vyc29yOjM1MA== hasNextPage:True
+[2020-02-13 12:06:18,373] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:mijora/omniva-woocommerce
+[2020-02-13 12:06:18,373] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:staccx/bitshift-css-in-js
+[2020-02-13 12:06:18,373] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:iambekzod/DrawSketch
+[2020-02-13 12:06:18,373] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:fortress-shell/fortress-shell
+[2020-02-13 12:06:18,373] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:fortress-shell/fortress-shell
+[2020-02-13 12:06:18,373] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:liukefeng2008/novel
+[2020-02-13 12:06:18,373] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:pgurazada/Talks
+[2020-02-13 12:06:18,373] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:TAMS-Group/mtc_pour
+[2020-02-13 12:06:18,373] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:TAMS-Group/mtc_pour
+[2020-02-13 12:06:18,373] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:ironhack-labs/lab-advance-querying-mongo
+[2020-02-13 12:06:18,373] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:ironhack-labs/lab-advance-querying-mongo
+[2020-02-13 12:06:18,373] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:cBioPortal/clinical-data-dictionary
+[2020-02-13 12:06:18,373] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:cryptozeny/MinerGuide
+[2020-02-13 12:06:18,374] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:WatchCoins/blog.watchcoins.net
+[2020-02-13 12:06:18,374] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:WatchCoins/blog.watchcoins.net
+[2020-02-13 12:06:18,374] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:yorku-ausml/lab
+[2020-02-13 12:06:18,374] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:yorku-ausml/lab
+[2020-02-13 12:06:18,374] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:andrewsanchez/andrewsanchez.github.io
+[2020-02-13 12:06:18,374] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:andrewsanchez/andrewsanchez.github.io
+[2020-02-13 12:06:18,374] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:Karrotts/Random-Icon-Generator
+[2020-02-13 12:06:18,374] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:jack1142/choco-auto
+[2020-02-13 12:06:18,374] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:hurenzhan/CodeData
+[2020-02-13 12:06:18,374] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:danheck/gpt
+[2020-02-13 12:06:18,374] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:rain-wang/kernel-linus-master
+[2020-02-13 12:06:18,374] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:data4development/dataworkbench-frontend
+[2020-02-13 12:06:18,374] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:hrysd/memo
+[2020-02-13 12:06:18,374] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:hrysd/memo
+[2020-02-13 12:06:18,374] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:nathants/cli-aws
+[2020-02-13 12:06:18,375] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:killzoner/bitbucket-branch-source-plugin
+[2020-02-13 12:06:18,375] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:killzoner/bitbucket-branch-source-plugin
+[2020-02-13 12:06:18,375] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:nikkyjain/nikkyjain.github.io
+[2020-02-13 12:06:18,375] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:nikkyjain/nikkyjain.github.io
+[2020-02-13 12:06:18,375] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:vexparadox/MUDEnet
+[2020-02-13 12:06:18,375] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:briankoser/sfc-listeners-guide
+[2020-02-13 12:06:18,375] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:oscar-martin/tail_folders
+[2020-02-13 12:06:18,375] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:marony/rust3d
+[2020-02-13 12:06:18,375] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:awjenson/finalProject
+[2020-02-13 12:06:18,375] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:phanan/vuebus
+[2020-02-13 12:06:18,375] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:phanan/vuebus
+[2020-02-13 12:06:18,375] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:mTresk/android_packages_apps_OpenDelta
+[2020-02-13 12:06:18,375] root - WARNING - TypeError. Null field found. key:('commitnum', 'history') repo:mTresk/android_packages_apps_OpenDelta
+[2020-02-13 12:06:18,375] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:rbutenuth/fpl
+[2020-02-13 12:06:18,375] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:lbrn/new-jekyll-lbrn
+[2020-02-13 12:06:18,375] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:cschramm/irda
+[2020-02-13 12:06:18,375] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:kyasu/android_device_samsung_msm8974-common
+[2020-02-13 12:06:18,376] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:kyasu/android_device_samsung_msm8974-common
+[2020-02-13 12:06:18,376] root - WARNING - TypeError. Null field found. key:('commitnum', 'history') repo:kyasu/android_device_samsung_msm8974-common
+[2020-02-13 12:06:18,376] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:Jasmeet181/mediaportal-ru-logos
+[2020-02-13 12:06:18,376] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:Jasmeet181/mediaportal-ru-logos
+[2020-02-13 12:06:18,376] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:p47t/adafruit-ble-sniffer-golang
+[2020-02-13 12:06:19,849] root - INFO - Executed SQL query. Affected row(s):-1
+[2020-02-13 12:06:19,887] urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-13 12:06:27,535] urllib3.connectionpool - DEBUG - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-13 12:06:27,538] root - INFO - Cursor: Y3Vyc29yOjQwMA== hasNextPage:True
+[2020-02-13 12:06:27,538] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:vladimirstoyanov/PythonOOP
+[2020-02-13 12:06:27,538] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:vladimirstoyanov/PythonOOP
+[2020-02-13 12:06:27,538] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:cran/CholWishart
+[2020-02-13 12:06:27,538] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:tyrylu/feel-the-streets
+[2020-02-13 12:06:27,539] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:jwillia3/ml
+[2020-02-13 12:06:27,539] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:diaphon/dial
+[2020-02-13 12:06:27,539] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:johnnyBira/responsive-props
+[2020-02-13 12:06:27,539] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:TachyonicProject/infinitystone
+[2020-02-13 12:06:27,539] root - WARNING - TypeError. Null field found. key:('commitnum', 'history') repo:TachyonicProject/infinitystone
+[2020-02-13 12:06:27,539] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:StartApp-SDK/StartAppSDK
+[2020-02-13 12:06:27,539] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:whatnick/ATM90E26_Featherwing_KiCAD
+[2020-02-13 12:06:27,539] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:xavierauana/cms
+[2020-02-13 12:06:27,539] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:xavierauana/cms
+[2020-02-13 12:06:27,539] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:hkchengrex/homepage
+[2020-02-13 12:06:27,539] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:wyfang/CSGO-Config
+[2020-02-13 12:06:27,539] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:wyfang/CSGO-Config
+[2020-02-13 12:06:27,539] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:sandeep-sm/Bayesian-surprise-for-video
+[2020-02-13 12:06:27,539] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:sandeep-sm/Bayesian-surprise-for-video
+[2020-02-13 12:06:27,539] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:amalhtait/NormAFE
+[2020-02-13 12:06:27,539] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:jklf5/Spider
+[2020-02-13 12:06:27,540] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:svhawks/react-native-android-sharer
+[2020-02-13 12:06:27,540] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:mfrashad/mfrashad.github.io
+[2020-02-13 12:06:27,540] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:chrismachado/N-queen-problem-IA
+[2020-02-13 12:06:27,540] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:HaoJuUESTC/HaoJuUESTC.github.io
+[2020-02-13 12:06:27,540] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:relaton/relaton-iso
+[2020-02-13 12:06:27,540] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:daiyuqing/daiyuqing.github.io
+[2020-02-13 12:06:27,540] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:daiyuqing/daiyuqing.github.io
+[2020-02-13 12:06:27,540] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:AndreynRosa/senac-dd-projetos
+[2020-02-13 12:06:27,540] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:diegosarzi/javascript
+[2020-02-13 12:06:27,540] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:brentsimmons/inessential.com
+[2020-02-13 12:06:27,540] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:atweiden/ttyfiles
+[2020-02-13 12:06:27,540] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:mcansh/eslint-config-mcansh
+[2020-02-13 12:06:27,540] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:mcansh/eslint-config-mcansh
+[2020-02-13 12:06:27,540] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:Sagenda/sagenda-calendar-wp
+[2020-02-13 12:06:27,540] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:pniedzielski/harrison-ford.pl
+[2020-02-13 12:06:27,540] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:pniedzielski/harrison-ford.pl
+[2020-02-13 12:06:27,540] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:zummenix/dotfiles
+[2020-02-13 12:06:27,541] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:zummenix/dotfiles
+[2020-02-13 12:06:27,541] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:petersenpeter/KilosortWrapper
+[2020-02-13 12:06:27,541] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:loopce/loopkey-sample-android
+[2020-02-13 12:06:27,541] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:nexoe/Wishlist
+[2020-02-13 12:06:27,541] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:nexoe/Wishlist
+[2020-02-13 12:06:27,541] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:ashwinvis/ashwinvis.github.io
+[2020-02-13 12:06:27,541] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:michaelrigart/dotfiles
+[2020-02-13 12:06:27,541] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:michaelrigart/dotfiles
+[2020-02-13 12:06:27,541] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:Libbum/AxiomaticSemantics
+[2020-02-13 12:06:27,541] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:MestafaKamal/ClavierLatinKabyle
+[2020-02-13 12:06:27,541] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:MestafaKamal/ClavierLatinKabyle
+[2020-02-13 12:06:29,052] root - INFO - Executed SQL query. Affected row(s):-1
+[2020-02-13 12:06:29,084] urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-13 12:06:32,685] urllib3.connectionpool - DEBUG - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-13 12:06:32,689] root - INFO - Cursor: Y3Vyc29yOjQyMw== hasNextPage:False
+[2020-02-13 12:06:32,689] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:vibe-d/vibe-compat
+[2020-02-13 12:06:32,689] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:Tibec/UltimateStreamManager
+[2020-02-13 12:06:32,689] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:javaLuo/blogSource
+[2020-02-13 12:06:32,689] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:ccmichaelis/coopersfirstwebpage
+[2020-02-13 12:06:32,689] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:samanmunikar/DBA
+[2020-02-13 12:06:32,690] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:samanmunikar/DBA
+[2020-02-13 12:06:32,690] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:hamzayogurtcuoglu/Bil102-C-Programming
+[2020-02-13 12:06:32,690] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:aykay76/canode
+[2020-02-13 12:06:32,690] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:zneroravi/sjbsvm
+[2020-02-13 12:06:32,690] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:Ayrtat/my_git
+[2020-02-13 12:06:32,690] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:IFS-Web/HSR.WED3.Template.Angular
+[2020-02-13 12:06:32,690] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:MLG-Fortress/CustomItemRecipes
+[2020-02-13 12:06:33,397] root - INFO - Executed SQL query. Affected row(s):-1
+[2020-02-13 12:06:33,455] root - INFO - Reached end of GitHub query response. New created start date:2018-02-26
+[2020-02-13 12:06:33,455] root - INFO - --------------------
+[2020-02-13 12:06:33,457] urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-13 12:06:39,168] urllib3.connectionpool - DEBUG - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-13 12:06:39,174] root - INFO - Repository Count: 713
+[2020-02-13 12:06:39,174] root - INFO - Cursor: Y3Vyc29yOjUw hasNextPage:True
+[2020-02-13 12:06:39,175] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:30-seconds/30-seconds-of-css
+[2020-02-13 12:06:39,175] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:andrew--r/frontend-case-studies
+[2020-02-13 12:06:39,175] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:andrew--r/frontend-case-studies
+[2020-02-13 12:06:39,175] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:andrew--r/frontend-case-studies
+[2020-02-13 12:06:39,175] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:alibaba/GCanvas
+[2020-02-13 12:06:39,175] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:zorlan/skycaiji
+[2020-02-13 12:06:39,175] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:zorlan/skycaiji
+[2020-02-13 12:06:39,175] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:BiBoyang/GoldHouse-for-iOS
+[2020-02-13 12:06:39,176] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:sjvasquez/handwriting-synthesis
+[2020-02-13 12:06:39,176] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:sjvasquez/handwriting-synthesis
+[2020-02-13 12:06:39,176] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:vuejs/jsx
+[2020-02-13 12:06:39,176] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:jest-community/awesome-jest
+[2020-02-13 12:06:39,176] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:zslucky/awesome-AI-books
+[2020-02-13 12:06:39,176] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:madalinabuzau/tensorflow-eager-tutorials
+[2020-02-13 12:06:39,176] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:hunters-forge/OSSEM
+[2020-02-13 12:06:39,176] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:Ph055a/OSINT_Collection
+[2020-02-13 12:06:39,176] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:Ph055a/OSINT_Collection
+[2020-02-13 12:06:39,177] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:KATT/shop
+[2020-02-13 12:06:39,177] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:kuaifan/eeui
+[2020-02-13 12:06:39,177] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:satwikkansal/python_blockchain_app
+[2020-02-13 12:06:40,665] root - INFO - Executed SQL query. Affected row(s):-1
+[2020-02-13 12:06:40,698] urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-13 12:06:49,830] urllib3.connectionpool - DEBUG - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-13 12:06:49,835] root - INFO - Cursor: Y3Vyc29yOjEwMA== hasNextPage:True
+[2020-02-13 12:06:49,835] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:cachix/cachix
+[2020-02-13 12:06:49,835] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:lordmauve/pgzero
+[2020-02-13 12:06:49,835] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:stestagg/pytubes
+[2020-02-13 12:06:49,836] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:mykiwi/symfony-bootstrapped
+[2020-02-13 12:06:49,836] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:Perflyst/PiHoleBlocklist
+[2020-02-13 12:06:49,836] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:rivafarabi/deckboard
+[2020-02-13 12:06:49,836] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:rivafarabi/deckboard
+[2020-02-13 12:06:49,836] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:plangrid/flask-rebar
+[2020-02-13 12:06:49,836] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:silvandeleemput/memcnn
+[2020-02-13 12:06:49,836] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:rohanray/next-fonts
+[2020-02-13 12:06:49,836] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:resloved/dots
+[2020-02-13 12:06:49,837] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:Vadorequest/serverless-with-next5-boilerplate
+[2020-02-13 12:06:49,837] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:aws-samples/aws-golden-ami-pipeline-sample
+[2020-02-13 12:06:49,837] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:coreui/coreui-angular
+[2020-02-13 12:06:49,837] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:bestRenekton/taoLand
+[2020-02-13 12:06:51,312] root - INFO - Executed SQL query. Affected row(s):-1
+[2020-02-13 12:06:51,345] urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-13 12:06:59,490] urllib3.connectionpool - DEBUG - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-13 12:06:59,496] root - INFO - Cursor: Y3Vyc29yOjE1MA== hasNextPage:True
+[2020-02-13 12:06:59,496] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:ceykmc/pytorch_model_summary
+[2020-02-13 12:06:59,497] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:Nadyatjia/BotLinePython3
+[2020-02-13 12:06:59,497] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:GeoscienceAustralia/dea-notebooks
+[2020-02-13 12:06:59,497] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:kevin-crook-ucb/ucb_w205_crook_supplement
+[2020-02-13 12:06:59,497] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:Atcold/pytorch-PPUU
+[2020-02-13 12:06:59,497] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:microsoft/vscode-docs-authoring
+[2020-02-13 12:06:59,497] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:xinali/articles
+[2020-02-13 12:06:59,497] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:xinali/articles
+[2020-02-13 12:06:59,498] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:ledermann/docker-vue
+[2020-02-13 12:06:59,498] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:erikdubois/arcolinux-nemesis
+[2020-02-13 12:06:59,498] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:EssentialOpenSource/linux
+[2020-02-13 12:06:59,498] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:mikma/lxd-openwrt
+[2020-02-13 12:06:59,498] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:johnnyzhang1992/gushi_lite
+[2020-02-13 12:06:59,498] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:rolling-scopes-school/docs
+[2020-02-13 12:06:59,498] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:AlisProject/serverless-application
+[2020-02-13 12:06:59,498] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:rahnumaa18/https-github.com-avramit-Instahack
+[2020-02-13 12:06:59,498] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:pythonprogramming-group/python_group
+[2020-02-13 12:06:59,499] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:pythonprogramming-group/python_group
+[2020-02-13 12:07:00,885] root - INFO - Executed SQL query. Affected row(s):-1
+[2020-02-13 12:07:00,920] urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-13 12:07:07,722] urllib3.connectionpool - DEBUG - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-13 12:07:07,727] root - INFO - Cursor: Y3Vyc29yOjIwMA== hasNextPage:True
+[2020-02-13 12:07:07,728] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:fullcalendar/fullcalendar-site-static
+[2020-02-13 12:07:07,728] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:The-Evil-Pickle/Replay-the-Spire
+[2020-02-13 12:07:07,728] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:djrobstep/logx
+[2020-02-13 12:07:07,728] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:EssentialOpenSource/kernel-manifest
+[2020-02-13 12:07:07,728] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:EssentialOpenSource/kernel-manifest
+[2020-02-13 12:07:07,728] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:woytu/UseNotes-vuepress
+[2020-02-13 12:07:07,728] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:Aleksoid1978/VideoRenderer
+[2020-02-13 12:07:07,728] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:fundamentalsofdocker/labs
+[2020-02-13 12:07:07,729] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:awsdocs/aws-codebuild-user-guide
+[2020-02-13 12:07:07,729] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:jefrydco/nuxt-pwa-vuetify-starter
+[2020-02-13 12:07:07,729] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:JackD83/PyMenu
+[2020-02-13 12:07:07,729] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:JingyuHe/XBART
+[2020-02-13 12:07:07,729] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:roundcube/roundcubemail-docker
+[2020-02-13 12:07:07,729] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:awsdocs/amazon-sqs-developer-guide
+[2020-02-13 12:07:07,729] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:awsdocs/aws-codecommit-user-guide
+[2020-02-13 12:07:07,729] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:AlexGyver/LEDcube
+[2020-02-13 12:07:07,730] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:mrantonwinter/lawndroid
+[2020-02-13 12:07:07,730] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:mrantonwinter/lawndroid
+[2020-02-13 12:07:07,730] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:EDePasquale/DoubletDecon
+[2020-02-13 12:07:07,730] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:tower1229/frontend-weekly
+[2020-02-13 12:07:07,730] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:tower1229/frontend-weekly
+[2020-02-13 12:07:07,730] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:Azure/azure-uamqp-python
+[2020-02-13 12:07:09,158] root - INFO - Executed SQL query. Affected row(s):-1
+[2020-02-13 12:07:09,191] urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-13 12:07:17,055] urllib3.connectionpool - DEBUG - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-13 12:07:17,060] root - INFO - Cursor: Y3Vyc29yOjI1MA== hasNextPage:True
+[2020-02-13 12:07:17,060] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:osamu38/react-ssr-starter
+[2020-02-13 12:07:17,060] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:tarsius/frameshot
+[2020-02-13 12:07:17,060] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:vitelabs/website
+[2020-02-13 12:07:17,060] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:VadimDez/Counter-Strike-JS
+[2020-02-13 12:07:17,060] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:victorgau/Python_Basics
+[2020-02-13 12:07:17,060] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:OCFL/spec
+[2020-02-13 12:07:17,060] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:franrruiz/shopper-src
+[2020-02-13 12:07:17,061] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:kjb085/MMM-Reddit
+[2020-02-13 12:07:17,061] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:marbl/meryl
+[2020-02-13 12:07:17,061] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:RelaJet/Job-Description
+[2020-02-13 12:07:17,061] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:RelaJet/Job-Description
+[2020-02-13 12:07:17,061] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:NLeSC/XAI
+[2020-02-13 12:07:17,061] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:jheling/freeathome
+[2020-02-13 12:07:17,061] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:ejnshtein/vk-to-telegram
+[2020-02-13 12:07:17,061] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:Ultimate-Blocks/Ultimate-Blocks
+[2020-02-13 12:07:17,062] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:Esri/cim-spec
+[2020-02-13 12:07:17,062] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:jparkie/Programming-Notebook
+[2020-02-13 12:07:17,062] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:saltstack-formulas/systemd-formula
+[2020-02-13 12:07:17,062] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:mapoga/nuke-vector-matrix
+[2020-02-13 12:07:17,062] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:wkulhanek/docker-openshift-gitea
+[2020-02-13 12:07:17,062] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:tungstenfabric/website
+[2020-02-13 12:07:17,062] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:squaremo/kubeyaml
+[2020-02-13 12:07:17,062] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:laymain/kafka-tool-avro
+[2020-02-13 12:07:17,062] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:ptuchik/billing
+[2020-02-13 12:07:17,063] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:edx/frontend-template-application
+[2020-02-13 12:07:17,063] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:ztoben/plex-viewer
+[2020-02-13 12:07:18,585] root - INFO - Executed SQL query. Affected row(s):-1
+[2020-02-13 12:07:18,620] urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-13 12:07:26,387] urllib3.connectionpool - DEBUG - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-13 12:07:26,396] root - INFO - Cursor: Y3Vyc29yOjMwMA== hasNextPage:True
+[2020-02-13 12:07:26,396] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:EssentialOpenSource/qcacld-3.0
+[2020-02-13 12:07:26,396] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:EssentialOpenSource/qcacld-3.0
+[2020-02-13 12:07:26,396] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:Wanty5883/Titanfall2
+[2020-02-13 12:07:26,397] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:Wanty5883/Titanfall2
+[2020-02-13 12:07:26,397] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:AXErunners/axe-seeder
+[2020-02-13 12:07:26,397] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:AXErunners/axe-seeder
+[2020-02-13 12:07:26,397] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:Arusekk/pwntools
+[2020-02-13 12:07:26,397] root - WARNING - TypeError. Null field found. key:('commitnum', 'history') repo:Arusekk/pwntools
+[2020-02-13 12:07:26,397] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:mvysny/beverage-buddy-vok
+[2020-02-13 12:07:26,397] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:EssentialOpenSource/qca-wifi-host-cmn
+[2020-02-13 12:07:26,397] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:EssentialOpenSource/qca-wifi-host-cmn
+[2020-02-13 12:07:26,397] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:criciumadev/criciumadev.com.br
+[2020-02-13 12:07:26,398] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:rangyu/TIL
+[2020-02-13 12:07:26,398] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:rangyu/TIL
+[2020-02-13 12:07:26,398] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:ozguryazilimas/telve4
+[2020-02-13 12:07:26,398] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:tifa9fan/JavaEE-Interview
+[2020-02-13 12:07:26,398] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:tifa9fan/JavaEE-Interview
+[2020-02-13 12:07:26,398] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:KashCherry/Timer-Fix-plugin
+[2020-02-13 12:07:26,398] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:choffmeister/yarn-workspace-isolator
+[2020-02-13 12:07:26,398] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:EssentialOpenSource/fw-api
+[2020-02-13 12:07:26,398] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:EssentialOpenSource/fw-api
+[2020-02-13 12:07:26,399] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:juanparati/Sendinblue
+[2020-02-13 12:07:26,399] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:svakulenk0/semantic_coherence
+[2020-02-13 12:07:26,399] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:jnxyp/Starsector-Translation
+[2020-02-13 12:07:26,399] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:yanyue404/blog
+[2020-02-13 12:07:26,399] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:yanyue404/blog
+[2020-02-13 12:07:26,399] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:rileytestut/NESDeltaCore
+[2020-02-13 12:07:26,399] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:rileytestut/NESDeltaCore
+[2020-02-13 12:07:26,399] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:rewe-digital-incubator/composer
+[2020-02-13 12:07:27,846] root - INFO - Executed SQL query. Affected row(s):-1
+[2020-02-13 12:07:27,882] urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-13 12:07:35,961] urllib3.connectionpool - DEBUG - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-13 12:07:35,966] root - INFO - Cursor: Y3Vyc29yOjM1MA== hasNextPage:True
+[2020-02-13 12:07:35,966] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:vctrchu/Rival
+[2020-02-13 12:07:35,966] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:GSA/search-gov
+[2020-02-13 12:07:35,966] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:GSA/search-gov
+[2020-02-13 12:07:35,966] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:honestbee/logrotate
+[2020-02-13 12:07:35,967] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:devlev/tc
+[2020-02-13 12:07:35,967] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:devlev/tc
+[2020-02-13 12:07:35,967] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:kungtiger/central-color-palette
+[2020-02-13 12:07:35,967] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:OpenLD/Astra19.2-Full-Transparent
+[2020-02-13 12:07:35,967] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:OpenLD/Astra19.2-Full-Transparent
+[2020-02-13 12:07:35,967] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:multiscale/muscle3
+[2020-02-13 12:07:35,967] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:PINPAL/pinpal.github.io
+[2020-02-13 12:07:35,967] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:PINPAL/pinpal.github.io
+[2020-02-13 12:07:35,967] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:irixjp/katacoda-scenarios
+[2020-02-13 12:07:35,968] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:ghinks/mod-dep-mod
+[2020-02-13 12:07:35,968] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:4meta5/notes
+[2020-02-13 12:07:35,968] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:MaigoAkisame/enumerate-expressions
+[2020-02-13 12:07:35,968] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:kookmin-sw/2018-cap1-2
+[2020-02-13 12:07:35,968] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:YosysHQ/yosys-tests
+[2020-02-13 12:07:35,968] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:igorseabra4/HeroesPowerPlant
+[2020-02-13 12:07:35,968] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:awsdocs/amazon-mq-developer-guide
+[2020-02-13 12:07:35,968] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:RattyDAVE/alpine-multics
+[2020-02-13 12:07:35,968] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:dagraham/etm-dgraham
+[2020-02-13 12:07:35,969] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:digidem/mapeo-core
+[2020-02-13 12:07:35,969] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:amagovpt/docs.dados.gov.pt
+[2020-02-13 12:07:35,969] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:amagovpt/docs.dados.gov.pt
+[2020-02-13 12:07:35,969] root - WARNING - AttributeError. Null field found. key:primaryLanguage repo:robertdebock/ansible-role-mssql
+[2020-02-13 12:07:35,969] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:NetTopologySuite/NetTopologySuite.IO.ShapeFile
+[2020-02-13 12:07:35,969] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:GabLeRoux/rails-webpacker-scss-example
+[2020-02-13 12:07:35,969] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:chanchann/Linux_Programming
+[2020-02-13 12:07:35,969] root - WARNING - AttributeError. Null field found. key:readme_bytes repo:chanchann/Linux_Programming
+[2020-02-13 12:07:35,970] root - WARNING - AttributeError. Null field found. key:licenseInfo repo:timschofield/webERP-svn

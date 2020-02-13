@@ -25,7 +25,7 @@ PASSWORD = config.PASSWORD
 DRIVER = "{ODBC Driver 17 for SQL Server}"
 STATUS_MSG = "Executed SQL query. Affected row(s):{}"
 # Repo creation start, end, and last pushed. Format
-CREATED_START = arrow.get("2018-02-25")
+CREATED_START = arrow.get("2018-02-26")
 CREATED_END = arrow.get("2019-01-01")
 LAST_PUSHED = arrow.get("2020-01-01")
 MAXITEMS = 50

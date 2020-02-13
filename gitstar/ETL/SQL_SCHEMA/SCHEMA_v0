@@ -21,7 +21,7 @@ CREATE TABLE gs_table_v0(
 	issuelabels INT,
 	repositoryTopics INT,
 	licenseInfo NVARCHAR(2000),
-	homepageUrl NVARCHAR(200),
+	homepageUrl NVARCHAR(1000),
 	descriptionHTML NVARCHAR(2000),
 	hasIssuesEnabled BIT,
 	hasWikiEnabled BIT,

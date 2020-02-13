@@ -4,6 +4,7 @@ mytest.py
 sample.json
 *__pycache__/*
 */__pycache__/*
+*/gitstar/ETL/__pycache__/*
 btest.py
 venv/*
 tree.sh

@@ -147,13 +147,13 @@ class GitHubSearchQuery(GitHubGraphQLQuery):
                 # returns datetime.timedelta obj
                 delta = arrow.get(refuel_time) - arrow.utcnow()
                 extra = 10  # additional delay
-                print(
-                    "[{}] Out of fuel. Will resume in {} seconds.".format(
-                        arrow.now(), delta.seconds + extra
+                logging.info(
+                    "Out of fuel. Will resume in {} seconds.".format(
+                        delta.seconds + extra
                     )
                 )
                 sleep(delta.seconds + extra)
-                print("[{}] Refueled, resuming operation.".format(arrow.now()))
+                logging.info("Refueled, resuming operation.")
                 yield gen
             else:
                 yield gen

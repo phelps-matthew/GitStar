@@ -8,18 +8,27 @@
         transformation process.
 """
 import json
+import logging
 import arrow
-import pandas as pd
+import pyodbc
 from gitstar import config
 from gitstar.ETL import gqlquery
 from gitstar.ETL.gstransform import transform
 
-# Load GitHub PERSONAL ACCESS TOKEN
+# GitHub PERSONAL ACCESS TOKEN
 PAT = config.PAT
+# SQL db params
+SERVER = config.SERVER
+DATABASE = config.DATABASE
+USERNAME = config.USERNAME
+PASSWORD = config.PASSWORD
+DRIVER = "{ODBC Driver 17 for SQL Server}"
+STATUS_MSG = "Executed SQL query. Affected row(s):{}"
 # Repo creation start, end, and last pushed. Format
-CREATED_START = arrow.get("2015-01-01")
-CREATED_END = arrow.get("2016-01-01")
-LAST_PUSHED = arrow.get("2019-01-01")
+CREATED_START = arrow.get("2018-01-01")
+CREATED_END = arrow.get("2019-01-01")
+LAST_PUSHED = arrow.get("2020-01-01")
+MAXITEMS = 50
 
 
 def print_json(obj):
@@ -37,36 +46,75 @@ def print_pd(df):
 
 def main():
     """Execute ETL process"""
-    # Intialize root logger. Used by dependent modules 
+    global CREATED_START
+    # Intialize root logger here
     logging.basicConfig(
         filename="run_ETL.log",
         filemode="w",
         level=logging.DEBUG,
         format="[%(asctime)s] %(name)s - %(levelname)s - %(message)s",
     )
-    print(CREATED_START)
-    # fmt: off
-    import ipdb,os; ipdb.set_trace(context=5)  # noqa
-    # fmt: on
+    # Initialize sql db connection
+    cnxn = pyodbc.connect(
+        "DRIVER="
+        + DRIVER
+        + ";SERVER="
+        + SERVER
+        + ";PORT=1433;DATABASE="
+        + DATABASE
+        + ";UID="
+        + USERNAME
+        + ";PWD="
+        + PASSWORD
+    )
+    cursor = cnxn.cursor()
+    # Combine INSERT's into single query
+    cursor.fast_executemany = True
     # Construct graphql query response generator
-    #gql_generator = gqlquery.GitHubSearchQuery(PAT, maxitems=100).generator()
-    # pd_data = pd.DataFrame(data=clean_data)
-    # print_json(clean_data)
-    # print_pd(pd_data)
-
-    #print("[{}] ETL begin.".format(arrow.now()))
-    #while True:
-    #    try:
-    #        # Iterate generator. Normalize nested fields
-    #        clean_data = transform(next(gql_generator))
-    #        print_json(clean_data)
-    #    except StopIteration:
-    #        print(
-    #            "[{}] Reached end of query response. ETL done.".format(
-    #                arrow.now()
-    #            )
-    #        )
-    #        break
+    gql_generator = gqlquery.GitHubSearchQuery(
+        PAT,
+        created_start=CREATED_END,
+        created_end=CREATED_END,
+        last_pushed=LAST_PUSHED,
+        maxitems=MAXITEMS,
+    ).generator()
+    logging.info("-" * 50)
+    logging.info(
+        "Begin main(). Created start date:{}".format(
+            CREATED_START.format("YYYY-MM-DD")
+        )
+    )
+    # Loop until end date
+    delta = bool((CREATED_END - CREATED_START).seconds)
+    while not delta:
+        try:
+            # Iterate generator. Normalize nested fields.
+            clean_data = transform(next(gql_generator))
+            # Construct generator of dict values
+            value_list = (list(node.values()) for node in clean_data)
+            # Load SQL insert query
+            cursor.executemany(config.INSERT_QUERY, value_list)
+            logging.info(STATUS_MSG.format(cursor.rowcount))
+            # Send SQL query to db
+            cnxn.commit()
+            print("[{}] {} rows inserted into db".format(arrow.now(), MAXITEMS))
+        except StopIteration:
+            CREATED_START = CREATED_START.shift(days=+1)
+            gql_generator = gqlquery.GitHubSearchQuery(
+                PAT,
+                created_start=CREATED_END,
+                created_end=CREATED_END,
+                last_pushed=LAST_PUSHED,
+                maxitems=MAXITEMS,
+            ).generator()
+            delta = bool((CREATED_END - CREATED_START).seconds)
+            logging.info(
+                "Reached end of GitHub query response. New created start date:{}".format(
+                    CREATED_START.format("YYYY-MM-DD")
+                )
+            )
+            logging.info("-" * 20)
+    logging.info("Exit main()")
 
 
 if __name__ == "__main__":

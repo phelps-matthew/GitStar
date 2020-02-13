@@ -16,11 +16,10 @@ from gitstar.ETL.gstransform import transform
 
 # Load GitHub PERSONAL ACCESS TOKEN
 PAT = config.PAT
-# Repo creation start, end, and last pushed
-#CREATED_START = 
-#CREATED_END = 
-#LAST_PUSHED = 
-
+# Repo creation start, end, and last pushed. Format
+CREATED_START = arrow.get("2015-01-01")
+CREATED_END = arrow.get("2016-01-01")
+LAST_PUSHED = arrow.get("2019-01-01")
 
 
 def print_json(obj):
@@ -31,9 +30,7 @@ def print_json(obj):
 def print_pd(df):
     """Print pandas dataframe object"""
     with pd.option_context(
-            "display.max_rows", None,
-            "display.max_columns", None,
-            "max_colwidth", 6
+        "display.max_rows", None, "display.max_columns", None, "max_colwidth", 6
     ):
         print(df)
 
@@ -46,13 +43,10 @@ def main():
     clean_data = transform(raw_data)
     print_json(raw_data)
     print_json(clean_data)
-    # fmt: off
-    import ipdb,os; ipdb.set_trace(context=5)  # noqa
-    # fmt: on
 
-    #pd_data = pd.DataFrame(data=clean_data)
-    #print_json(clean_data)
-    #print_pd(pd_data)
+    # pd_data = pd.DataFrame(data=clean_data)
+    # print_json(clean_data)
+    # print_pd(pd_data)
 
     # print("[{}] ETL begin.".format(arrow.now()))
     # while True:

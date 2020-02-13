@@ -75,26 +75,40 @@ class GitHubSearchQuery(GitHubGraphQLQuery):
     """
 
     # Read in custom queries from text file
-    with open("GQL_QUERIES/QUERY") as qfile,\
-         open("GQL_QUERIES/TEST_QUERY") as tqfile:
+    with open("GQL_QUERIES/QUERY") as qfile, open(
+        "GQL_QUERIES/TEST_QUERY"
+    ) as tqfile:
         QUERY = qfile.read()
         TEST_QUERY = tqfile.read()
 
-    VARIABLES = {
-        "search_query": "archived:false mirror:false stars:>0 "
-                        "created:>=2020-02-01 pushed:>=2020-02-01 fork:true",
-        "maxitems": 1,
-        "cursor": None,
-    }
+    SEARCH_QUERY = ["archived:false", "mirror:false", "stars:>0", "fork:true"]
 
-    def __init__(self, PAT, created_end=None, maxitems=1):
+    def __init__(
+            self,
+            PAT,
+            created_start=arrow.get("2020-01-01"),
+            created_end=arrow.get("2020-02-01"),
+            last_pushed=arrow.get("2020-01-01"),
+            maxitems=1
+    ):
         super().__init__(
-            PAT=PAT,
-            query=GitHubSearchQuery.QUERY,
-            variables=GitHubSearchQuery.VARIABLES,
+            PAT=PAT, query=GitHubSearchQuery.QUERY, variables=None,
         )
-        # Add configurable maxitems instance attribute
+        # Form variables to be passed with query based on intialization params
         self.variables["maxitems"] = maxitems
+        self.variables["cursor"] = None
+        GitHubSearchQuery.SEARCH_QUERY.append(
+            "created:{}..{}".format(
+                created_start.format("YYYY-MM-DD"),
+                created_end.format("YYYY-MM-DD"),
+            )
+        )
+        GitHubSearchQuery.SEARCH_QUERY.append(
+            "pushed:{}..*".format(last_pushed.format("YYYY-MM-DD"))
+        )
+        self.variables["search_query"] = " ".join(
+            GitHubSearchQuery.SEARCH_QUERY
+        )
 
     def generator(self):
         """Pagination generator iterated upon query response boolean 'hasNextPage'.
@@ -106,15 +120,21 @@ class GitHubSearchQuery(GitHubGraphQLQuery):
         nextpage = True
         while nextpage:
             gen = self.gql_response()
+            print("Repositories: {}".format(gen["data"]["search"]["repositoryCount"]))
             # Acquire rate limits
             fuel = gen["data"]["rateLimit"]["remaining"]
             refuel_time = gen["data"]["rateLimit"]["resetAt"]
             # Update cursor
-            self.variables["cursor"] =\
-                gen["data"]["search"]["pageInfo"]["endCursor"]
+            self.variables["cursor"] = gen["data"]["search"]["pageInfo"][
+                "endCursor"
+            ]
             # Update hasNextPage
             nextpage = gen["data"]["search"]["pageInfo"]["hasNextPage"]
-            print("Cursor: {} hasNextPage:{}".format(self.variables["cursor"],nextpage))
+            print(
+                "Cursor: {} hasNextPage:{}".format(
+                    self.variables["cursor"], nextpage
+                )
+            )
             # Handle rate limiting
             if fuel <= 1:
                 # returns datetime.timedelta obj

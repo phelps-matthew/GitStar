@@ -85,8 +85,8 @@ class GitHubSearchQuery(GitHubGraphQLQuery):
     def __init__(
         self,
         PAT,
-        created_start=arrow.get("2020-01-01"),
-        created_end=arrow.get("2020-02-01"),
+        created_start=arrow.get("2021-01-01"),
+        created_end=arrow.get("2021-02-01"),
         last_pushed=arrow.get("2020-01-01"),
         maxitems=1,
     ):

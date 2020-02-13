@@ -49,7 +49,7 @@ def main():
     global CREATED_START
     # Intialize root logger here
     logging.basicConfig(
-        filename="run_ETL.log",
+        filename="ETL.log",
         filemode="w",
         level=logging.DEBUG,
         format="[%(asctime)s] %(name)s - %(levelname)s - %(message)s",
@@ -73,8 +73,8 @@ def main():
     # Construct graphql query response generator
     gql_generator = gqlquery.GitHubSearchQuery(
         PAT,
-        created_start=CREATED_END,
-        created_end=CREATED_END,
+        created_start=CREATED_START,
+        created_end=CREATED_START.shift(days=+1),
         last_pushed=LAST_PUSHED,
         maxitems=MAXITEMS,
     ).generator()
@@ -102,16 +102,16 @@ def main():
             CREATED_START = CREATED_START.shift(days=+1)
             gql_generator = gqlquery.GitHubSearchQuery(
                 PAT,
-                created_start=CREATED_END,
-                created_end=CREATED_END,
+                created_start=CREATED_START,
+                created_end=CREATED_START.shift(days=+1),
                 last_pushed=LAST_PUSHED,
                 maxitems=MAXITEMS,
             ).generator()
             delta = bool((CREATED_END - CREATED_START).seconds)
             logging.info(
-                "Reached end of GitHub query response. New created start date:{}".format(
-                    CREATED_START.format("YYYY-MM-DD")
-                )
+                "Reached end of GitHub query response. "\
+                "New created start date:{}"
+                .format(CREATED_START.format("YYYY-MM-DD"))
             )
             logging.info("-" * 20)
     logging.info("Exit main()")

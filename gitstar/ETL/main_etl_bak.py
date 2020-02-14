@@ -32,6 +32,7 @@ USERNAME = config.USERNAME
 PASSWORD = config.PASSWORD
 DRIVER = "{ODBC Driver 17 for SQL Server}"
 STATUS_MSG = "Executed SQL query. Affected row(s):{}"
+INSERT_QUERY = config.INSERT_QUERY
 # Repo creation start, end, and last pushed. Format
 created_start = arrow.get("2018-02-26")  # Not static
 CREATED_END = arrow.get("2019-01-01")
@@ -39,26 +40,58 @@ LAST_PUSHED = arrow.get("2020-01-01")
 MAXITEMS = 50
 
 
+# For debugging
 def print_json(obj):
     """Serialize python object to json formatted str and print"""
     print(json.dumps(obj, indent=4))
 
 
-def print_pd(df):
-    """Print pandas dataframe object"""
-    with pd.option_context(
-        "display.max_rows", None, "display.max_columns", None, "max_colwidth", 6
-    ):
-        print(df)
+def dbconnection():
+    # Initialize sql db connection
+    cnxn = pyodbc.connect(
+        "DRIVER="
+        + DRIVER
+        + ";SERVER="
+        + SERVER
+        + ";PORT=1433;DATABASE="
+        + DATABASE
+        + ";UID="
+        + USERNAME
+        + ";PWD="
+        + PASSWORD
+    )
+    cursor = cnxn.cursor()
+    # Combine INSERT's into single query
+    cursor.fast_executemany = True
+    return cursor
+
+def dbload(odbc_cnxn, value_list):
+    odbc_cnxn.executemany(INSERT_QUERY, value_list)
+    logging.info(STATUS_MSG.format(odbc_cnxn.rowcount))
+    # Send SQL query to db
+    odbc_cnxn.commit()
+
+
+def set_logger():
+    # Intialize root logger here.
+    logging.basicConfig(
+        filename="ETL.log", 
+        filemode="w",  # will rewrite on each run
+        level=logging.DEBUG,
+        format="[%(asctime)s] %(name)s - %(levelname)s - %(message)s",
+    )
+
+
+
 
 
 def main():
     """Execute ETL process"""
     global created_start
-    # Intialize root logger here
+    # Intialize root logger here.
     logging.basicConfig(
-        filename="ETL.log",
-        filemode="w",
+        filename="ETL.log", 
+        filemode="w",  # will rewrite on each run
         level=logging.DEBUG,
         format="[%(asctime)s] %(name)s - %(levelname)s - %(message)s",
     )
@@ -121,7 +154,7 @@ def main():
                 "New created start date:{}"
                 .format(created_start.format("YYYY-MM-DD"))
             )
-            logging.info("-" * 20)
+            logging.info("-" * 80)
     logging.info("Exit main()")
 
 

@@ -32,6 +32,7 @@ USERNAME = config.USERNAME
 PASSWORD = config.PASSWORD
 DRIVER = "{ODBC Driver 17 for SQL Server}"
 STATUS_MSG = "Executed SQL query. Affected row(s):{}"
+INSERT_QUERY = config.INSERT_QUERY
 # Repo creation start, end, and last pushed. Format
 created_start = arrow.get("2018-02-26")  # Not static
 CREATED_END = arrow.get("2019-01-01")
@@ -39,30 +40,24 @@ LAST_PUSHED = arrow.get("2020-01-01")
 MAXITEMS = 50
 
 
+# For debugging
 def print_json(obj):
     """Serialize python object to json formatted str and print"""
     print(json.dumps(obj, indent=4))
 
 
-def print_pd(df):
-    """Print pandas dataframe object"""
-    with pd.option_context(
-        "display.max_rows", None, "display.max_columns", None, "max_colwidth", 6
-    ):
-        print(df)
-
-
-def main():
-    """Execute ETL process"""
-    global created_start
-    # Intialize root logger here
+def set_logger():
+    """Intialize root logger here."""
     logging.basicConfig(
         filename="ETL.log",
-        filemode="w",
+        filemode="w",  # will rewrite on each run
         level=logging.DEBUG,
         format="[%(asctime)s] %(name)s - %(levelname)s - %(message)s",
     )
-    # Initialize sql db connection
+
+
+def dbconnection():
+    """Intialize sql db connection"""
     cnxn = pyodbc.connect(
         "DRIVER="
         + DRIVER
@@ -78,14 +73,35 @@ def main():
     cursor = cnxn.cursor()
     # Combine INSERT's into single query
     cursor.fast_executemany = True
-    # Construct graphql query response generator
-    gql_generator = gqlquery.GitHubSearchQuery(
+    return cursor
+
+
+def dbload(odbc_cnxn, value_list):
+    """Load columns into sql db"""
+    odbc_cnxn.executemany(INSERT_QUERY, value_list)
+    logging.info(STATUS_MSG.format(odbc_cnxn.rowcount))
+    # Send SQL query to db
+    odbc_cnxn.commit()
+
+
+def gql_generator(c_start):
+    """Construct graphql query response generator"""
+    gql_gen = gqlquery.GitHubSearchQuery(
         PAT,
-        created_start=created_start,
-        created_end=created_start.shift(days=+1),
+        created_start=c_start,
+        created_end=c_start.shift(days=+1),
         last_pushed=LAST_PUSHED,
         maxitems=MAXITEMS,
     ).generator()
+    return gql_gen
+
+
+def main():
+    """Execute ETL process"""
+    global created_start
+    set_logger()
+    dbcnxn = dbconnection()
+    gql_gen = gql_generator(created_start)
     logging.info("-" * 50)
     logging.info(
         "Begin main(). Created start date:{}".format(
@@ -97,31 +113,22 @@ def main():
     while not delta:
         try:
             # Iterate generator. Normalize nested fields.
-            clean_data = transform(next(gql_generator))
+            clean_data = transform(next(gql_gen))
             # Construct generator of dict values
             value_list = (list(node.values()) for node in clean_data)
-            # Load SQL insert query
-            cursor.executemany(config.INSERT_QUERY, value_list)
-            logging.info(STATUS_MSG.format(cursor.rowcount))
-            # Send SQL query to db
-            cnxn.commit()
+            dbload(dbcnxn, value_list)
             print("[{}] {} rows inserted into db".format(arrow.now(), MAXITEMS))
         except StopIteration:
             created_start = created_start.shift(days=+1)
-            gql_generator = gqlquery.GitHubSearchQuery(
-                PAT,
-                created_start=created_start,
-                created_end=created_start.shift(days=+1),
-                last_pushed=LAST_PUSHED,
-                maxitems=MAXITEMS,
-            ).generator()
+            gql_gen = gql_generator(created_start)
             delta = bool((CREATED_END - created_start).seconds)
             logging.info(
-                "Reached end of GitHub query response. "\
-                "New created start date:{}"
-                .format(created_start.format("YYYY-MM-DD"))
+                "Reached end of GitHub query response. "
+                "New created start date:{}".format(
+                    created_start.format("YYYY-MM-DD")
+                )
             )
-            logging.info("-" * 20)
+            logging.info("-" * 80)
     logging.info("Exit main()")
 
 

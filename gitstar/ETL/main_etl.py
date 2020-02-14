@@ -49,7 +49,7 @@ def print_json(obj):
 def set_logger():
     """Intialize root logger here."""
     logging.basicConfig(
-        filename="ETL.log",
+        filename="logs/ETL.log",
         filemode="w",  # will rewrite on each run
         level=logging.DEBUG,
         format="[%(asctime)s] %(name)s - %(levelname)s - %(message)s",

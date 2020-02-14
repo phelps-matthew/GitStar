@@ -13,7 +13,7 @@
         data/repo to be held in RAM.
 
     TODO:
-        a
+        check global created_start
 """
 import json
 import logging
@@ -34,7 +34,7 @@ DRIVER = "{ODBC Driver 17 for SQL Server}"
 STATUS_MSG = "Executed SQL query. Affected row(s):{}"
 INSERT_QUERY = config.INSERT_QUERY
 # Repo creation start, end, and last pushed. Format
-created_start = arrow.get("2018-02-26")  # Not static
+created_start = arrow.get("2018-10-08")  # Not static
 CREATED_END = arrow.get("2019-01-01")
 LAST_PUSHED = arrow.get("2020-01-01")
 MAXITEMS = 50
@@ -116,6 +116,7 @@ def main():
             clean_data = transform(next(gql_gen))
             # Construct generator of dict values
             value_list = (list(node.values()) for node in clean_data)
+            # Load into db
             dbload(dbcnxn, value_list)
             print("[{}] {} rows inserted into db".format(arrow.now(), MAXITEMS))
         except StopIteration:

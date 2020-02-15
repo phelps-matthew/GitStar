@@ -1,3 +1,5 @@
-[2020-02-15 10:47:13,891] asyncio - DEBUG - Using selector: EpollSelector
-[2020-02-15 10:47:14,058] asyncio - DEBUG - Using selector: EpollSelector
-[2020-02-15 10:47:14,077] asyncio - DEBUG - Using selector: EpollSelector
+[2020-02-15 12:49:35,613] root - INFO - --------------------------------------------------
+[2020-02-15 12:49:35,614] root - INFO - Begin main(). Created start date:2019-05-16
+[2020-02-15 12:49:36,016] asyncio - DEBUG - Using selector: EpollSelector
+[2020-02-15 12:49:36,203] asyncio - DEBUG - Using selector: EpollSelector
+[2020-02-15 12:49:36,223] asyncio - DEBUG - Using selector: EpollSelector

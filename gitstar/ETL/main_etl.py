@@ -109,6 +109,7 @@ def main():
     )
     # Loop until end date
     delta = bool((CREATED_END - CREATED_START).total_seconds())
+    day = CREATED_START
     while delta:
         try:
             # Iterate generator. Normalize nested fields.
@@ -119,13 +120,13 @@ def main():
             dbload(dbcnxn, value_list)
             print("[{}] {} rows inserted into db".format(arrow.now(), MAXITEMS))
         except StopIteration:
-            created_new = CREATED_START.shift(days=+1)
-            gql_gen = gql_generator(created_new)
-            delta = bool((CREATED_END - created_new).total_seconds())
+            day = day.shift(days=+1)
+            gql_gen = gql_generator(day)
+            delta = bool((CREATED_END - day).total_seconds())
             logging.info(
                 "Reached end of GitHub query response. "
                 "New created start date:{}".format(
-                    created_new.format("YYYY-MM-DD")
+                    day.format("YYYY-MM-DD")
                 )
             )
             logging.info("-" * 80)

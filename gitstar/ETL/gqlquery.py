@@ -92,7 +92,7 @@ class GitHubSearchQuery(GitHubGraphQLQuery):
         super().__init__(
             PAT=PAT, query=GitHubSearchQuery.QUERY, variables=None,
         )
-        # Form variables to be passed with query based on intialization params
+        # Form gql API variables to be passed with query
         self.variables["maxitems"] = maxitems
         self.variables["cursor"] = None
         GitHubSearchQuery.SEARCH_QUERY.append(
@@ -112,7 +112,7 @@ class GitHubSearchQuery(GitHubGraphQLQuery):
         """Pagination generator iterated upon query response boolean 'hasNextPage'.
             Calls gql_response() then updates cursor and hasNextPage.
             Exceptions (e.g. StopIteration) are to be handled outside of class.
-            Generator is composed of py dict objects, deserialized from json
+            Generator is composed of nested dicts, deserialized from json
             response.
         """
         nextpage = True

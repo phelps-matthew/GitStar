@@ -34,7 +34,7 @@ DRIVER = "{ODBC Driver 17 for SQL Server}"
 STATUS_MSG = "Executed SQL query. Affected row(s):{}"
 INSERT_QUERY = config.INSERT_QUERY
 # Repo creation start, end, and last pushed. Format
-created_start = arrow.get("2018-10-08")  # Not static
+created_startx = arrow.get("2018-10-08")  # Not static
 CREATED_END = arrow.get("2019-01-01")
 LAST_PUSHED = arrow.get("2020-01-01")
 MAXITEMS = 50
@@ -98,18 +98,17 @@ def gql_generator(c_start):
 
 def main():
     """Execute ETL process"""
-    global created_start
     set_logger()
     dbcnxn = dbconnection()
-    gql_gen = gql_generator(created_start)
+    gql_gen = gql_generator(created_startx)
     logging.info("-" * 50)
     logging.info(
         "Begin main(). Created start date:{}".format(
-            created_start.format("YYYY-MM-DD")
+            created_startx.format("YYYY-MM-DD")
         )
     )
     # Loop until end date
-    delta = bool((CREATED_END - created_start).total_seconds())
+    delta = bool((CREATED_END - created_startx).total_seconds())
     while not delta:
         try:
             # Iterate generator. Normalize nested fields.
@@ -120,13 +119,13 @@ def main():
             dbload(dbcnxn, value_list)
             print("[{}] {} rows inserted into db".format(arrow.now(), MAXITEMS))
         except StopIteration:
-            created_start = created_start.shift(days=+1)
-            gql_gen = gql_generator(created_start)
-            delta = bool((CREATED_END - created_start).total_seconds())
+            created_startx = created_startx.shift(days=+1)
+            gql_gen = gql_generator(created_startx)
+            delta = bool((CREATED_END - created_startx).total_seconds())
             logging.info(
                 "Reached end of GitHub query response. "
                 "New created start date:{}".format(
-                    created_start.format("YYYY-MM-DD")
+                    created_startx.format("YYYY-MM-DD")
                 )
             )
             logging.info("-" * 80)

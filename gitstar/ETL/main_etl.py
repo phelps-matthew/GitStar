@@ -109,7 +109,7 @@ def main():
         )
     )
     # Loop until end date
-    delta = bool((CREATED_END - created_start).seconds)
+    delta = bool((CREATED_END - created_start).total_seconds())
     while not delta:
         try:
             # Iterate generator. Normalize nested fields.
@@ -122,7 +122,7 @@ def main():
         except StopIteration:
             created_start = created_start.shift(days=+1)
             gql_gen = gql_generator(created_start)
-            delta = bool((CREATED_END - created_start).seconds)
+            delta = bool((CREATED_END - created_start).total_seconds())
             logging.info(
                 "Reached end of GitHub query response. "
                 "New created start date:{}".format(

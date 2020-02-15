@@ -148,10 +148,10 @@ class GitHubSearchQuery(GitHubGraphQLQuery):
                 extra = 10  # additional delay
                 logging.info(
                     "Out of fuel. Will resume in {} seconds.".format(
-                        delta.seconds + extra
+                        delta.total_seconds() + extra
                     )
                 )
-                sleep(delta.seconds + extra)
+                sleep(delta.total_seconds() + extra)
                 logging.info("Refueled, resuming operation.")
                 yield gen
             else:

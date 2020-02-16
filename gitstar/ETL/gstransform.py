@@ -47,11 +47,12 @@ def normalize(ndict):
             value = ndict[key].popitem()[1]
             ndict[key] = value
         except AttributeError:
-            logging.warning(
-                "AttributeError. Null field found. key:{} repo:{}".format(
-                    key, ndict["nameWithOwner"]
-                )
-            )
+            # logging.warning(
+            #    "AttributeError. Null field found. key:{} repo:{}".format(
+            #        key, ndict["nameWithOwner"]
+            #    )
+            # )
+            pass
     for key in dict_keys_d3:
         # Catch null values that would otherwise be nested dicts. Log
         # null errors.
@@ -59,11 +60,12 @@ def normalize(ndict):
             value = ndict[key[0]][key[1]].popitem()[1]
             ndict[key[0]] = value
         except TypeError:
-            logging.warning(
-                "TypeError. Null field found. key:{} repo:{}".format(
-                    key, ndict["nameWithOwner"]
-                )
-            )
+            # logging.warning(
+            #    "TypeError. Null field found. key:{} repo:{}".format(
+            #        key, ndict["nameWithOwner"]
+            #    )
+            # )
+            pass
     return ndict
 
 
@@ -82,3 +84,13 @@ def transform(ndicts):
     for node in ndicts:
         nodes.append(normalize(node))
     return nodes
+
+
+def repocount(ndicts):
+    """Fetch repo count header from json decoded graphql data (nested
+        dictionary), i.e. the return from GitHubSearchQuery.generator()
+        iteration output.
+    """
+    # Extract relevant quantity
+    node_num = ndicts["data"]["search"]["repositoryCount"]
+    return node_num

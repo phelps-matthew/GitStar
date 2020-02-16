@@ -79,7 +79,7 @@ class GitHubSearchQuery(GitHubGraphQLQuery):
         QUERY = qfile.read()
         TEST_QUERY = tqfile.read()
 
-    SEARCH_QUERY = ["archived:false", "mirror:false", "stars:>0", "fork:true"]
+    SEARCH_QUERY = ["archived:false", "mirror:false", "fork:true"]
 
     def __init__(
         self,
@@ -88,6 +88,7 @@ class GitHubSearchQuery(GitHubGraphQLQuery):
         created_end=arrow.get("2021-02-01"),
         last_pushed=arrow.get("2020-01-01"),
         maxitems=1,
+        stars=0,
     ):
         super().__init__(
             PAT=PAT, query=GitHubSearchQuery.QUERY, variables=None,
@@ -95,18 +96,19 @@ class GitHubSearchQuery(GitHubGraphQLQuery):
         # Form gql API variables to be passed with query
         self.variables["maxitems"] = maxitems
         self.variables["cursor"] = None
-        GitHubSearchQuery.SEARCH_QUERY.append(
-            "created:{}..{}".format(
-                created_start.format("YYYY-MM-DD"),
-                created_end.format("YYYY-MM-DD"),
-            )
+        # Copy class attribute list
+        searchq = GitHubSearchQuery.SEARCH_QUERY[:]
+        searchq.extend(
+            [
+                "stars:>{}".format(stars),
+                "created:{}..{}".format(
+                    created_start.format("YYYY-MM-DD"),
+                    created_end.format("YYYY-MM-DD"),
+                ),
+                "pushed:{}..*".format(last_pushed.format("YYYY-MM-DD")),
+            ]
         )
-        GitHubSearchQuery.SEARCH_QUERY.append(
-            "pushed:{}..*".format(last_pushed.format("YYYY-MM-DD"))
-        )
-        self.variables["search_query"] = " ".join(
-            GitHubSearchQuery.SEARCH_QUERY
-        )
+        self.variables["search_query"] = " ".join(searchq)
 
     def generator(self):
         """Pagination generator iterated upon query response boolean 'hasNextPage'.
@@ -120,12 +122,17 @@ class GitHubSearchQuery(GitHubGraphQLQuery):
         while nextpage:
             gen = self.gql_response()
             # log repository count
-            if index == 1:
-                logging.info(
-                    "Repository Count: {}".format(
-                        gen["data"]["search"]["repositoryCount"]
-                    )
-                )
+            #if index == 1:
+               # logging.info(
+               #     "Repository Count: {}".format(
+               #         gen["data"]["search"]["repositoryCount"]
+               #     )
+               # )
+               # print(
+               #     "Repository Count: {}".format(
+               #         gen["data"]["search"]["repositoryCount"]
+               #     )
+               # )
             # Acquire rate limits
             fuel = gen["data"]["rateLimit"]["remaining"]
             refuel_time = gen["data"]["rateLimit"]["resetAt"]
@@ -135,11 +142,13 @@ class GitHubSearchQuery(GitHubGraphQLQuery):
             ]
             # Update hasNextPage
             nextpage = gen["data"]["search"]["pageInfo"]["hasNextPage"]
-            logging.info(
-                "Cursor: {} hasNextPage:{}".format(
-                    self.variables["cursor"], nextpage
-                )
-            )
+            #logging.info(
+            #    "Cursor: {} hasNextPage:{}".format(
+            #        self.variables["cursor"], nextpage
+            #    )
+            # )
+            #logging.info(json.dumps(self.variables, indent=4))
+            #print(index)
             index += 1
             # Handle rate limiting
             if fuel <= 1:

@@ -26,6 +26,6 @@ CREATE TABLE gs_table_v0(
 	hasIssuesEnabled BIT,
 	hasWikiEnabled BIT,
 	isLocked BIT,
-	isDisabled BIT
+	isDisabled BIT,
 	Date_Loaded DATETIME2 NOT NULL DEFAULT GETDATE()
 );

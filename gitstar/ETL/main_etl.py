@@ -34,10 +34,10 @@ DRIVER = "{ODBC Driver 17 for SQL Server}"
 STATUS_MSG = "Executed SQL query. Affected row(s):{}"
 INSERT_QUERY = config.INSERT_QUERY
 # Repo creation start, end, and last pushed. Format
-CREATED_START = arrow.get("2019-12-15")
-CREATED_END = arrow.get("2019-12-28")
+CREATED_START = arrow.get("2015-01-01")
+CREATED_END = arrow.get("2019-12-31")
 PUSH_START = arrow.get("2020-01-01")
-MAXITEMS = 50
+MAXITEMS = 100
 MINSTARS = 1
 MAXSTARS = None
 
@@ -104,6 +104,9 @@ def gql_generator(c_start, pushed_start, pushed_end=None):
 
 
 def etl_loop(created_start, created_end, pushed_start, pushed_end=None):
+    """Iterate through gql_generator (which handles pagination) while looping
+        through provided date range. Raise repo count exception as needed.
+    """
     # Intialize db connection and gql response
     dbcnxn = dbconnection()
     gql_gen = gql_generator(created_start, pushed_start, pushed_end=pushed_end)
@@ -123,9 +126,9 @@ def etl_loop(created_start, created_end, pushed_start, pushed_end=None):
             # Construct generator of dict values
             value_list = (list(node.values()) for node in clean_data)
             # repos = [node["nameWithOwner"] for node in clean_data]
-            # Load into db
             # logging.info('\n'+'\n'.join(repos))
-            # dbload(dbcnxn, value_list)
+            # Load into db
+            dbload(dbcnxn, value_list)
             print("[{}] {} rows inserted into db".format(arrow.now(), MAXITEMS))
         except (StopIteration, gqlquery.RepoCountError):
             day = day.shift(days=+1)

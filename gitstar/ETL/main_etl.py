@@ -35,9 +35,11 @@ STATUS_MSG = "Executed SQL query. Affected row(s):{}"
 INSERT_QUERY = config.INSERT_QUERY
 # Repo creation start, end, and last pushed. Format
 CREATED_START = arrow.get("2019-01-06")
-CREATED_END = arrow.get("2020-01-01")
+CREATED_END = arrow.get("2019-01-08")
 LAST_PUSHED = arrow.get("2020-01-01")
 MAXITEMS = 50
+MINSTARS = 2
+MAXSTARS = None
 
 
 # For debugging
@@ -93,6 +95,8 @@ def gql_generator(c_start):
         created_end=c_start.shift(days=+1),
         last_pushed=LAST_PUSHED,
         maxitems=MAXITEMS,
+        minstars=MINSTARS,
+        maxstars=MAXSTARS,
     ).generator()
     return gql_gen
 
@@ -102,16 +106,16 @@ def main():
     set_logger()
     dbcnxn = dbconnection()
     gql_gen = gql_generator(CREATED_START)
-    logging.info("-" * 50)
+    logging.info("-" * 80)
     logging.info(
         "Begin main(). Created start date:{}".format(
             CREATED_START.format("YYYY-MM-DD")
         )
     )
     # Loop until end date
-    delta = bool((CREATED_END - CREATED_START).total_seconds())
+    delta = (CREATED_END - CREATED_START).total_seconds()
     day = CREATED_START
-    while delta:
+    while delta >= 0:
         try:
             # Iterate generator. Normalize nested fields.
             clean_data = transform(next(gql_gen))
@@ -119,18 +123,16 @@ def main():
             value_list = (list(node.values()) for node in clean_data)
             repos = [node["nameWithOwner"] for node in clean_data]
             # Load into db
-            #logging.info('\n'+'\n'.join(repos))
-            #dbload(dbcnxn, value_list)
+            logging.info('\n'+'\n'.join(repos))
+            dbload(dbcnxn, value_list)
             print("[{}] {} rows inserted into db".format(arrow.now(), MAXITEMS))
         except StopIteration:
             day = day.shift(days=+1)
             gql_gen = gql_generator(day)
-            delta = bool((CREATED_END - day).total_seconds())
+            delta = (CREATED_END - day).total_seconds()
             logging.info(
-                "Reached end of GitHub query response. "
-                "New created start date:{}".format(
-                    day.format("YYYY-MM-DD")
-                )
+                "Reached end of gql pagination."
+                "New created start date:{}".format(day.format("YYYY-MM-DD"))
             )
             logging.info("-" * 80)
     logging.info("Exit main()")

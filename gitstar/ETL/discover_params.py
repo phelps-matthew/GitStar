@@ -116,6 +116,7 @@ def repo_rate(created_start, created_end, stars):
 
 
 def plot_repo_rate(x, y, stars):
+    """Plot arrow date list (x) and repo count (y) with star criteria"""
     # Convert arrow -> datetime -> np.datetime64, store in np.array
     x = np.array(list(map(lambda z: np.datetime64(z.datetime), x)))
     y = np.array(y)
@@ -124,7 +125,7 @@ def plot_repo_rate(x, y, stars):
     months = mdates.MonthLocator()
     years_fmt = mdates.DateFormatter("%Y")
     # Create Figure.figure and Axes.axes instances
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(8, 8))
     ax.plot(x, y, "b.")
     ax.set(
         ylabel="Repos Created (daily)",
@@ -135,8 +136,8 @@ def plot_repo_rate(x, y, stars):
     ax.xaxis.set_major_formatter(years_fmt)
     ax.xaxis.set_minor_locator(months)
     # Add range to nearest month
-    datemin = np.datetime64(x[0], "M") - np.timedelta64(1, "M")
-    datemax = np.datetime64(x[-1], "M") + np.timedelta64(1, "M")
+    datemin = np.datetime64(x[0], "M") - np.timedelta64(2, "M")
+    datemax = np.datetime64(x[-1], "M") + np.timedelta64(2, "M")
     ax.set_xlim(datemin, datemax)
     # Format coordinates
     ax.format_xdata = mdates.DateFormatter("%Y-%m-%d")
@@ -146,18 +147,37 @@ def plot_repo_rate(x, y, stars):
     return fig, ax
 
 
+def star_write(rdict, star):
+    # Convert arrow to str for json encoding
+    rdict["dates"] = list(map(lambda x: x.format(), rdict["dates"]))
+    with open("data/repo_star_{}".format(star), "w") as file:
+        json.dump(rdict, file, indent=4)
+
+
+def star_read(star):
+    with open("data/repo_star_{}".format(star)) as file:
+        rdict = json.load(file)
+        return rdict
+
+
 def main():
     """Execute ETL process"""
     set_logger()
-    for star in range(0,12,2):
-        rdict = repo_rate(CREATED_START, CREATED_END, star)
-        rdict["dates"] = list(map(lambda x: x.format(), rdict["dates"]))
-        with open("data/repo_star_{}".format(star), "w") as file:
-            json.dump(rdict, file, indent=4)
-        dates = np.array(rdict["dates"])
-        repos = np.array(rdict["repos"])
-        # fig, ax = plot_repo_rate(dates, repos, star)
+    star = 1
+    rdict = star_read(star)
+    # Convert from str to arrow
+    rdict["dates"] = list(map(lambda x: arrow.get(x), rdict["dates"]))
+    dates = rdict["dates"]
+    repos = rdict["repos"]
+    fig, ax = plot_repo_rate(dates, repos, star)
     # plt.show()
+    fig.savefig(
+        "data/repo_star_{}.png".format(star),
+        transparent=False,
+        dpi=100,
+        bbox_inches="tight",  # fit bounds of figure to plot
+    )
+    # rdict = repo_rate(CREATED_START, CREATED_END, star)
 
 
 if __name__ == "__main__":

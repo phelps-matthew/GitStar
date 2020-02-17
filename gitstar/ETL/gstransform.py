@@ -3,6 +3,19 @@
 """
 
 import logging
+import arrow
+
+
+def add_intdate(ndict):
+    """Take in single node (nested dictionary representing a single repo),
+        and convert created_start and created_end dates to int timestamp.
+        Added as separate entries.
+
+        Returns single dictionary.
+    """
+    ndict["createdAt_sec"] = int(arrow.get(ndict["createdAt"]).format("X"))
+    ndict["updatedAt_sec"] = int(arrow.get(ndict["updatedAt"]).format("X"))
+    return ndict
 
 
 def normalize(ndict):
@@ -48,9 +61,9 @@ def normalize(ndict):
             ndict[key] = value
         except AttributeError:
             # logging.warning(
-            #    "AttributeError. Null field found. key:{} repo:{}".format(
-            #        key, ndict["nameWithOwner"]
-            #    )
+            #   "AttributeError. Null field found. key:{} repo:{}".format(
+            #       key, ndict["nameWithOwner"]
+            #   )
             # )
             pass
     for key in dict_keys_d3:
@@ -61,9 +74,9 @@ def normalize(ndict):
             ndict[key[0]] = value
         except TypeError:
             # logging.warning(
-            #    "TypeError. Null field found. key:{} repo:{}".format(
-            #        key, ndict["nameWithOwner"]
-            #    )
+            #   "TypeError. Null field found. key:{} repo:{}".format(
+            #       key, ndict["nameWithOwner"]
+            #   )
             # )
             pass
     return ndict
@@ -82,7 +95,7 @@ def transform(ndicts):
     # Iterate over list of nodes (repos). Length will vary
     nodes = []
     for node in ndicts:
-        nodes.append(normalize(node))
+        nodes.append(add_intdate(normalize(node)))
     return nodes
 
 

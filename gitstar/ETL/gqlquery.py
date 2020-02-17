@@ -135,8 +135,8 @@ class GitHubSearchQuery(GitHubGraphQLQuery):
                     rep_count = gen["data"]["search"]["repositoryCount"]
                     logging.info("Repository Count: {}".format(rep_count))
                     print(
-                        "Date:{}. Repository Count: {}".format(
-                            rep_count, self.created_start
+                        "Date:{}. Repository Count:{}".format(
+                            self.created_start, rep_count 
                         )
                     )
                     # log queries that exceed node limit

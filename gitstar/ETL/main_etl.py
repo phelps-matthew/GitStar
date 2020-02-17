@@ -34,7 +34,7 @@ DRIVER = "{ODBC Driver 17 for SQL Server}"
 STATUS_MSG = "Executed SQL query. Affected row(s):{}"
 INSERT_QUERY = config.INSERT_QUERY
 # Repo creation start, end, and last pushed. Format
-CREATED_START = arrow.get("2015-02-23")
+CREATED_START = arrow.get("2015-03-26")
 CREATED_END = arrow.get("2019-12-31")
 PUSH_START = arrow.get("2020-01-01")
 MAXITEMS = 50

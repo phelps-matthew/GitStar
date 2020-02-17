@@ -128,7 +128,7 @@ def plot_repo_rate(x, y, stars):
     ax.plot(x, y, "b.")
     ax.set(
         ylabel="Repos Created (daily)",
-        title="Created Repos, Stars:>{}".format(stars),
+        title="Created Repos, Stars:>={}".format(stars),
     )
     # Format x ticks
     ax.xaxis.set_major_locator(years)
@@ -162,23 +162,25 @@ def star_read(star):
 def main():
     """Execute ETL process"""
     set_logger()
-    # star = 1
-    # rdict = star_read(star)
-    # # Convert from str to arrow
-    # rdict["dates"] = list(map(lambda x: arrow.get(x), rdict["dates"]))
-    # dates = rdict["dates"]
-    # repos = rdict["repos"]
-    # fig, ax = plot_repo_rate(dates, repos, star)
-    # # plt.show()
-    # fig.savefig(
-    #     "data/repo_star_{}.png".format(star),
-    #     transparent=False,
-    #     dpi=100,
-    #     bbox_inches="tight",  # fit bounds of figure to plot
-    # )
+    # Generate plots based on stored star data
     for star in range(3):
-        rdict = repo_rate(CREATED_START, CREATED_END, star)
-        star_write(rdict, star)
+        rdict = star_read(star)
+        # Convert from str to arrow
+        rdict["dates"] = list(map(lambda x: arrow.get(x), rdict["dates"]))
+        dates = rdict["dates"]
+        repos = rdict["repos"]
+        fig, ax = plot_repo_rate(dates, repos, star)
+        # plt.show()
+        fig.savefig(
+            "data/repo_star_{}.png".format(star),
+            transparent=False,
+            dpi=100,
+            bbox_inches="tight",  # fit bounds of figure to plot
+        )
+    # Fetch data and write for variable star number
+    # for star in range(3):
+    #     rdict = repo_rate(CREATED_START, CREATED_END, star)
+    #     star_write(rdict, star)
 
 
 if __name__ == "__main__":

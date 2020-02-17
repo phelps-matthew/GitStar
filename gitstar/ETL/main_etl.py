@@ -54,7 +54,7 @@ def set_logger():
         filename="logs/ETL.log",
         filemode="w",  # will rewrite on each run
         level=logging.DEBUG,
-        format="[%(asctime)s] %(name)s - %(levelname)s - %(message)s",
+        format="[%(asctime)s] %(levelname)s - %(name)s - %(message)s",
     )
 
 

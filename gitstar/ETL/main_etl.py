@@ -104,13 +104,12 @@ def gql_generator(c_start, pushed_start, pushed_end=None):
 
 
 def etl_loop(created_start, created_end, pushed_start, pushed_end=None):
+    # Intialize db connection and gql response
     dbcnxn = dbconnection()
-    gql_gen = gql_generator(
-        created_start, pushed_start, pushed_end=pushed_end
-    )
-    logging.info("-" * 80)
+    gql_gen = gql_generator(created_start, pushed_start, pushed_end=pushed_end)
     logging.info(
-        "Begin etl_loop(). Created start date:{}".format(
+        "-" * 80
+        + "Begin etl_loop(). Created start date:{}".format(
             created_start.format("YYYY-MM-DD")
         )
     )
@@ -137,8 +136,8 @@ def etl_loop(created_start, created_end, pushed_start, pushed_end=None):
             logging.info(
                 "Reached end of gql pagination or exceeded repo count. "
                 "New created start date:{}".format(day.format("YYYY-MM-DD"))
+                + "-" * 80
             )
-            logging.info("-" * 80)
 
 
 def main():

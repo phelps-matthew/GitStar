@@ -132,6 +132,7 @@ class GitHubSearchQuery(GitHubGraphQLQuery):
                     rep_count = gen["data"]["search"]["repositoryCount"]
                     logging.info("Repository Count: {}".format(rep_count))
                     print("Repository Count: {}".format(rep_count))
+                    # log queries that exceed node limit
                     if rep_count > 1000:
                         logging.warning(
                             "Repo Count {} exceeds limits!".format(rep_count)
@@ -146,35 +147,38 @@ class GitHubSearchQuery(GitHubGraphQLQuery):
                 ]
                 # Update hasNextPage
                 nextpage = gen["data"]["search"]["pageInfo"]["hasNextPage"]
+                # Log relevant query variables
                 logging.info(
-                    "Cursor: {} hasNextPage:{}".format(
-                        self.variables["cursor"], nextpage
+                    "vars:{}\nhasNextPage:{}".format(
+                        json.dumps(self.variables, indent=4), nextpage
                     )
                 )
-                logging.info(json.dumps(self.variables, indent=4))
-                print(index)
+                print(index,end=' ')
                 index += 1
                 # Handle rate limiting
                 if fuel <= 1:
                     # returns datetime.timedelta obj
                     delta = arrow.get(refuel_time) - arrow.utcnow()
                     extra = 10  # additional delay
-                    logging.info(
+                    logging.warning(
                         "Out of fuel. Will resume in {} seconds.".format(
                             delta.total_seconds() + extra
                         )
                     )
                     sleep(delta.total_seconds() + extra)
-                    logging.info("Refueled, resuming operation.")
+                    logging.warning("Refueled, resuming operation.")
                     yield gen
                 else:
                     yield gen
             except KeyError:
-                logging.error("KeyError Occured!\n{}".format(json.dumps(gen,indent=4)))
+                logging.error(
+                    "KeyError Occured!\n{}".format(json.dumps(gen, indent=4))
+                )
                 return StopIteration
 
 
 class RepoCountError(Exception):
+    """If repositoryCount > 1000, raise this exception"""
     def __init__(self, repo_count, msg):
         self.repo_count = repo_count
         self.msg = msg

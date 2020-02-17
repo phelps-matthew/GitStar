@@ -1,0 +1,13 @@
+## SQL queries by example ##
+
+# Searching via date. Returns all within day
+SELECT TOP(1000) * FROM gs_table_v1
+WHERE CAST(createdAt AS DATE) = '2015-03-26'
+ORDER BY nameWithOwner DESC
+
+# Count unique
+SELECT COUNT(DISTINCT id) FROM gs_table_v1
+
+# Table creation for NVARCHAR
+CREATE TABLE tv1(
+nvc5 NVARCHAR(5) NOT NULL DEFAULT '12345');

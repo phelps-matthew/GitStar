@@ -41,8 +41,8 @@ class GraphQLQuery:
         # Check json response dict for errors from query. Recursive.
         if "errors" in response:
             logging.error(
-                "Error graphql response from endpoint. Check logs.\n{}".format(
-                    json.dumps(response, indent=4)
+                "Error graphql response from endpoint. Check logs.\n{}\n{}".format(
+                    json.dumps(response, indent=4), self.variables
                 )
             )
             sleep(60)
@@ -153,7 +153,7 @@ class GitHubSearchQuery(GitHubGraphQLQuery):
                         json.dumps(self.variables, indent=4), nextpage
                     )
                 )
-                print(index,end=' ')
+                print(index, end=" ")
                 index += 1
                 # Handle rate limiting
                 if fuel <= 1:
@@ -179,6 +179,7 @@ class GitHubSearchQuery(GitHubGraphQLQuery):
 
 class RepoCountError(Exception):
     """If repositoryCount > 1000, raise this exception"""
+
     def __init__(self, repo_count, msg):
         self.repo_count = repo_count
         self.msg = msg

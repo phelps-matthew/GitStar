@@ -34,10 +34,10 @@ DRIVER = "{ODBC Driver 17 for SQL Server}"
 STATUS_MSG = "Executed SQL query. Affected row(s):{}"
 INSERT_QUERY = config.INSERT_QUERY
 # Repo creation start, end, and last pushed. Format
-CREATED_START = arrow.get("2015-01-01")
+CREATED_START = arrow.get("2015-02-23")
 CREATED_END = arrow.get("2019-12-31")
 PUSH_START = arrow.get("2020-01-01")
-MAXITEMS = 100
+MAXITEMS = 50
 MINSTARS = 1
 MAXSTARS = None
 
@@ -138,7 +138,7 @@ def etl_loop(created_start, created_end, pushed_start, pushed_end=None):
             delta = (created_end - day).total_seconds()
             logging.info(
                 "Reached end of gql pagination or exceeded repo count. "
-                "New created start date:{}".format(day.format("YYYY-MM-DD"))
+                "New created start date:{}\n".format(day.format("YYYY-MM-DD"))
                 + "-" * 80
             )
 

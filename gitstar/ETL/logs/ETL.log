@@ -1,45 +1,1160 @@
-[2020-02-17 15:45:28,033] root - INFO - --------------------------------------------------------------------------------Begin etl_loop(). Created start date:2015-01-01
-[2020-02-17 15:45:28,039] urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.github.com:443
-[2020-02-17 15:45:32,268] urllib3.connectionpool - DEBUG - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
-[2020-02-17 15:45:32,273] root - INFO - Repository Count: 27
-[2020-02-17 15:45:32,273] root - INFO - vars:{
-    "maxitems": 100,
+[2020-02-17 15:51:26,720] INFO - root - --------------------------------------------------------------------------------Begin etl_loop(). Created start date:2015-01-01
+[2020-02-17 15:51:26,726] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:51:29,912] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:51:29,917] INFO - root - Repository Count: 27
+[2020-02-17 15:51:29,917] INFO - root - vars:{
+    "maxitems": 50,
     "cursor": "Y3Vyc29yOjI3",
     "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-01..2015-01-01 pushed:2020-01-01..*"
 }
 hasNextPage:False
-[2020-02-17 15:45:33,343] root - INFO - Executed SQL query. Affected row(s):-1
-[2020-02-17 15:45:33,430] root - INFO - Reached end of gql pagination or exceeded repo count. New created start date:2015-01-02--------------------------------------------------------------------------------
-[2020-02-17 15:45:33,433] urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.github.com:443
-[2020-02-17 15:45:40,645] urllib3.connectionpool - DEBUG - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
-[2020-02-17 15:45:40,651] root - INFO - Repository Count: 56
-[2020-02-17 15:45:40,651] root - INFO - vars:{
-    "maxitems": 100,
+[2020-02-17 15:51:30,874] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:51:30,906] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-01-02
+--------------------------------------------------------------------------------
+[2020-02-17 15:51:30,910] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:51:36,648] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:51:36,654] INFO - root - Repository Count: 56
+[2020-02-17 15:51:36,654] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-02..2015-01-02 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 15:51:38,103] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:51:38,137] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:51:39,165] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:51:39,169] INFO - root - vars:{
+    "maxitems": 50,
     "cursor": "Y3Vyc29yOjU2",
     "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-02..2015-01-02 pushed:2020-01-01..*"
 }
 hasNextPage:False
-[2020-02-17 15:45:42,679] root - INFO - Executed SQL query. Affected row(s):-1
-[2020-02-17 15:45:42,729] root - INFO - Reached end of gql pagination or exceeded repo count. New created start date:2015-01-03--------------------------------------------------------------------------------
-[2020-02-17 15:45:42,731] urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.github.com:443
-[2020-02-17 15:45:50,630] urllib3.connectionpool - DEBUG - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
-[2020-02-17 15:45:50,637] root - INFO - Repository Count: 59
-[2020-02-17 15:45:50,638] root - INFO - vars:{
-    "maxitems": 100,
+[2020-02-17 15:51:39,361] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:51:39,390] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-01-03
+--------------------------------------------------------------------------------
+[2020-02-17 15:51:39,393] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:51:45,136] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:51:45,140] INFO - root - Repository Count: 59
+[2020-02-17 15:51:45,140] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-03..2015-01-03 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 15:51:46,658] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:51:46,697] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:51:48,078] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:51:48,081] INFO - root - vars:{
+    "maxitems": 50,
     "cursor": "Y3Vyc29yOjU5",
     "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-03..2015-01-03 pushed:2020-01-01..*"
 }
 hasNextPage:False
-[2020-02-17 15:45:52,613] root - INFO - Executed SQL query. Affected row(s):-1
-[2020-02-17 15:45:52,648] root - INFO - Reached end of gql pagination or exceeded repo count. New created start date:2015-01-04--------------------------------------------------------------------------------
-[2020-02-17 15:45:52,651] urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.github.com:443
-[2020-02-17 15:46:02,955] urllib3.connectionpool - DEBUG - https://api.github.com:443 "POST /graphql HTTP/1.1" 502 None
-[2020-02-17 15:46:02,957] root - ERROR - Error graphql response from endpoint. Check logs.
+[2020-02-17 15:51:48,326] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:51:48,383] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-01-04
+--------------------------------------------------------------------------------
+[2020-02-17 15:51:48,386] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:51:53,878] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:51:53,884] INFO - root - Repository Count: 66
+[2020-02-17 15:51:53,884] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-04..2015-01-04 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 15:51:55,362] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:51:55,396] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:51:58,602] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:51:58,607] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjY2",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-04..2015-01-04 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 15:51:59,141] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:51:59,175] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-01-05
+--------------------------------------------------------------------------------
+[2020-02-17 15:51:59,178] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:52:05,943] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:52:05,949] INFO - root - Repository Count: 81
+[2020-02-17 15:52:05,949] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-05..2015-01-05 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 15:52:07,510] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:52:07,546] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:52:11,513] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:52:11,516] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjgx",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-05..2015-01-05 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 15:52:12,540] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:52:12,575] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-01-06
+--------------------------------------------------------------------------------
+[2020-02-17 15:52:12,578] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:52:17,975] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:52:17,980] INFO - root - Repository Count: 74
+[2020-02-17 15:52:17,981] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-06..2015-01-06 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 15:52:19,541] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:52:19,581] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:52:23,107] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:52:23,111] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjc0",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-06..2015-01-06 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 15:52:23,900] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:52:23,933] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-01-07
+--------------------------------------------------------------------------------
+[2020-02-17 15:52:23,936] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:52:30,131] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:52:30,135] INFO - root - Repository Count: 87
+[2020-02-17 15:52:30,135] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-07..2015-01-07 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 15:52:31,729] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:52:31,782] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:52:37,087] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:52:37,090] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjg3",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-07..2015-01-07 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 15:52:38,256] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:52:38,287] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-01-08
+--------------------------------------------------------------------------------
+[2020-02-17 15:52:38,290] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:52:44,409] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:52:44,415] INFO - root - Repository Count: 103
+[2020-02-17 15:52:44,415] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-08..2015-01-08 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 15:52:46,009] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:52:46,043] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:52:53,544] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:52:53,550] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjEwMA==",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-08..2015-01-08 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 15:52:55,104] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:52:55,180] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:52:56,210] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:52:56,212] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjEwMw==",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-08..2015-01-08 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 15:52:56,316] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:52:56,349] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-01-09
+--------------------------------------------------------------------------------
+[2020-02-17 15:52:56,352] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:53:03,062] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:53:03,065] INFO - root - Repository Count: 69
+[2020-02-17 15:53:03,065] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-09..2015-01-09 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 15:53:04,635] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:53:04,669] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:53:07,590] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:53:07,595] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjY5",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-09..2015-01-09 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 15:53:08,163] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:53:08,195] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-01-10
+--------------------------------------------------------------------------------
+[2020-02-17 15:53:08,196] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:53:14,660] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:53:14,665] INFO - root - Repository Count: 56
+[2020-02-17 15:53:14,665] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-10..2015-01-10 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 15:53:16,307] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:53:16,346] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:53:18,553] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:53:18,557] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjU2",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-10..2015-01-10 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 15:53:18,756] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:53:18,789] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-01-11
+--------------------------------------------------------------------------------
+[2020-02-17 15:53:18,792] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:53:26,654] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:53:26,660] INFO - root - Repository Count: 70
+[2020-02-17 15:53:26,661] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-11..2015-01-11 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 15:53:28,265] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:53:28,301] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:53:33,435] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:53:33,438] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjcw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-11..2015-01-11 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 15:53:34,048] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:53:34,083] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-01-12
+--------------------------------------------------------------------------------
+[2020-02-17 15:53:34,086] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:53:40,163] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:53:40,169] INFO - root - Repository Count: 86
+[2020-02-17 15:53:40,169] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-12..2015-01-12 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 15:53:41,786] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:53:41,827] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:53:47,267] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:53:47,272] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjg2",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-12..2015-01-12 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 15:53:48,404] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:53:48,436] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-01-13
+--------------------------------------------------------------------------------
+[2020-02-17 15:53:48,439] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:53:56,083] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:53:56,088] INFO - root - Repository Count: 70
+[2020-02-17 15:53:56,089] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-13..2015-01-13 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 15:53:57,970] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:53:58,022] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:54:00,598] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:54:00,603] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjcw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-13..2015-01-13 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 15:54:01,202] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:54:01,268] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-01-14
+--------------------------------------------------------------------------------
+[2020-02-17 15:54:01,272] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:54:07,290] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:54:07,296] INFO - root - Repository Count: 88
+[2020-02-17 15:54:07,296] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-14..2015-01-14 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 15:54:08,855] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:54:08,887] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:54:13,585] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:54:13,590] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjg4",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-14..2015-01-14 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 15:54:14,768] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:54:14,815] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-01-15
+--------------------------------------------------------------------------------
+[2020-02-17 15:54:14,818] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:54:22,482] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:54:22,488] INFO - root - Repository Count: 87
+[2020-02-17 15:54:22,489] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-15..2015-01-15 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 15:54:24,091] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:54:24,125] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:54:29,441] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:54:29,443] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjg3",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-15..2015-01-15 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 15:54:30,644] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:54:30,684] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-01-16
+--------------------------------------------------------------------------------
+[2020-02-17 15:54:30,687] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:54:39,212] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:54:39,218] INFO - root - Repository Count: 85
+[2020-02-17 15:54:39,219] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-16..2015-01-16 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 15:54:41,030] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:54:41,065] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:54:45,560] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:54:45,565] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjg1",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-16..2015-01-16 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 15:54:46,736] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:54:46,773] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-01-17
+--------------------------------------------------------------------------------
+[2020-02-17 15:54:46,776] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:54:53,172] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:54:53,177] INFO - root - Repository Count: 53
+[2020-02-17 15:54:53,177] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-17..2015-01-17 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 15:54:54,810] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:54:54,849] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:54:55,559] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:54:55,562] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUz",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-17..2015-01-17 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 15:54:55,656] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:54:55,687] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-01-18
+--------------------------------------------------------------------------------
+[2020-02-17 15:54:55,690] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:55:00,593] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:55:00,598] INFO - root - Repository Count: 55
+[2020-02-17 15:55:00,598] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-18..2015-01-18 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 15:55:02,157] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:55:02,200] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:55:03,175] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:55:03,178] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjU1",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-18..2015-01-18 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 15:55:03,336] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:55:03,368] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-01-19
+--------------------------------------------------------------------------------
+[2020-02-17 15:55:03,371] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:55:10,276] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:55:10,284] INFO - root - Repository Count: 84
+[2020-02-17 15:55:10,285] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-19..2015-01-19 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 15:55:11,944] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:55:11,977] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:55:16,278] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:55:16,282] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjg0",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-19..2015-01-19 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 15:55:17,516] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:55:17,549] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-01-20
+--------------------------------------------------------------------------------
+[2020-02-17 15:55:17,552] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:55:23,934] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:55:23,939] INFO - root - Repository Count: 83
+[2020-02-17 15:55:23,939] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-20..2015-01-20 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 15:55:25,604] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:55:25,651] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:55:29,737] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:55:29,739] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjgz",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-20..2015-01-20 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 15:55:30,829] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:55:30,868] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-01-21
+--------------------------------------------------------------------------------
+[2020-02-17 15:55:30,872] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:55:39,832] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:55:39,837] INFO - root - Repository Count: 82
+[2020-02-17 15:55:39,838] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-21..2015-01-21 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 15:55:41,448] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:55:41,503] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:55:46,186] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:55:46,190] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjgy",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-21..2015-01-21 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 15:55:47,216] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:55:47,248] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-01-22
+--------------------------------------------------------------------------------
+[2020-02-17 15:55:47,251] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:55:54,853] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:55:54,859] INFO - root - Repository Count: 71
+[2020-02-17 15:55:54,859] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-22..2015-01-22 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 15:55:56,484] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:55:56,518] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:55:59,589] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:55:59,593] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjcx",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-22..2015-01-22 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 15:56:00,425] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:56:00,462] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-01-23
+--------------------------------------------------------------------------------
+[2020-02-17 15:56:00,465] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:56:07,430] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:56:07,435] INFO - root - Repository Count: 68
+[2020-02-17 15:56:07,436] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-23..2015-01-23 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 15:56:09,014] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:56:09,056] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:56:12,015] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:56:12,019] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjY4",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-23..2015-01-23 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 15:56:12,558] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:56:12,591] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-01-24
+--------------------------------------------------------------------------------
+[2020-02-17 15:56:12,594] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:56:18,832] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:56:18,839] INFO - root - Repository Count: 46
+[2020-02-17 15:56:18,839] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjQ2",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-24..2015-01-24 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 15:56:20,290] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:56:20,326] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-01-25
+--------------------------------------------------------------------------------
+[2020-02-17 15:56:20,332] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:56:27,345] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:56:27,350] INFO - root - Repository Count: 50
+[2020-02-17 15:56:27,350] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-25..2015-01-25 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 15:56:29,058] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:56:29,097] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-01-26
+--------------------------------------------------------------------------------
+[2020-02-17 15:56:29,100] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:56:37,436] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:56:37,442] INFO - root - Repository Count: 88
+[2020-02-17 15:56:37,442] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-26..2015-01-26 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 15:56:39,081] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:56:39,119] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:56:45,274] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:56:45,279] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjg4",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-26..2015-01-26 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 15:56:46,501] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:56:46,560] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-01-27
+--------------------------------------------------------------------------------
+[2020-02-17 15:56:46,564] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:56:52,873] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:56:52,878] INFO - root - Repository Count: 111
+[2020-02-17 15:56:52,879] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-27..2015-01-27 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 15:56:54,502] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:56:54,539] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:57:02,150] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:57:02,155] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjEwMA==",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-27..2015-01-27 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 15:57:03,843] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:57:03,880] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:57:05,796] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:57:05,800] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjExMQ==",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-27..2015-01-27 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 15:57:06,181] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:57:06,210] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-01-28
+--------------------------------------------------------------------------------
+[2020-02-17 15:57:06,212] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:57:13,257] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:57:13,262] INFO - root - Repository Count: 77
+[2020-02-17 15:57:13,263] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-28..2015-01-28 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 15:57:14,865] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:57:14,914] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:57:19,748] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:57:19,752] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjc3",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-28..2015-01-28 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 15:57:20,610] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:57:20,658] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-01-29
+--------------------------------------------------------------------------------
+[2020-02-17 15:57:20,661] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:57:28,017] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:57:28,024] INFO - root - Repository Count: 84
+[2020-02-17 15:57:28,024] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-29..2015-01-29 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 15:57:29,673] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:57:30,044] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:57:35,847] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:57:35,852] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjg0",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-29..2015-01-29 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 15:57:36,945] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:57:37,013] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-01-30
+--------------------------------------------------------------------------------
+[2020-02-17 15:57:37,016] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:57:42,089] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:57:42,097] INFO - root - Repository Count: 69
+[2020-02-17 15:57:42,097] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-30..2015-01-30 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 15:57:43,769] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:57:43,809] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:57:47,508] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:57:47,511] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjY5",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-30..2015-01-30 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 15:57:48,099] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:57:48,130] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-01-31
+--------------------------------------------------------------------------------
+[2020-02-17 15:57:48,133] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:57:53,913] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:57:53,918] INFO - root - Repository Count: 69
+[2020-02-17 15:57:53,918] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-31..2015-01-31 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 15:57:55,468] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:57:55,525] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:57:59,001] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:57:59,003] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjY5",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-01-31..2015-01-31 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 15:57:59,607] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:57:59,640] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-02-01
+--------------------------------------------------------------------------------
+[2020-02-17 15:57:59,642] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:58:06,246] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:58:06,252] INFO - root - Repository Count: 54
+[2020-02-17 15:58:06,252] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-02-01..2015-02-01 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 15:58:07,897] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:58:07,932] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:58:09,037] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:58:09,039] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjU0",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-02-01..2015-02-01 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 15:58:09,155] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:58:09,188] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-02-02
+--------------------------------------------------------------------------------
+[2020-02-17 15:58:09,189] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:58:14,769] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:58:14,775] INFO - root - Repository Count: 87
+[2020-02-17 15:58:14,775] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-02-02..2015-02-02 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 15:58:16,503] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:58:16,540] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:58:22,132] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:58:22,137] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjg3",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-02-02..2015-02-02 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 15:58:23,390] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:58:23,424] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-02-03
+--------------------------------------------------------------------------------
+[2020-02-17 15:58:23,427] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:58:31,454] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:58:31,460] INFO - root - Repository Count: 82
+[2020-02-17 15:58:31,460] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-02-03..2015-02-03 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 15:58:33,043] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:58:33,075] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:58:36,849] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:58:36,854] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjgy",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-02-03..2015-02-03 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 15:58:37,869] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:58:37,901] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-02-04
+--------------------------------------------------------------------------------
+[2020-02-17 15:58:37,904] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:58:45,430] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:58:45,435] INFO - root - Repository Count: 75
+[2020-02-17 15:58:45,435] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-02-04..2015-02-04 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 15:58:47,096] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:58:47,136] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:58:50,746] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:58:50,751] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjc1",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-02-04..2015-02-04 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 15:58:51,561] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:58:51,602] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-02-05
+--------------------------------------------------------------------------------
+[2020-02-17 15:58:51,604] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:58:59,216] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:58:59,220] INFO - root - Repository Count: 85
+[2020-02-17 15:58:59,220] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-02-05..2015-02-05 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 15:59:00,808] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:59:00,839] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:59:06,824] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:59:06,829] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjg1",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-02-05..2015-02-05 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 15:59:07,921] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:59:07,955] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-02-06
+--------------------------------------------------------------------------------
+[2020-02-17 15:59:07,957] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:59:15,399] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:59:15,405] INFO - root - Repository Count: 69
+[2020-02-17 15:59:15,405] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-02-06..2015-02-06 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 15:59:16,973] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:59:17,006] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:59:19,902] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:59:19,906] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjY5",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-02-06..2015-02-06 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 15:59:20,513] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:59:20,549] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-02-07
+--------------------------------------------------------------------------------
+[2020-02-17 15:59:20,552] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:59:26,751] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:59:26,757] INFO - root - Repository Count: 55
+[2020-02-17 15:59:26,757] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-02-07..2015-02-07 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 15:59:28,388] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:59:28,423] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:59:29,874] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:59:29,877] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjU1",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-02-07..2015-02-07 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 15:59:30,197] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:59:30,322] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-02-08
+--------------------------------------------------------------------------------
+[2020-02-17 15:59:30,325] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:59:38,491] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:59:38,497] INFO - root - Repository Count: 62
+[2020-02-17 15:59:38,497] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-02-08..2015-02-08 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 15:59:40,283] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:59:40,320] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:59:42,445] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:59:42,448] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjYy",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-02-08..2015-02-08 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 15:59:42,841] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:59:42,873] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-02-09
+--------------------------------------------------------------------------------
+[2020-02-17 15:59:42,875] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:59:50,051] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:59:50,057] INFO - root - Repository Count: 78
+[2020-02-17 15:59:50,058] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-02-09..2015-02-09 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 15:59:51,590] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:59:51,628] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 15:59:55,926] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 15:59:55,930] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjc4",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-02-09..2015-02-09 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 15:59:56,916] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 15:59:56,946] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-02-10
+--------------------------------------------------------------------------------
+[2020-02-17 15:59:56,949] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 16:00:07,091] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 16:00:07,096] INFO - root - Repository Count: 75
+[2020-02-17 16:00:07,097] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-02-10..2015-02-10 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 16:00:08,710] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 16:00:08,748] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 16:00:13,052] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 16:00:13,055] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjc1",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-02-10..2015-02-10 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 16:00:13,838] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 16:00:13,870] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-02-11
+--------------------------------------------------------------------------------
+[2020-02-17 16:00:13,873] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 16:00:20,453] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 16:00:20,456] INFO - root - Repository Count: 141
+[2020-02-17 16:00:20,456] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-02-11..2015-02-11 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 16:00:22,035] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 16:00:22,076] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 16:00:29,498] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 16:00:29,503] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjEwMA==",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-02-11..2015-02-11 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 16:00:31,118] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 16:00:31,154] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 16:00:38,583] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 16:00:38,589] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjE0MQ==",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-02-11..2015-02-11 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 16:00:39,901] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 16:00:39,956] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-02-12
+--------------------------------------------------------------------------------
+[2020-02-17 16:00:39,958] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 16:00:47,145] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 16:00:47,151] INFO - root - Repository Count: 75
+[2020-02-17 16:00:47,152] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-02-12..2015-02-12 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 16:00:48,730] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 16:00:48,771] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 16:00:52,519] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 16:00:52,524] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjc1",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-02-12..2015-02-12 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 16:00:53,318] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 16:00:53,350] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-02-13
+--------------------------------------------------------------------------------
+[2020-02-17 16:00:53,353] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 16:01:00,337] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 16:01:00,342] INFO - root - Repository Count: 93
+[2020-02-17 16:01:00,343] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-02-13..2015-02-13 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 16:01:02,088] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 16:01:02,125] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 16:01:08,428] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 16:01:08,433] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjkz",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-02-13..2015-02-13 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 16:01:09,799] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 16:01:09,830] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-02-14
+--------------------------------------------------------------------------------
+[2020-02-17 16:01:09,832] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 16:01:16,818] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 16:01:16,821] INFO - root - Repository Count: 49
+[2020-02-17 16:01:16,821] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjQ5",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-02-14..2015-02-14 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 16:01:18,434] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 16:01:18,466] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-02-15
+--------------------------------------------------------------------------------
+[2020-02-17 16:01:18,468] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 16:01:27,233] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 16:01:27,239] INFO - root - Repository Count: 60
+[2020-02-17 16:01:27,240] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-02-15..2015-02-15 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 16:01:28,761] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 16:01:28,801] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 16:01:30,624] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 16:01:30,627] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjYw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-02-15..2015-02-15 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 16:01:30,914] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 16:01:30,950] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-02-16
+--------------------------------------------------------------------------------
+[2020-02-17 16:01:30,953] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 16:01:38,787] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 16:01:38,790] INFO - root - Repository Count: 77
+[2020-02-17 16:01:38,790] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-02-16..2015-02-16 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 16:01:40,377] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 16:01:40,432] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 16:01:44,623] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 16:01:44,627] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjc3",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-02-16..2015-02-16 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 16:01:45,516] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 16:01:45,570] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-02-17
+--------------------------------------------------------------------------------
+[2020-02-17 16:01:45,573] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 16:01:52,741] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 16:01:52,747] INFO - root - Repository Count: 87
+[2020-02-17 16:01:52,748] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-02-17..2015-02-17 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 16:01:54,615] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 16:01:55,016] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 16:02:01,030] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 16:02:01,035] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjg3",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-02-17..2015-02-17 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 16:02:02,220] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 16:02:02,253] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-02-18
+--------------------------------------------------------------------------------
+[2020-02-17 16:02:02,256] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 16:02:12,217] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 16:02:12,220] INFO - root - Repository Count: 79
+[2020-02-17 16:02:12,220] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-02-18..2015-02-18 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 16:02:13,851] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 16:02:13,888] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 16:02:18,240] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 16:02:18,245] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjc5",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-02-18..2015-02-18 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 16:02:19,173] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 16:02:19,215] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-02-19
+--------------------------------------------------------------------------------
+[2020-02-17 16:02:19,218] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 16:02:25,599] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 16:02:25,605] INFO - root - Repository Count: 77
+[2020-02-17 16:02:25,606] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-02-19..2015-02-19 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 16:02:27,240] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 16:02:27,290] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 16:02:30,442] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 16:02:30,447] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjc3",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-02-19..2015-02-19 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 16:02:31,301] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 16:02:31,332] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-02-20
+--------------------------------------------------------------------------------
+[2020-02-17 16:02:31,335] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 16:02:37,233] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 16:02:37,240] INFO - root - Repository Count: 73
+[2020-02-17 16:02:37,241] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-02-20..2015-02-20 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 16:02:38,905] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 16:02:38,937] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 16:02:42,591] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 16:02:42,593] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjcz",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-02-20..2015-02-20 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 16:02:43,319] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 16:02:43,362] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-02-21
+--------------------------------------------------------------------------------
+[2020-02-17 16:02:43,366] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 16:02:50,749] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 16:02:50,753] INFO - root - Repository Count: 60
+[2020-02-17 16:02:50,753] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-02-21..2015-02-21 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 16:02:52,414] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 16:02:52,461] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 16:02:54,156] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 16:02:54,158] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjYw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-02-21..2015-02-21 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 16:02:54,459] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 16:02:54,489] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-02-22
+--------------------------------------------------------------------------------
+[2020-02-17 16:02:54,492] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 16:03:01,465] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 16:03:01,470] INFO - root - Repository Count: 74
+[2020-02-17 16:03:01,471] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjUw",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-02-22..2015-02-22 pushed:2020-01-01..*"
+}
+hasNextPage:True
+[2020-02-17 16:03:03,012] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 16:03:03,353] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 16:03:07,249] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 200 None
+[2020-02-17 16:03:07,252] INFO - root - vars:{
+    "maxitems": 50,
+    "cursor": "Y3Vyc29yOjc0",
+    "search_query": "archived:false mirror:false fork:true stars:1..* created:2015-02-22..2015-02-22 pushed:2020-01-01..*"
+}
+hasNextPage:False
+[2020-02-17 16:03:07,983] INFO - root - Executed SQL query. Affected row(s):-1
+[2020-02-17 16:03:08,016] INFO - root - Reached end of gql pagination or exceeded repo count. New created start date:2015-02-23
+--------------------------------------------------------------------------------
+[2020-02-17 16:03:08,019] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 16:03:19,403] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 502 None
+[2020-02-17 16:03:19,405] ERROR - root - Error graphql response from endpoint. Check logs.
 {
     "data": null,
     "errors": [
         {
-            "message": "Something went wrong while executing your query. This may be the result of a timeout, or it could be a GitHub bug. Please include `C9AE:6FF8:2402EA:435CA0:5E4AFB9F` when reporting this issue."
+            "message": "Something went wrong while executing your query. This may be the result of a timeout, or it could be a GitHub bug. Please include `C990:6459:14FC59:341F0F:5E4AFFAC` when reporting this issue."
+        }
+    ]
+}
+[2020-02-17 16:04:19,469] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 16:04:29,819] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 502 None
+[2020-02-17 16:04:29,822] ERROR - root - Error graphql response from endpoint. Check logs.
+{
+    "data": null,
+    "errors": [
+        {
+            "message": "Something went wrong while executing your query. This may be the result of a timeout, or it could be a GitHub bug. Please include `C992:2E1F:149947:31812E:5E4AFFF2` when reporting this issue."
+        }
+    ]
+}
+[2020-02-17 16:05:29,886] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 16:05:41,281] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 502 None
+[2020-02-17 16:05:41,283] ERROR - root - Error graphql response from endpoint. Check logs.
+{
+    "data": null,
+    "errors": [
+        {
+            "message": "Something went wrong while executing your query. This may be the result of a timeout, or it could be a GitHub bug. Please include `C98A:2D31:1467A7:31859E:5E4B0039` when reporting this issue."
+        }
+    ]
+}
+[2020-02-17 16:06:41,338] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 16:06:51,695] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 502 None
+[2020-02-17 16:06:51,699] ERROR - root - Error graphql response from endpoint. Check logs.
+{
+    "data": null,
+    "errors": [
+        {
+            "message": "Something went wrong while executing your query. This may be the result of a timeout, or it could be a GitHub bug. Please include `C97A:3D4B:17EBB4:302CC9:5E4B0080` when reporting this issue."
+        }
+    ]
+}
+[2020-02-17 16:07:51,709] DEBUG - urllib3.connectionpool - Starting new HTTPS connection (1): api.github.com:443
+[2020-02-17 16:08:02,225] DEBUG - urllib3.connectionpool - https://api.github.com:443 "POST /graphql HTTP/1.1" 502 None
+[2020-02-17 16:08:02,228] ERROR - root - Error graphql response from endpoint. Check logs.
+{
+    "data": null,
+    "errors": [
+        {
+            "message": "Something went wrong while executing your query. This may be the result of a timeout, or it could be a GitHub bug. Please include `C98E:7D96:B9EBC:1C7697:5E4B00C6` when reporting this issue."
         }
     ]
 }

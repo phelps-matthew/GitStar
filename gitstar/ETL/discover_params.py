@@ -41,7 +41,7 @@ def print_json(obj):
 def set_logger():
     """Intialize root logger here."""
     logging.basicConfig(
-        filename="logs/ETL.log",
+        filename="logs/discover_params.log",
         filemode="w",  # will rewrite on each run
         level=logging.INFO,
         format="[%(asctime)s] %(name)s - %(levelname)s - %(message)s",
@@ -76,42 +76,41 @@ def dbload(odbc_cnxn, value_list):
     odbc_cnxn.commit()
 
 
-def gql_generator(c_start, stars=0):
+def gql_generator(c_start, minstars=0):
     """Construct graphql query response generator based on repo creation date
     """
     gql_gen = gqlquery.GitHubSearchQuery(
         PAT,
         created_start=c_start,
-        created_end=c_start.shift(days=+1),
+        created_end=c_start,
         last_pushed=LAST_PUSHED,
         maxitems=MAXITEMS,
-        stars=stars,
+        minstars=minstars,
     ).generator()
     return gql_gen
 
 
-def repo_rate(created_start, created_end, stars):
+def repo_rate(created_start, created_end, minstars):
     """Determine repos created per day based on star criteria.
         Stars are greater than given int value.
     """
-    gql_gen = gql_generator(created_start, stars=stars)
+    gql_gen = gql_generator(created_start, minstars=minstars)
     delta = (created_end - created_start).total_seconds()
     day = created_start
     dates_repos = {"dates": [], "repos": []}
-    while delta > 0:
+    while delta >= 0:
         # Iterate generator. No pagination required.
         repo_count = repocount(next(gql_gen))
         params = {
             "CreatedStart": day,
-            "CreatedEnd": day.shift(days=+1),
             "RepoCount": repo_count,
         }
         logging.info(params)
+        dates_repos["dates"].append(day)
+        dates_repos["repos"].append(repo_count)
         day = day.shift(days=+1)
-        gql_gen = gql_generator(day, stars)
+        gql_gen = gql_generator(day, minstars=minstars)
         delta = (created_end - day).total_seconds()
-        dates_repos["dates"].append(params["CreatedStart"])
-        dates_repos["repos"].append(params["RepoCount"])
     return dates_repos
 
 
@@ -163,21 +162,23 @@ def star_read(star):
 def main():
     """Execute ETL process"""
     set_logger()
-    star = 1
-    rdict = star_read(star)
-    # Convert from str to arrow
-    rdict["dates"] = list(map(lambda x: arrow.get(x), rdict["dates"]))
-    dates = rdict["dates"]
-    repos = rdict["repos"]
-    fig, ax = plot_repo_rate(dates, repos, star)
-    # plt.show()
-    fig.savefig(
-        "data/repo_star_{}.png".format(star),
-        transparent=False,
-        dpi=100,
-        bbox_inches="tight",  # fit bounds of figure to plot
-    )
-    # rdict = repo_rate(CREATED_START, CREATED_END, star)
+    # star = 1
+    # rdict = star_read(star)
+    # # Convert from str to arrow
+    # rdict["dates"] = list(map(lambda x: arrow.get(x), rdict["dates"]))
+    # dates = rdict["dates"]
+    # repos = rdict["repos"]
+    # fig, ax = plot_repo_rate(dates, repos, star)
+    # # plt.show()
+    # fig.savefig(
+    #     "data/repo_star_{}.png".format(star),
+    #     transparent=False,
+    #     dpi=100,
+    #     bbox_inches="tight",  # fit bounds of figure to plot
+    # )
+    for star in range(3):
+        rdict = repo_rate(CREATED_START, CREATED_END, star)
+        star_write(rdict, star)
 
 
 if __name__ == "__main__":

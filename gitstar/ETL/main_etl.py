@@ -34,11 +34,11 @@ DRIVER = "{ODBC Driver 17 for SQL Server}"
 STATUS_MSG = "Executed SQL query. Affected row(s):{}"
 INSERT_QUERY = config.INSERT_QUERY
 # Repo creation start, end, and last pushed. Format
-CREATED_START = arrow.get("2019-01-06")
-CREATED_END = arrow.get("2019-01-08")
-LAST_PUSHED = arrow.get("2020-01-01")
+CREATED_START = arrow.get("2019-12-15")
+CREATED_END = arrow.get("2019-12-28")
+PUSH_START = arrow.get("2020-01-01")
 MAXITEMS = 50
-MINSTARS = 2
+MINSTARS = 1
 MAXSTARS = None
 
 
@@ -94,7 +94,7 @@ def gql_generator(c_start):
         PAT,
         created_start=c_start,
         created_end=c_start,
-        last_pushed=LAST_PUSHED,
+        pushed_start=PUSH_START,
         maxitems=MAXITEMS,
         minstars=MINSTARS,
         maxstars=MAXSTARS,
@@ -125,14 +125,14 @@ def main():
             #repos = [node["nameWithOwner"] for node in clean_data]
             # Load into db
             #logging.info('\n'+'\n'.join(repos))
-            dbload(dbcnxn, value_list)
+            #dbload(dbcnxn, value_list)
             print("[{}] {} rows inserted into db".format(arrow.now(), MAXITEMS))
-        except StopIteration:
+        except (StopIteration, gqlquery.RepoCountError):
             day = day.shift(days=+1)
             gql_gen = gql_generator(day)
             delta = (CREATED_END - day).total_seconds()
             logging.info(
-                "Reached end of gql pagination."
+                "Reached end of gql pagination or exceeded repo count. "
                 "New created start date:{}".format(day.format("YYYY-MM-DD"))
             )
             logging.info("-" * 80)

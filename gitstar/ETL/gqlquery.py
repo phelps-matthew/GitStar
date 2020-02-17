@@ -86,7 +86,8 @@ class GitHubSearchQuery(GitHubGraphQLQuery):
         PAT,
         created_start=arrow.get("2021-01-01"),
         created_end=arrow.get("2021-02-01"),
-        last_pushed=arrow.get("2020-01-01"),
+        pushed_start=arrow.get("2020-01-01"),
+        pushed_end=None,
         maxitems=1,
         minstars=1,
         maxstars=None,
@@ -99,6 +100,7 @@ class GitHubSearchQuery(GitHubGraphQLQuery):
         self.variables["cursor"] = None
         # Copy class attribute list
         searchq = GitHubSearchQuery.SEARCH_QUERY[:]
+        pushend = pushed_end.format("YYYY-MM-DD") if pushed_end else None
         searchq.extend(
             [
                 "stars:{}..{}".format(minstars, maxstars or "*"),
@@ -106,7 +108,9 @@ class GitHubSearchQuery(GitHubGraphQLQuery):
                     created_start.format("YYYY-MM-DD"),
                     created_end.format("YYYY-MM-DD"),
                 ),
-                "pushed:{}..*".format(last_pushed.format("YYYY-MM-DD")),
+                "pushed:{}..{}".format(
+                    pushed_start.format("YYYY-MM-DD"), pushend or "*",
+                ),
             ]
         )
         self.variables["search_query"] = " ".join(searchq)
@@ -127,6 +131,11 @@ class GitHubSearchQuery(GitHubGraphQLQuery):
                 rep_count = gen["data"]["search"]["repositoryCount"]
                 logging.info("Repository Count: {}".format(rep_count))
                 print("Repository Count: {}".format(rep_count))
+                if rep_count > 1000:
+                    logging.warning(
+                        "Repo Count {} exceeds limits!".format(rep_count)
+                    )
+                    raise RepoCountError(rep_count, "Repo Count exceeded!")
             # Acquire rate limits
             fuel = gen["data"]["rateLimit"]["remaining"]
             refuel_time = gen["data"]["rateLimit"]["resetAt"]
@@ -159,3 +168,10 @@ class GitHubSearchQuery(GitHubGraphQLQuery):
                 yield gen
             else:
                 yield gen
+
+
+class RepoCountError(Exception):
+    def __init__(self, repo_count, msg):
+        self.repo_count = repo_count
+        self.msg = msg
+        super().__init__(self)

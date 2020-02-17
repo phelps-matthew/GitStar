@@ -87,12 +87,13 @@ def dbload(odbc_cnxn, value_list):
 
 
 def gql_generator(c_start):
-    """Construct graphql query response generator based on repo creation date
+    """Construct graphql query response generator based on repo creation date.
+        Date range {}..{} is inclusive.
     """
     gql_gen = gqlquery.GitHubSearchQuery(
         PAT,
         created_start=c_start,
-        created_end=c_start.shift(days=+1),
+        created_end=c_start,
         last_pushed=LAST_PUSHED,
         maxitems=MAXITEMS,
         minstars=MINSTARS,
@@ -121,9 +122,9 @@ def main():
             clean_data = transform(next(gql_gen))
             # Construct generator of dict values
             value_list = (list(node.values()) for node in clean_data)
-            repos = [node["nameWithOwner"] for node in clean_data]
+            #repos = [node["nameWithOwner"] for node in clean_data]
             # Load into db
-            logging.info('\n'+'\n'.join(repos))
+            #logging.info('\n'+'\n'.join(repos))
             dbload(dbcnxn, value_list)
             print("[{}] {} rows inserted into db".format(arrow.now(), MAXITEMS))
         except StopIteration:

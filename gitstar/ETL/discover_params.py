@@ -9,6 +9,7 @@ import logging
 import arrow
 import pyodbc
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 import numpy as np
 from gitstar import config
 from gitstar.ETL import gqlquery
@@ -25,7 +26,7 @@ DRIVER = "{ODBC Driver 17 for SQL Server}"
 STATUS_MSG = "Executed SQL query. Affected row(s):{}"
 INSERT_QUERY = config.INSERT_QUERY
 # Repo creation start, end, and last pushed. Format
-CREATED_START = arrow.get("2019-12-29")
+CREATED_START = arrow.get("2015-01-01")
 CREATED_END = arrow.get("2020-01-01")
 LAST_PUSHED = arrow.get("2020-01-01")
 MAXITEMS = 1
@@ -94,10 +95,10 @@ def repo_rate(created_start, created_end, stars):
         Stars are greater than given int value.
     """
     gql_gen = gql_generator(created_start, stars=stars)
-    delta = bool((created_end - created_start).total_seconds())
+    delta = (created_end - created_start).total_seconds()
     day = created_start
     dates_repos = {"dates": [], "repos": []}
-    while delta:
+    while delta > 0:
         # Iterate generator. No pagination required.
         repo_count = repocount(next(gql_gen))
         params = {
@@ -108,34 +109,55 @@ def repo_rate(created_start, created_end, stars):
         logging.info(params)
         day = day.shift(days=+1)
         gql_gen = gql_generator(day, stars)
-        delta = bool((created_end - day).total_seconds())
+        delta = (created_end - day).total_seconds()
         dates_repos["dates"].append(params["CreatedStart"])
         dates_repos["repos"].append(params["RepoCount"])
     return dates_repos
 
 
-def plot_repo_rate(x, y):
+def plot_repo_rate(x, y, stars):
+    # Convert arrow -> datetime -> np.datetime64, store in np.array
+    x = np.array(list(map(lambda z: np.datetime64(z.datetime), x)))
+    y = np.array(y)
+    # x axis date parsing
+    years = mdates.YearLocator()
+    months = mdates.MonthLocator()
+    years_fmt = mdates.DateFormatter("%Y")
+    # Create Figure.figure and Axes.axes instances
     fig, ax = plt.subplots()
-    ax.plot(y, y)
-    #    ax.xaxis.set_major_formatter(lambda x: x.format("YYY
-    ax.set(xlabel="Dates", ylabel="Repo Count", title="Repo Rate")
+    ax.plot(x, y, "b.")
+    ax.set(
+        ylabel="Repos Created (daily)",
+        title="Created Repos, Stars:>{}".format(stars),
+    )
+    # Format x ticks
+    ax.xaxis.set_major_locator(years)
+    ax.xaxis.set_major_formatter(years_fmt)
+    ax.xaxis.set_minor_locator(months)
+    # Add range to nearest month
+    datemin = np.datetime64(x[0], "M") - np.timedelta64(1, "M")
+    datemax = np.datetime64(x[-1], "M") + np.timedelta64(1, "M")
+    ax.set_xlim(datemin, datemax)
+    # Format coordinates
+    ax.format_xdata = mdates.DateFormatter("%Y-%m-%d")
+    ax.grid(True)
+    # Rotate x labels, makes room
+    fig.autofmt_xdate()
     return fig, ax
 
 
 def main():
     """Execute ETL process"""
     set_logger()
-    for star in range(1):
+    for star in range(0,12,2):
         rdict = repo_rate(CREATED_START, CREATED_END, star)
+        rdict["dates"] = list(map(lambda x: x.format(), rdict["dates"]))
+        with open("data/repo_star_{}".format(star), "w") as file:
+            json.dump(rdict, file, indent=4)
         dates = np.array(rdict["dates"])
         repos = np.array(rdict["repos"])
-        print(dates)
-        print(repos)
-        fig, ax = plot_repo_rate(dates, repos)
-    fig.show()
-    plt.plot([1, 2, 3, 4])
-    plt.ylabel('some numbers')
-    plt.show()
+        # fig, ax = plot_repo_rate(dates, repos, star)
+    # plt.show()
 
 
 if __name__ == "__main__":

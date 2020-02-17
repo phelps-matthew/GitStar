@@ -125,49 +125,53 @@ class GitHubSearchQuery(GitHubGraphQLQuery):
         nextpage = True
         index = 1  # For debugging
         while nextpage:
-            gen = self.gql_response()
-            # log repository count
-            if index == 1:
-                rep_count = gen["data"]["search"]["repositoryCount"]
-                logging.info("Repository Count: {}".format(rep_count))
-                print("Repository Count: {}".format(rep_count))
-                if rep_count > 1000:
-                    logging.warning(
-                        "Repo Count {} exceeds limits!".format(rep_count)
-                    )
-                    raise RepoCountError(rep_count, "Repo Count exceeded!")
-            # Acquire rate limits
-            fuel = gen["data"]["rateLimit"]["remaining"]
-            refuel_time = gen["data"]["rateLimit"]["resetAt"]
-            # Update cursor
-            self.variables["cursor"] = gen["data"]["search"]["pageInfo"][
-                "endCursor"
-            ]
-            # Update hasNextPage
-            nextpage = gen["data"]["search"]["pageInfo"]["hasNextPage"]
-            logging.info(
-                "Cursor: {} hasNextPage:{}".format(
-                    self.variables["cursor"], nextpage
-                )
-            )
-            logging.info(json.dumps(self.variables, indent=4))
-            print(index)
-            index += 1
-            # Handle rate limiting
-            if fuel <= 1:
-                # returns datetime.timedelta obj
-                delta = arrow.get(refuel_time) - arrow.utcnow()
-                extra = 10  # additional delay
+            try:
+                gen = self.gql_response()
+                # log repository count
+                if index == 1:
+                    rep_count = gen["data"]["search"]["repositoryCount"]
+                    logging.info("Repository Count: {}".format(rep_count))
+                    print("Repository Count: {}".format(rep_count))
+                    if rep_count > 1000:
+                        logging.warning(
+                            "Repo Count {} exceeds limits!".format(rep_count)
+                        )
+                        raise RepoCountError(rep_count, "Repo Count exceeded!")
+                # Acquire rate limits
+                fuel = gen["data"]["rateLimit"]["remaining"]
+                refuel_time = gen["data"]["rateLimit"]["resetAt"]
+                # Update cursor
+                self.variables["cursor"] = gen["data"]["search"]["pageInfo"][
+                    "endCursor"
+                ]
+                # Update hasNextPage
+                nextpage = gen["data"]["search"]["pageInfo"]["hasNextPage"]
                 logging.info(
-                    "Out of fuel. Will resume in {} seconds.".format(
-                        delta.total_seconds() + extra
+                    "Cursor: {} hasNextPage:{}".format(
+                        self.variables["cursor"], nextpage
                     )
                 )
-                sleep(delta.total_seconds() + extra)
-                logging.info("Refueled, resuming operation.")
-                yield gen
-            else:
-                yield gen
+                logging.info(json.dumps(self.variables, indent=4))
+                print(index)
+                index += 1
+                # Handle rate limiting
+                if fuel <= 1:
+                    # returns datetime.timedelta obj
+                    delta = arrow.get(refuel_time) - arrow.utcnow()
+                    extra = 10  # additional delay
+                    logging.info(
+                        "Out of fuel. Will resume in {} seconds.".format(
+                            delta.total_seconds() + extra
+                        )
+                    )
+                    sleep(delta.total_seconds() + extra)
+                    logging.info("Refueled, resuming operation.")
+                    yield gen
+                else:
+                    yield gen
+            except KeyError:
+                logging.error("KeyError Occured!\n{}".format(json.dumps(gen,indent=4)))
+                return StopIteration
 
 
 class RepoCountError(Exception):

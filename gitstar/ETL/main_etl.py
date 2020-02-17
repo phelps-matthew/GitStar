@@ -86,7 +86,7 @@ def dbload(odbc_cnxn, value_list):
     odbc_cnxn.commit()
 
 
-def gql_generator(c_start):
+def gql_generator(c_start, pushed_start, pushed_end=None):
     """Construct graphql query response generator based on repo creation date.
         Date range {}..{} is inclusive.
     """
@@ -94,7 +94,8 @@ def gql_generator(c_start):
         PAT,
         created_start=c_start,
         created_end=c_start,
-        pushed_start=PUSH_START,
+        pushed_start=pushed_start,
+        pushed_end=pushed_end,
         maxitems=MAXITEMS,
         minstars=MINSTARS,
         maxstars=MAXSTARS,
@@ -102,40 +103,48 @@ def gql_generator(c_start):
     return gql_gen
 
 
-def main():
-    """Execute ETL process"""
-    set_logger()
+def etl_loop(created_start, created_end, pushed_start, pushed_end=None):
     dbcnxn = dbconnection()
-    gql_gen = gql_generator(CREATED_START)
+    gql_gen = gql_generator(
+        created_start, pushed_start, pushed_end=pushed_end
+    )
     logging.info("-" * 80)
     logging.info(
-        "Begin main(). Created start date:{}".format(
-            CREATED_START.format("YYYY-MM-DD")
+        "Begin etl_loop(). Created start date:{}".format(
+            created_start.format("YYYY-MM-DD")
         )
     )
     # Loop until end date
-    delta = (CREATED_END - CREATED_START).total_seconds()
-    day = CREATED_START
+    delta = (created_end - created_start).total_seconds()
+    day = created_start
     while delta >= 0:
         try:
             # Iterate generator. Normalize nested fields.
             clean_data = transform(next(gql_gen))
             # Construct generator of dict values
             value_list = (list(node.values()) for node in clean_data)
-            #repos = [node["nameWithOwner"] for node in clean_data]
+            # repos = [node["nameWithOwner"] for node in clean_data]
             # Load into db
-            #logging.info('\n'+'\n'.join(repos))
-            #dbload(dbcnxn, value_list)
+            # logging.info('\n'+'\n'.join(repos))
+            # dbload(dbcnxn, value_list)
             print("[{}] {} rows inserted into db".format(arrow.now(), MAXITEMS))
         except (StopIteration, gqlquery.RepoCountError):
             day = day.shift(days=+1)
-            gql_gen = gql_generator(day)
-            delta = (CREATED_END - day).total_seconds()
+            gql_gen = gql_generator(
+                day, pushed_start=pushed_start, pushed_end=pushed_end
+            )
+            delta = (created_end - day).total_seconds()
             logging.info(
                 "Reached end of gql pagination or exceeded repo count. "
                 "New created start date:{}".format(day.format("YYYY-MM-DD"))
             )
             logging.info("-" * 80)
+
+
+def main():
+    """Execute ETL process"""
+    set_logger()
+    etl_loop(CREATED_START, CREATED_END, PUSH_START)
     logging.info("Exit main()")
 
 

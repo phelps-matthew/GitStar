@@ -100,6 +100,7 @@ class GitHubSearchQuery(GitHubGraphQLQuery):
         self.variables["cursor"] = None
         # Copy class attribute list
         searchq = GitHubSearchQuery.SEARCH_QUERY[:]
+        # Form search query string (gql variable)
         pushend = pushed_end.format("YYYY-MM-DD") if pushed_end else None
         searchq.extend(
             [
@@ -114,6 +115,8 @@ class GitHubSearchQuery(GitHubGraphQLQuery):
             ]
         )
         self.variables["search_query"] = " ".join(searchq)
+        # Helpful for tracking date in generator()
+        self.created_start = created_start
 
     def generator(self):
         """Pagination generator iterated upon query response boolean 'hasNextPage'.
@@ -131,7 +134,11 @@ class GitHubSearchQuery(GitHubGraphQLQuery):
                 if index == 1:
                     rep_count = gen["data"]["search"]["repositoryCount"]
                     logging.info("Repository Count: {}".format(rep_count))
-                    print("Repository Count: {}".format(rep_count))
+                    print(
+                        "Date:{}. Repository Count: {}".format(
+                            rep_count, self.created_start
+                        )
+                    )
                     # log queries that exceed node limit
                     if rep_count > 1000:
                         logging.warning(

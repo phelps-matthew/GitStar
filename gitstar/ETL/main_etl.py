@@ -34,7 +34,7 @@ DRIVER = "{ODBC Driver 17 for SQL Server}"
 STATUS_MSG = "Executed SQL query. Affected row(s):{}"
 INSERT_QUERY = config.INSERT_QUERY
 # Repo creation start, end, and last pushed. Format
-CREATED_START = arrow.get("2015-03-26")
+CREATED_START = arrow.get("2018-09-21")
 CREATED_END = arrow.get("2019-12-31")
 PUSH_START = arrow.get("2020-01-01")
 MAXITEMS = 50
@@ -48,10 +48,10 @@ def print_json(obj):
     print(json.dumps(obj, indent=4))
 
 
-def set_logger():
+def set_logger(filename):
     """Intialize root logger here."""
     logging.basicConfig(
-        filename="logs/ETL.log",
+        filename=filename,
         filemode="w",  # will rewrite on each run
         level=logging.DEBUG,
         format="[%(asctime)s] %(levelname)s - %(name)s - %(message)s",
@@ -143,10 +143,49 @@ def etl_loop(created_start, created_end, pushed_start, pushed_end=None):
             )
 
 
+def special_etl():
+    """Dates that exceeded 1000 repo count must be treated specially
+        Last pushed date range is sliced to fetch < 1000 repos/query
+    """
+    # Determined by logs of primary ETL
+    special_dates = [
+        ("2019-11-18", "2019-11-22"),
+        ("2019-11-25", "2019-11-28"),
+        ("2019-12-02", "2019-12-07"),
+        ("2019-12-09", "2019-12-14"),
+        ("2019-12-16", "2019-12-25"),
+        ("2019-12-26", "2020-01-01"),
+    ]
+    # This range of push dates was verfied to return < 1k repos
+    push_start1 = arrow.get("2020-01-01")
+    push_end1 = arrow.get("2020-01-20")
+    push_start2 = arrow.get("2020-01-21")
+    for c_start, c_end in special_dates:
+        # First push slice
+        etl_loop(
+            created_start=arrow.get(c_start),
+            created_end=arrow.get(c_end),
+            pushed_start=push_start1,
+            pushed_end=push_end1,
+        )
+        # Second push slice
+        etl_loop(
+            created_start=arrow.get(c_start),
+            created_end=arrow.get(c_end),
+            pushed_start=push_start2,
+        )
+
+
 def main():
     """Execute ETL process"""
-    set_logger()
-    etl_loop(CREATED_START, CREATED_END, PUSH_START)
+    set_logger("logs/ETL_special.log")
+
+    # Primary ETL (uncomment below)
+    # etl_loop(CREATED_START, CREATED_END, PUSH_START)
+
+    # Follow up ETL
+    special_etl()
+
     logging.info("Exit main()")
 
 

@@ -181,7 +181,7 @@ def main():
     set_logger("logs/ETL_special.log")
 
     # Primary ETL (uncomment below)
-    # etl_loop(CREATED_START, CREATED_END, PUSH_START)
+    etl_loop(CREATED_START, CREATED_END, PUSH_START)
 
     # Follow up ETL
     special_etl()

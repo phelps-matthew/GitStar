@@ -180,7 +180,7 @@ def main():
     """Execute ETL process"""
     set_logger("logs/ETL_special.log")
 
-    # Primary ETL (uncomment below)
+    # Primary ETL
     etl_loop(CREATED_START, CREATED_END, PUSH_START)
 
     # Follow up ETL

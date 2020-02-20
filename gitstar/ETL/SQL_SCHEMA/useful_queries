@@ -8,6 +8,23 @@ ORDER BY nameWithOwner DESC
 # Count unique
 SELECT COUNT(DISTINCT id) FROM gs_table_v1
 
+# Count duplicate
+SELECT COUNT(id) - COUNT(DISTINCT id) FROM gs_table_v1
+
 # Table creation for NVARCHAR
 CREATE TABLE tv1(
 nvc5 NVARCHAR(5) NOT NULL DEFAULT '12345');
+
+# Common table expression to list all duplicates
+WITH CTE AS(
+   SELECT *,
+       RN = ROW_NUMBER()OVER(PARTITION BY id ORDER BY id)
+   FROM gs_table_v1
+)
+SELECT TOP(10) * FROM CTE WHERE RN > 1 # List 10
+SELECT COUNT(*) FROM CTE WHERE RN > 1 # Count all duplicates
+DELETE FROM CTE WHERE RN > 1 # Delete all duplicates
+
+# OR condition must be separated
+SELECT TOP 100 * from gs_table_v1
+WHERE isDisabled = 1 OR isLocked = 1

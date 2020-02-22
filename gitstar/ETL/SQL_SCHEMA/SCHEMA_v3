@@ -1,0 +1,25 @@
+SELECT
+    stargazers,
+    openissues,
+    closedissues,
+    forkCount,
+    pullRequests,
+    commitnum,
+    watchers,
+    diskUsage_kb,
+    ISNULL(readme_bytes, 0) as readme_bytes,
+    releases,
+    projects,
+    milestones,
+    deployments,
+    issuelabels,
+    repositoryTopics,
+    ISNULL(LEN(description), 0) as descr_len,
+    ISNULL(CAST(CAST(LEN(homepageUrl) as BIT) as INT), 0) as hasUrl,
+    ISNULL(CAST(CAST(LEN(licenseInfo) as BIT) as INT), 0) as hasLicense,
+    CAST(hasWikiEnabled as INT) as hasWiki,
+    CAST(hasIssuesEnabled as INT) as hasIssue,
+    createdAt_sec as created,
+    updatedAt_sec as updated
+INTO gs_table_v2
+FROM gs_table_v1

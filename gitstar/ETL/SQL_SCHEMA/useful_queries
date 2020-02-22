@@ -28,3 +28,20 @@ DELETE FROM CTE WHERE RN > 1 # Delete all duplicates
 # OR condition must be separated
 SELECT TOP 100 * from gs_table_v1
 WHERE isDisabled = 1 OR isLocked = 1
+
+# 244 rows had push date < 2020-01-01. Removed
+DELETE FROM gs_table_v1
+WHERE updatedAt_sec < 1577836800
+
+# Find occurances for given categories
+SELECT
+  primaryLanguage,
+  COUNT(*) AS num
+FROM
+  gs_table_v1
+GROUP BY
+  primaryLanguage
+ORDER BY num DESC
+
+# Total number of languages = 324 (including None)
+SELECT COUNT(DISTINCT primaryLanguage) FROM gs_table_v1

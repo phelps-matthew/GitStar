@@ -14,6 +14,9 @@ from time import sleep
 import logging
 import requests
 import arrow  # simple alt. to datetime
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent
 
 
 class GraphQLQuery:
@@ -73,9 +76,8 @@ class GitHubSearchQuery(GitHubGraphQLQuery):
     """
 
     # Read in custom queries from text file
-    with open("GQL_QUERIES/QUERY") as qfile, open(
-        "GQL_QUERIES/TEST_QUERY"
-    ) as tqfile:
+    with open(BASE_DIR / "GQL_QUERIES/QUERY") as qfile,\
+            open( BASE_DIR / "GQL_QUERIES/TEST_QUERY") as tqfile:
         QUERY = qfile.read()
         TEST_QUERY = tqfile.read()
 
@@ -136,7 +138,7 @@ class GitHubSearchQuery(GitHubGraphQLQuery):
                     logging.info("Repository Count: {}".format(rep_count))
                     print(
                         "Date:{}. Repository Count:{}".format(
-                            self.created_start, rep_count 
+                            self.created_start, rep_count
                         )
                     )
                     # log queries that exceed node limit

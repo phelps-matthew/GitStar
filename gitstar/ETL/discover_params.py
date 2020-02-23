@@ -14,7 +14,10 @@ import numpy as np
 from gitstar import config
 from gitstar.ETL import gqlquery
 from gitstar.ETL.gstransform import repocount
+from pathlib import Path
 
+# Path for repo count files
+BASE_DIR = Path(__file__).resolve().parent
 # GitHub PERSONAL ACCESS TOKEN
 PAT = config.PAT
 # SQL db params
@@ -41,7 +44,7 @@ def print_json(obj):
 def set_logger():
     """Intialize root logger here."""
     logging.basicConfig(
-        filename="logs/discover_params.log",
+        filename=BASE_DIR/"logs/discover_params.log",
         filemode="w",  # will rewrite on each run
         level=logging.INFO,
         format="[%(asctime)s] %(name)s - %(levelname)s - %(message)s",
@@ -149,12 +152,12 @@ def plot_repo_rate(x, y, stars):
 def star_write(rdict, star):
     # Convert arrow to str for json encoding
     rdict["dates"] = list(map(lambda x: x.format(), rdict["dates"]))
-    with open("data/repo_star_{}".format(star), "w") as file:
+    with open(BASE_DIR/("data/repo_star_{}".format(star)), "w") as file:
         json.dump(rdict, file, indent=4)
 
 
 def star_read(star):
-    with open("data/repo_star_{}".format(star)) as file:
+    with open(BASE_DIR/("data/repo_star_{}".format(star))) as file:
         rdict = json.load(file)
         return rdict
 
@@ -170,13 +173,13 @@ def main():
         dates = rdict["dates"]
         repos = rdict["repos"]
         fig, ax = plot_repo_rate(dates, repos, star)
-        # plt.show()
-        fig.savefig(
-            "data/repo_star_{}.png".format(star),
-            transparent=False,
-            dpi=100,
-            bbox_inches="tight",  # fit bounds of figure to plot
-        )
+        plt.show()
+        # fig.savefig(
+        #     "data/repo_star_{}.png".format(star),
+        #     transparent=False,
+        #     dpi=100,
+        #     bbox_inches="tight",  # fit bounds of figure to plot
+        # )
     # Fetch data and write for variable star number
     # for star in range(3):
     #     rdict = repo_rate(CREATED_START, CREATED_END, star)

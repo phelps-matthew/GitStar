@@ -6,9 +6,13 @@ import arrow
 import gitstar.ETL
 from gitstar import config
 from gitstar.ETL import gqlquery
-from gitstar.ETL.gstransform import transform
 import pandas as pd
+from pathlib import Path
 
+# paths
+BASE_DIR = Path(__file__).resolve().parent
+FILENAME = "gs_table_v2.csv"
+# db configs
 SERVER = config.SERVER
 DATABASE = config.DATABASE
 USERNAME = config.USERNAME
@@ -24,8 +28,8 @@ def print_json(obj):
     print(json.dumps(obj, indent=4))
 
 
-def load():
-    """execute tests"""
+def dbconnection():
+    """Intialize sql db connection"""
     cnxn = pyodbc.connect(
         "DRIVER="
         + DRIVER
@@ -36,33 +40,34 @@ def load():
         + ";UID="
         + USERNAME
         + ";PWD="
-        + PASSWORD
+        + PASSWORD,
+        autocommit=True,
     )
     cursor = cnxn.cursor()
     cursor.fast_executemany = True
-    # --------------------------#
-    gql_generator = gqlquery.GitHubSearchQuery(PAT, maxitems=2).generator()
-    i = 1
-    while True:
-        try:
-            raw_data = next(gql_generator)
-            if i == 1:
-                print(raw_data["data"]["search"]["repositoryCount"])
-            clean_data = transform(raw_data)
-            value_list = (list(node.values()) for node in clean_data)
-            # Execute many statements.
-            cursor.executemany(config.INSERT_QUERY, value_list)
-            print(STATUS_MSG.format(cursor.rowcount))
-            cnxn.commit()
-            print(i)
-            i += 1
-        except StopIteration:
-            print(
-                "[{}] Reached end of query response. ETL done.".format(
-                    arrow.now()
-                )
-            )
-            break
+    return cnxn, cursor
+
+
+def table_to_csv(sql, file_path):
+    """
+    This function creates csv file from the query result with ODBC driver
+    """
+    dbcnxn, _ = dbconnection()
+    df = pd.read_sql(sql, dbcnxn)
+    df.to_csv(
+        file_path,
+        encoding="utf-8",
+        header=True,
+        doublequote=True,
+        sep=",",
+        index=False,
+    )
+    dbcnxn.close()
+
+
+sql_statement = "SELECT * FROM gs_table_v2"
+
+table_to_csv(sql_statement, BASE_DIR / FILENAME)
 
 # cursor.execute(
 #    """

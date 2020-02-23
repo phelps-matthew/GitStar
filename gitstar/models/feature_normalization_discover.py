@@ -4,6 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import time
 import arrow
+import os
 
 BASE_DIR = Path(__file__).resolve().parent
 DATA_PATH = BASE_DIR / "dataset"
@@ -20,15 +21,19 @@ def gen_hist(img_path, data, qtl=None):
             qrange = (data[col].min(), 1.1*data[col].quantile(qtl))
         else:
             qrange = (data[col].min(), data[col].max())
-        ax = data[col].plot.hist(bins=100, title=col, range=qrange)
+        ax = data[col].plot.hist(bins=2000, title=col, range=qrange, align='mid')
         fig = ax.get_figure()
-        fig.savefig(
-            img_path / ("{}_hist.png".format(col)),
-            transparent=False,
-            dpi=300,
-            bbox_inches="tight",  # fit bounds of figure to plot
-        )
+        input("Press Return to continue")
+        print(data[col].describe())
+        plt.show()
+        # fig.savefig(
+        #     img_path / ("{}_hist.png".format(col)),
+        #     transparent=False,
+        #     dpi=300,
+        #     bbox_inches="tight",  # fit bounds of figure to plot
+        # )
         plt.close(fig)
+        os.system('clear')
 
 
 def gen_scatter(img_path, data, qtl=None):
@@ -59,10 +64,10 @@ def main():
     star_min = 100
     # data_sub = data[data["created"].between(ti, tf)]
     #data = data[data["stargazers"] >= star_min]
-    mypath = "full_qtl_80"
-    qtl = 0.8
-    #gen_hist(IMG_PATH/mypath, data, qtl=qtl)
-    gen_scatter(IMG_PATH/mypath, data, qtl=qtl)
+    mypath = "full_qtl_90"
+    qtl = None
+    gen_hist(IMG_PATH/mypath, data, qtl=qtl)
+    #gen_scatter(IMG_PATH/mypath, data, qtl=qtl)
 
 
 if __name__ == "__main__":

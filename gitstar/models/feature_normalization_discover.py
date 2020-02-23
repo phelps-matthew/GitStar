@@ -34,10 +34,13 @@ def gen_hist(img_path, data, qtl=None):
 def gen_scatter(img_path, data, qtl=None):
     """Generate scatter plots of columns vs stargazers"""
     img_path.mkdir(parents=True, exist_ok=True)
-    for col in data.iloc[:, 1:]:
+    for col in data.iloc[:,1:]:
         ax = data.plot.scatter(x=col, y="stargazers", s=5, alpha=0.5)
         if qtl:
-            ax.set_xlim(right=1.1*data[col].quantile(qtl))
+            ax.set_xlim(left=data[col].min(), right=data[col].quantile(qtl))
+            ax.margins(x=0.05)
+            ax.autoscale(True)
+            # print("{}:".format(col)+str(1.1*data[col].quantile(qtl)))
         ax.set_ylim(top=100000)  # outlier 996.ICU
         fig = ax.get_figure()
         fig.savefig(
@@ -58,7 +61,7 @@ def main():
     #data = data[data["stargazers"] >= star_min]
     mypath = "full_qtl_80"
     qtl = 0.8
-    gen_hist(IMG_PATH/mypath, data, qtl=qtl)
+    #gen_hist(IMG_PATH/mypath, data, qtl=qtl)
     gen_scatter(IMG_PATH/mypath, data, qtl=qtl)
 
 

@@ -6,11 +6,40 @@ import time
 import arrow
 import os
 
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import minmax_scale
+from sklearn.preprocessing import MaxAbsScaler
+from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import RobustScaler
+from sklearn.preprocessing import Normalizer
+from sklearn.preprocessing import QuantileTransformer
+from sklearn.preprocessing import PowerTransformer
+
 BASE_DIR = Path(__file__).resolve().parent
 DATA_PATH = BASE_DIR / "dataset"
 IMG_PATH = BASE_DIR / "features"
 IMG_PATH.mkdir(parents=True, exist_ok=True)
 FILENAME = "gs_table_v2.csv"
+DISTS = [
+    ("standard scaling", StandardScaler()),
+    ("min-max scaling", MinMaxScaler()),
+    ("max-abs scaling", MaxAbsScaler()),
+    ("robust scaling", RobustScaler(quantile_range=(25, 75))),
+    (
+        "power transformation (Yeo-Johnson)",
+        PowerTransformer(method="yeo-johnson"),
+    ),
+    ("power transformation (Box-Cox)", PowerTransformer(method="box-cox")),
+    (
+        "quantile transformation (gaussian pdf)",
+        QuantileTransformer(output_distribution="normal"),
+    ),
+    (
+        "quantile transformation (uniform pdf)",
+        QuantileTransformer(output_distribution="uniform"),
+    ),
+    ("sample-wise L2 normalizing", Normalizer()),
+]
 
 
 def gen_hist(img_path, data, qtl=None):
@@ -18,10 +47,12 @@ def gen_hist(img_path, data, qtl=None):
     img_path.mkdir(parents=True, exist_ok=True)
     for col in data:
         if qtl:
-            qrange = (data[col].min(), 1.1*data[col].quantile(qtl))
+            qrange = (data[col].min(), 1.1 * data[col].quantile(qtl))
         else:
             qrange = (data[col].min(), data[col].max())
-        ax = data[col].plot.hist(bins=2000, title=col, range=qrange, align='mid')
+        ax = data[col].plot.hist(
+            bins=2000, title=col, range=qrange, align="mid"
+        )
         fig = ax.get_figure()
         input("Press Return to continue")
         print(data[col].describe())
@@ -33,13 +64,13 @@ def gen_hist(img_path, data, qtl=None):
         #     bbox_inches="tight",  # fit bounds of figure to plot
         # )
         plt.close(fig)
-        os.system('clear')
+        os.system("clear")
 
 
 def gen_scatter(img_path, data, qtl=None):
     """Generate scatter plots of columns vs stargazers"""
     img_path.mkdir(parents=True, exist_ok=True)
-    for col in data.iloc[:,1:]:
+    for col in data.iloc[:, 1:]:
         ax = data.plot.scatter(x=col, y="stargazers", s=5, alpha=0.5)
         if qtl:
             ax.set_xlim(left=data[col].min(), right=data[col].quantile(qtl))
@@ -57,17 +88,42 @@ def gen_scatter(img_path, data, qtl=None):
         plt.close(fig)
 
 
+def scale_hist(img_path, data, scaler):
+    """Generate histograms of columns"""
+    img_path.mkdir(parents=True, exist_ok=True)
+    # deep df copy
+    transformer = scaler[1]
+    tdata = data.copy()
+    tdata[tdata.columns] = transformer.fit_transform(tdata[tdata.columns])
+    for col in tdata:
+        tplt = plt.figure(1)
+        t_ax = tdata[col].plot.hist(
+            bins=2000, title="{}: {}".format(col, scaler[0])
+        )
+        tfig = t_ax.get_figure()
+        print(data[col].describe())
+        tplt.show()
+        rplt = plt.figure(2)
+        ax = data[col].plot.hist(bins=2000, title=col)
+        fig = ax.get_figure()
+        rplt.show()
+        input("Press Return to continue")
+        plt.close("all")
+        os.system("clear")
+
+
 def main():
     data = pd.read_csv(DATA_PATH / FILENAME)
     ti = int(arrow.get("2017-06-01").format("X"))
     tf = int(arrow.get("2018-01-01").format("X"))
     star_min = 100
     # data_sub = data[data["created"].between(ti, tf)]
-    #data = data[data["stargazers"] >= star_min]
-    mypath = "full_qtl_90"
+    # data = data[data["stargazers"] >= star_min]
+    mypath = "transformed/full"
     qtl = None
-    gen_hist(IMG_PATH/mypath, data, qtl=qtl)
-    #gen_scatter(IMG_PATH/mypath, data, qtl=qtl)
+    scale_hist(IMG_PATH / mypath, data, DISTS[1])
+    # gen_hist(IMG_PATH/mypath, data, qtl=qtl)
+    # gen_scatter(IMG_PATH/mypath, data, qtl=qtl)
 
 
 if __name__ == "__main__":

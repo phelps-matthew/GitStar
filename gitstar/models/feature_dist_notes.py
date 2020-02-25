@@ -143,6 +143,9 @@ def scale_hist(img_path, data, col, scaler):
 def main():
     mypath = "transformed/full"
     data = pd.read_csv(DATA_PATH / FILENAME)
+    # fmt: off
+    import ipdb,os; ipdb.set_trace(context=5)  # noqa
+    # fmt: on
     while True:
         col, scaler = input_menu(data)
         scale_hist(IMG_PATH / mypath, data, col, scaler)

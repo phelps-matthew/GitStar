@@ -24,26 +24,23 @@ DATA_PATH = BASE_DIR / "dataset"
 IMG_PATH = BASE_DIR / "features"
 IMG_PATH.mkdir(parents=True, exist_ok=True)
 FILENAME = "gs_table_v2.csv"
-DISTS = [
-    ("standard scaling", StandardScaler()),
-    ("min-max scaling", MinMaxScaler()),
-    ("max-abs scaling", MaxAbsScaler()),
-    ("robust scaling", RobustScaler(quantile_range=(25, 75))),
-    (
-        "power transformation (Yeo-Johnson)",
-        PowerTransformer(method="yeo-johnson"),
+DISTS = {
+    "standard scaling": StandardScaler(),
+    "min-max scaling": MinMaxScaler(),
+    "max-abs scaling": MaxAbsScaler(),
+    "robust scaling": RobustScaler(quantile_range=(25, 75)),
+    "power transformation (Yeo-Johnson)": PowerTransformer(
+        method="yeo-johnson"
     ),
-    ("power transformation (Box-Cox)", PowerTransformer(method="box-cox")),
-    (
-        "quantile transformation (gaussian pdf)",
-        QuantileTransformer(output_distribution="normal"),
+    "power transformation (Box-Cox)": PowerTransformer(method="box-cox"),
+    "quantile transformation (gaussian pdf)": QuantileTransformer(
+        output_distribution="normal"
     ),
-    (
-        "quantile transformation (uniform pdf)",
-        QuantileTransformer(output_distribution="uniform"),
+    "quantile transformation (uniform pdf)": QuantileTransformer(
+        output_distribution="uniform"
     ),
-    ("sample-wise L2 normalizing", Normalizer()),
-]
+    "sample-wise L2 normalizing": Normalizer(),
+}
 
 
 def gen_hist(img_path, data, qtl=None):
@@ -92,39 +89,71 @@ def gen_scatter(img_path, data, qtl=None):
         plt.close(fig)
 
 
-def scale_hist(img_path, data, scaler):
-    """Generate histograms of columns"""
+def input_menu(data):
+    """Input menu for gathering dataframe column and scale trans. type.
+
+        Args:
+            data (pandas dataframe or string iterable)
+        Return:
+            col name (str), scaler type (str)
+    """
+    # User input column
+    print("Data Columns:")
+    for col in data:
+        print("[{}] {}".format(data.columns.get_loc(col), col))
+    col_in = int(input("Select Column: "))
+
+    # User input scale transformation
+    print("\nScale Transformations:")
+    dist_keys = list(DISTS.keys())
+    for i in range(len(dist_keys)):
+        print("[{}] {}".format(i, dist_keys[i]))
+    scale_in = int(input("Select Scaler: "))
+    return data.columns[col_in], dist_keys[scale_in]
+
+
+def scale_hist(img_path, data, col, scaler):
+    """Generate histograms of given single column
+
+        Args:
+            img_path (Path, str)
+            data (pd.df)
+            col (str): Single df col name
+            scaler (str): based on DISTS dict
+    """
     img_path.mkdir(parents=True, exist_ok=True)
+    transformer = DISTS[scaler]
     # deep df copy
-    transformer = scaler[1]
-    tdata = data.copy()
+    tdata = data[["hasUrl", col]].copy()
+    # apply scaler to all cols
     tdata[tdata.columns] = transformer.fit_transform(tdata[tdata.columns])
-    for col in tdata:
-        tplt = plt.figure(1)
-        t_ax = tdata[col].plot.hist(
-            bins=2000, title="{}: {}".format(col, scaler[0])
-        )
-        print(data[col].describe())
-        tplt.show()
-        rplt = plt.figure(2)
-        ax = data[col].plot.hist(bins=2000, title=col)
-        rplt.show()
-        # Method for continutation w/ matplotlib
-        input("Press Return to continue")
-        plt.close("all")
-        os.system("clear")
+    tplt = plt.figure(1)
+    t_ax = tdata[col].plot.hist(bins=2000, title="{}: {}".format(col, scaler))
+    print("\nStatistics: \n{}\n".format(data[col].describe()))
+    tplt.show()
+    rplt = plt.figure(2)
+    ax = data[col].plot.hist(bins=2000, title=col)
+    rplt.show()
+    # Method for continutation w/ matplotlib
+    input("Press any key to continue, ctrl+z to exit.")
+    plt.close()
+    os.system("clear")
 
 
 def main():
+    mypath = "transformed/full"
     data = pd.read_csv(DATA_PATH / FILENAME)
+    while True:
+        col, scaler = input_menu(data)
+        scale_hist(IMG_PATH / mypath, data, col, scaler)
+
+    ###############################################
     # ti = int(arrow.get("2017-06-01").format("X"))
     # tf = int(arrow.get("2018-01-01").format("X"))
     # star_min = 100
+    # qtl = None
     # data_sub = data[data["created"].between(ti, tf)]
     # data = data[data["stargazers"] >= star_min]
-    mypath = "transformed/full"
-    # qtl = None
-    scale_hist(IMG_PATH / mypath, data, DISTS[1])
     # gen_hist(IMG_PATH/mypath, data, qtl=qtl)
     # gen_scatter(IMG_PATH/mypath, data, qtl=qtl)
 

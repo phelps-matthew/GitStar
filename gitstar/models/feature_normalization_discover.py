@@ -1,3 +1,7 @@
+"""This script explores the distributions and properties of input features, as
+    well as the output. Most importantly, we explore various
+    normalization/standardization tranforms from sklearn.preprocessing.
+"""
 from pathlib import Path
 import json
 import pandas as pd
@@ -100,13 +104,12 @@ def scale_hist(img_path, data, scaler):
         t_ax = tdata[col].plot.hist(
             bins=2000, title="{}: {}".format(col, scaler[0])
         )
-        tfig = t_ax.get_figure()
         print(data[col].describe())
         tplt.show()
         rplt = plt.figure(2)
         ax = data[col].plot.hist(bins=2000, title=col)
-        fig = ax.get_figure()
         rplt.show()
+        # Method for continutation w/ matplotlib
         input("Press Return to continue")
         plt.close("all")
         os.system("clear")
@@ -114,13 +117,13 @@ def scale_hist(img_path, data, scaler):
 
 def main():
     data = pd.read_csv(DATA_PATH / FILENAME)
-    ti = int(arrow.get("2017-06-01").format("X"))
-    tf = int(arrow.get("2018-01-01").format("X"))
-    star_min = 100
+    # ti = int(arrow.get("2017-06-01").format("X"))
+    # tf = int(arrow.get("2018-01-01").format("X"))
+    # star_min = 100
     # data_sub = data[data["created"].between(ti, tf)]
     # data = data[data["stargazers"] >= star_min]
     mypath = "transformed/full"
-    qtl = None
+    # qtl = None
     scale_hist(IMG_PATH / mypath, data, DISTS[1])
     # gen_hist(IMG_PATH/mypath, data, qtl=qtl)
     # gen_scatter(IMG_PATH/mypath, data, qtl=qtl)

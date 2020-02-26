@@ -6,6 +6,7 @@ import pandas as pd
 from gitstar.models.dataload import GitStarDataset, rand_split_rel, get_data
 from torch import nn
 import torch.nn.functional as F
+from torch import optim
 
 
 class DFF(nn.Module):
@@ -53,8 +54,9 @@ class DFF(nn.Module):
         # We shall try ReLU
         for layer in self.layers:
             x = self.a_fn(layer(x))
-        # linear activation on output layer
-        return self.out(x)
+        # Relu activation on output layer (since target strictly > 0)
+        return F.relu(self.out(x))
+
 
 
 def main():
@@ -65,15 +67,30 @@ def main():
     FILE = "gs_table_v2.csv"
     SAMPLE_FILE = "gs_table_v2_sample.csv"
 
-    model = DFF(21, [24, 48], 1)
+    # Model params
+    bs = 64
+    lr = 0.01
+    epochs = 50
 
     dataset = GitStarDataset(DATA_PATH / SAMPLE_FILE)
     train_ds, valid_ds = rand_split_rel(dataset, 0.8)
-    train_dl, valid_dl = get_data(train_ds, valid_ds, bs=2)
+    train_dl, valid_dl = get_data(train_ds, valid_ds, bs=bs)
 
-    for xb, yb in train_dl:
-        out = model(xb)
-        print(out)
+    model = DFF(21, [24, 48], 1)
+    opt = optim.SGD(model.parameters(), lr=lr, momentum=0.9)
+    loss_func = F.mse_loss
+
+    for epoch in range(epochs):
+        print(epoch)
+        for xb, yb in train_dl:
+            loss = loss_func(model(xb), yb)
+            if epoch == 0:
+                print(loss)
+
+            loss.backward()
+            opt.step()
+            opt.zero_grad()
+    print(loss)
 
 
 if __name__ == "__main__":

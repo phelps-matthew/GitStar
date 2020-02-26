@@ -1,4 +1,5 @@
 """Data handling for NN"""
+
 import pandas as pd
 import torch
 from pathlib import Path
@@ -7,17 +8,15 @@ import numpy as np
 
 
 class GitStarDataset(Dataset):
-    """GitStar dataset."""
+    """GitStar Dataset.
+    Args:
+        csv_file (str, Path): Path to the csv file. Target must be col. 0.
+        transform (callable, optional): Optional transform to be applied
+            on a sample.
+    """
 
     def __init__(self, csv_path, transform=None):
-        """
-        Args:
-            csv_file (str, Path): Path to the csv file. Target must be col. 0.
-            root_dir (str): Directory with all the images.
-            transform (callable, optional): Optional transform to be applied
-                on a sample.
-        """
-        self.data_frame = pd.read_csv(csv_path).astype('float64')
+        self.data_frame = pd.read_csv(csv_path).astype("float64").iloc[:10, :]
         self.transform = transform
 
     def __len__(self):
@@ -37,31 +36,35 @@ class GitStarDataset(Dataset):
         return x_sample, y_sample
 
 
+def rand_split_rel(dataset, frac, **kwargs):
+    """Splits dataset as fraction of total. Based on torch random_split.
+
+        Args:
+            dataset (torch.utils.data.Dataset)
+            frac (float): [0,1]
+        Return:
+            (ds_frac, ds_remainder) (tuple)
+    """
+    size_1 = int(frac * len(dataset))
+    size_2 = len(dataset) - size_1
+    return random_split(dataset, [size_1, size_2], **kwargs)
+
+
 def main():
     """Test class implementations"""
 
     BASE_DIR = Path(__file__).resolve().parent
     DATA_PATH = BASE_DIR / "dataset"
-    FILENAME = "gs_table_v2.csv"
-    CSV_PATH = DATA_PATH / FILENAME
+    FILE = "gs_table_v2.csv"
+    SAMPLE_FILE = "gs_table_v2_sample.csv"
 
-    dataset = GitStarDataset(CSV_PATH)
-    print(dataset[1])
-    train_frac = 0.7
-    train_len = int(train_frac * len(dataset))
-    trainset, valset = random_split(
-        dataset, [train_len, len(dataset) - train_len]
-    )
-    print(trainset)
+    dataset = GitStarDataset(DATA_PATH / SAMPLE_FILE)
+    
+    bs = 1
+    trainset, valset = rand_split_rel(dataset, 0.7)
 
-    train_loader = DataLoader(trainset, batch_size=10, shuffle=True)
-    val_loader = DataLoader(valset, batch_size=10, shuffle=True)
-
-    for i, batch in enumerate(train_loader):
-        print(i, batch)
-
-    for i, batch in enumerate(val_loader):
-        print(i, batch)
+    train_dl = DataLoader(trainset, batch_size=bs, shuffle=True)
+    val_dl = DataLoader(valset, batch_size=bs, shuffle=True)
 
 
 if __name__ == "__main__":

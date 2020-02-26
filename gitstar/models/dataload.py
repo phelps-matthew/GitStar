@@ -25,9 +25,9 @@ class GitStarDataset(Dataset):
         # pd.df -> np.ndarray with dtype float64
         x_sample = self.data_frame.iloc[idx, 1:].values
         y_sample = self.data_frame.iloc[idx, 0]
-        # np.ndarry -> torch.tensor
-        x_sample = torch.from_numpy(x_sample)
-        y_sample = torch.tensor(y_sample)
+        # np.ndarry -> torch.tensor. float() to match default weights
+        x_sample = torch.from_numpy(x_sample).float()
+        y_sample = torch.tensor(y_sample).float()
 
         if self.transform:
             x_sample = self.transform(x_sample)

@@ -33,8 +33,7 @@ class DFF(nn.Module):
         else:
             dim_list = [D_in] + D_hid + [D_out]
 
-        # Modules w/i ModuleList are properly accessible
-        self.layers = nn.ModuleList()
+        self.layers = []
 
         # Construct interlaced dims for self.layers ModuleList
         for dim in range(len(dim_list) - 1):
@@ -43,12 +42,15 @@ class DFF(nn.Module):
         # Separate output layer for different activation
         self.out = self.layers.pop()
 
+        # Modules w/i ModuleList are properly inherited
+        self.layers = nn.ModuleList(self.layers)
+
     def forward(self, x):
         """Execute feedforward with input x
             Args:
                 x (torch.tensor): Input from DataLoader
         """
-        # We shall try Relu
+        # We shall try ReLU
         for layer in self.layers:
             x = self.a_fn(layer(x))
         # linear activation on output layer
@@ -63,16 +65,15 @@ def main():
     FILE = "gs_table_v2.csv"
     SAMPLE_FILE = "gs_table_v2_sample.csv"
 
-    model = DFF(22, [10,11], 1)
+    model = DFF(21, [24, 48], 1)
 
     dataset = GitStarDataset(DATA_PATH / SAMPLE_FILE)
     train_ds, valid_ds = rand_split_rel(dataset, 0.8)
-    train_dl, valid_dl = get_data(train_ds, valid_ds, bs=1)
+    train_dl, valid_dl = get_data(train_ds, valid_ds, bs=2)
 
-    for i, elem in enumerate(valid_dl):
-        print(i, elem)
-        if i == 3:
-            break
+    for xb, yb in train_dl:
+        out = model(xb)
+        print(out)
 
 
 if __name__ == "__main__":

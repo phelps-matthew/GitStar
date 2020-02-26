@@ -8,10 +8,10 @@ import torch
 
 class GitStarDataset(Dataset):
     """GitStar Dataset.
-    Args:
-        csv_file (str, Path): Path to the csv file. Target must be col. 0.
-        transform (callable, optional): Optional transform to be applied
-            on a sample.
+        Args:
+            csv_file (str, Path): Path to the csv file. Target must be col. 0.
+            transform (callable, optional): Optional transform to be applied
+                on a sample.
     """
 
     def __init__(self, csv_path, transform=None):
@@ -37,7 +37,6 @@ class GitStarDataset(Dataset):
 
 def rand_split_rel(dataset, frac, **kwargs):
     """Splits dataset as fraction of total. Based on torch random_split.
-
         Args:
             dataset (torch.utils.data.Dataset)
             frac (float): [0,1]
@@ -58,7 +57,6 @@ def get_data(train_ds, valid_ds, bs):
 
 def main():
     """Test class implementations"""
-
     BASE_DIR = Path(__file__).resolve().parent
     DATA_PATH = BASE_DIR / "dataset"
     FILE = "gs_table_v2.csv"

@@ -61,7 +61,6 @@ class DFF(nn.Module):
 
 def main():
     """Test class implementations"""
-
     BASE_DIR = Path(__file__).resolve().parent
     DATA_PATH = BASE_DIR / "dataset"
     FILE = "gs_table_v2.csv"
@@ -73,14 +72,17 @@ def main():
     epochs = 50
     h_layers = [24, 48]
 
+    # Load data
     dataset = GitStarDataset(DATA_PATH / SAMPLE_FILE)
     train_ds, valid_ds = rand_split_rel(dataset, 0.8)
     train_dl, valid_dl = get_data(train_ds, valid_ds, bs=bs)
 
+    # Intialize model, optimization method, and loss function
     model = DFF(21, h_layers, 1)
     opt = optim.SGD(model.parameters(), lr=lr, momentum=0.9)
     loss_func = F.mse_loss
 
+    # Train model
     for epoch in range(epochs):
         print(epoch)
         for xb, yb in train_dl:
@@ -91,6 +93,8 @@ def main():
             loss.backward()
             opt.step()
             opt.zero_grad()
+
+    # Compare loss before/after training
     print(loss)
 
 

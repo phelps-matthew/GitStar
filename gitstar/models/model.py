@@ -14,15 +14,20 @@ class DFF(nn.Module):
             D_in (int): Input dimension
             D_hid (list or int): list of hidden layer dimensions, sequential
             D_out (int): Output dimension
+            [a_fn=F.relu] (torch.nn.functional) : Activation function on hidden
+                layers
     """
 
-    def __init__(self, D_in, D_hid, D_out):
+    def __init__(self, D_in, D_hid, D_out, a_fn=F.relu):
+
+        # Module must be initialized, many hidden attributes
         super().__init__()
+        self.a_fn = a_fn
 
         # Must be list, cannot be None or other iterable
         assert isinstance(D_hid, (int, list))
 
-        # Compose list of NN dimensions
+        # Compose list of DFF dimensions
         if isinstance(D_hid, int):
             dim_list = [D_in] + [D_hid] + [D_out]
         else:
@@ -35,14 +40,19 @@ class DFF(nn.Module):
         for dim in range(len(dim_list) - 1):
             self.layers.append(nn.Linear(dim_list[dim], dim_list[dim + 1]))
 
+        # Separate output layer for different activation
+        self.out = self.layers.pop()
+
     def forward(self, x):
-
-        # Feedforward
+        """Execute feedforward with input x
+            Args:
+                x (torch.tensor): Input from DataLoader
+        """
+        # We shall try Relu
         for layer in self.layers:
-            x = F.relu(layer(x))
-        output = F.softmax(self.out(x), dim=1)
-
-        return output
+            x = self.a_fn(layer(x))
+        # linear activation on output layer
+        return self.out(x)
 
 
 def main():

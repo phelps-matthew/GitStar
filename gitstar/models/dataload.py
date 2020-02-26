@@ -1,10 +1,9 @@
 """Data handling for NN"""
 
-import pandas as pd
-import torch
 from pathlib import Path
 from torch.utils.data import Dataset, DataLoader, random_split
-import numpy as np
+import pandas as pd
+import torch
 
 
 class GitStarDataset(Dataset):
@@ -49,6 +48,13 @@ def rand_split_rel(dataset, frac, **kwargs):
     size_2 = len(dataset) - size_1
     return random_split(dataset, [size_1, size_2], **kwargs)
 
+def get_data(train_ds, valid_ds, bs):
+    """Create dataloaders based on train/test datasets and batch size"""
+    train_dl = DataLoader(train_ds, batch_size=bs, shuffle=True)
+    valid_dl = DataLoader(valid_ds, batch_size=bs, shuffle=True)
+    return train_dl, valid_dl
+
+
 
 def main():
     """Test class implementations"""
@@ -59,12 +65,8 @@ def main():
     SAMPLE_FILE = "gs_table_v2_sample.csv"
 
     dataset = GitStarDataset(DATA_PATH / SAMPLE_FILE)
-    
-    bs = 1
-    trainset, valset = rand_split_rel(dataset, 0.7)
-
-    train_dl = DataLoader(trainset, batch_size=bs, shuffle=True)
-    val_dl = DataLoader(valset, batch_size=bs, shuffle=True)
+    train_ds, valid_ds = rand_split_rel(dataset, 0.8)
+    train_dl, valid_dl = get_data(train_ds, valid_ds, bs=1)
 
 
 if __name__ == "__main__":

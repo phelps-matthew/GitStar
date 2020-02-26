@@ -66,9 +66,6 @@ def main():
 
     dataset = GitStarDataset(DATA_PATH / SAMPLE_FILE)
     train_ds, valid_ds = rand_split_rel(dataset, 0.8)
-    # fmt: off
-    import ipdb,os; ipdb.set_trace(context=5)  # noqa
-    # fmt: on
     train_dl, valid_dl = get_data(train_ds, valid_ds, bs=1)
 
 

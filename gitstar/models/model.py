@@ -10,7 +10,7 @@ from torch import optim
 
 
 class DFF(nn.Module):
-    """Construct basic FF NN with len(h_sizes) hidden layers.
+    """Construct basic deep FF NN with len(D_hid) hidden layers.
         Args:
             D_in (int): Input dimension
             D_hid (list or int): list of hidden layer dimensions, sequential
@@ -51,7 +51,7 @@ class DFF(nn.Module):
             Args:
                 x (torch.tensor): Input from DataLoader
         """
-        # We shall try ReLU
+        # We shall try ReLU on hidden layers
         for layer in self.layers:
             x = self.a_fn(layer(x))
         # Relu activation on output layer (since target strictly > 0)
@@ -71,12 +71,13 @@ def main():
     bs = 64
     lr = 0.01
     epochs = 50
+    h_layers = [24, 48]
 
     dataset = GitStarDataset(DATA_PATH / SAMPLE_FILE)
     train_ds, valid_ds = rand_split_rel(dataset, 0.8)
     train_dl, valid_dl = get_data(train_ds, valid_ds, bs=bs)
 
-    model = DFF(21, [24, 48], 1)
+    model = DFF(21, h_layers, 1)
     opt = optim.SGD(model.parameters(), lr=lr, momentum=0.9)
     loss_func = F.mse_loss
 

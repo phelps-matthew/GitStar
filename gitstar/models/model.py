@@ -1,16 +1,21 @@
-"""Deep feedforward NN model"""
+"""Deep feedforward model
+
+    ToDo:
+        Normalize inputs/output
+        BS, lr, model dims. Separate affects
+"""
 
 from pathlib import Path
-from torch.utils.data import Dataset, DataLoader, random_split
-import pandas as pd
-from gitstar.models.dataload import GitStarDataset, rand_split_rel, get_data
+import torch
 from torch import nn
 import torch.nn.functional as F
 from torch import optim
+from gitstar.models.dataload import GitStarDataset, rand_split_rel, get_data
+import numpy as np
 
 
 class DFF(nn.Module):
-    """Construct basic deep FF NN with len(D_hid) hidden layers.
+    """Construct basic deep FF net with len(D_hid) hidden layers.
         Args:
             D_in (int): Input dimension
             D_hid (list or int): list of hidden layer dimensions, sequential
@@ -58,22 +63,48 @@ class DFF(nn.Module):
         return F.relu(self.out(x))
 
 
+def loss_batch(model, loss_func, xb, yb, opt=None):
+    """Computes batch loss for training (with opt) and validation"""
+    loss = loss_func(model(xb), yb)
+    if opt is not None:
+        loss.backward()
+        opt.step()
+        opt.zero_grad()
+    # loss returns torch.tensor
+    return loss.item(), len(xb)
+
+
+def fit(epochs, model, loss_func, opt, train_dl, valid_dl):
+    for epoch in range(epochs):
+        model.train()
+        for xb, yb in train_dl:
+            loss_batch(model, loss_func, xb, yb, opt)
+
+        model.eval()
+        with torch.no_grad():
+            losses, nums = zip(
+                *[loss_batch(model, loss_func, xb, yb) for xb, yb in valid_dl]
+            )
+        # Weighted sum of mean loss per batch. Batches may not be identical.
+        val_loss = np.sum(np.multiply(losses, nums)) / np.sum(nums)
+        print(epoch, val_loss)
+
 
 def main():
     """Test class implementations"""
     BASE_DIR = Path(__file__).resolve().parent
     DATA_PATH = BASE_DIR / "dataset"
     FILE = "gs_table_v2.csv"
-    SAMPLE_FILE = "gs_table_v2_sample.csv"
+    SAMPLE_FILE = "10ksample.csv"
 
     # Model params
-    bs = 64
-    lr = 0.01
-    epochs = 50
-    h_layers = [24, 48]
+    bs = 8
+    lr = 0.001
+    epochs = 2
+    h_layers = [21]
 
     # Load data
-    dataset = GitStarDataset(DATA_PATH / SAMPLE_FILE)
+    dataset = GitStarDataset(DATA_PATH / SAMPLE_FILE, sample_frac=1)
     train_ds, valid_ds = rand_split_rel(dataset, 0.8)
     train_dl, valid_dl = get_data(train_ds, valid_ds, bs=bs)
 
@@ -84,18 +115,27 @@ def main():
 
     # Train model
     for epoch in range(epochs):
-        print(epoch)
+        model.train()
+        i = 0
         for xb, yb in train_dl:
             loss = loss_func(model(xb), yb)
-            if epoch == 0:
+            # Print initial train_dl loss
+            if i == 0:
                 print(loss)
 
             loss.backward()
             opt.step()
             opt.zero_grad()
+            i += 1
 
-    # Compare loss before/after training
-    print(loss)
+        model.eval()
+        with torch.no_grad():
+            valid_loss = sum(loss_func(model(xb), yb) for xb, yb in valid_dl)
+
+        # Print loss from valid_dl
+        print("Epoch: {}  Validation Loss: {}".format(epoch, valid_loss / len(valid_dl)))
+
+    # fit(epochs, model, loss_func, opt, train_dl, valid_dl)
 
 
 if __name__ == "__main__":

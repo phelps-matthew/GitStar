@@ -14,8 +14,11 @@ class GitStarDataset(Dataset):
                 on a sample.
     """
 
-    def __init__(self, csv_path, transform=None):
-        self.data_frame = pd.read_csv(csv_path).astype("float64").iloc[:10, :]
+    def __init__(self, csv_path, sample_frac=1, transform=None):
+        self.data_frame = pd.read_csv(csv_path).astype("float64")
+        sample_size = int(sample_frac * len(self.data_frame))
+        # Slice data frame according to sample_frac
+        self.data_frame = self.data_frame.iloc[:sample_size, :]
         self.transform = transform
 
     def __len__(self):
@@ -47,20 +50,20 @@ def rand_split_rel(dataset, frac, **kwargs):
     size_2 = len(dataset) - size_1
     return random_split(dataset, [size_1, size_2], **kwargs)
 
+
 def get_data(train_ds, valid_ds, bs):
     """Create dataloaders based on train/test datasets and batch size"""
     train_dl = DataLoader(train_ds, batch_size=bs, shuffle=True)
-    valid_dl = DataLoader(valid_ds, batch_size=bs, shuffle=True)
+    valid_dl = DataLoader(valid_ds, batch_size=2 * bs)
     return train_dl, valid_dl
 
 
-
-def main():
+def module_test():
     """Test class implementations"""
     BASE_DIR = Path(__file__).resolve().parent
     DATA_PATH = BASE_DIR / "dataset"
     FILE = "gs_table_v2.csv"
-    SAMPLE_FILE = "gs_table_v2_sample.csv"
+    SAMPLE_FILE = "10ksample.csv"
 
     dataset = GitStarDataset(DATA_PATH / SAMPLE_FILE)
     train_ds, valid_ds = rand_split_rel(dataset, 0.8)
@@ -69,6 +72,6 @@ def main():
 
 if __name__ == "__main__":
     try:
-        main()
+        module_test()
     except KeyboardInterrupt:
         exit()

@@ -1,4 +1,4 @@
-"""Generate Multi-Layer Perceptron"""
+"""Deep feedforward NN model"""
 
 from pathlib import Path
 from torch.utils.data import Dataset, DataLoader, random_split
@@ -8,37 +8,42 @@ from torch import nn
 import torch.nn.functional as F
 
 
-class MLP(nn.Module):
-    """Construct MLP with len(h_sizes) hidden layers of type nn.Linear.
+class DFF(nn.Module):
+    """Construct basic FF NN with len(h_sizes) hidden layers.
         Args:
-            h_sizes (iterable): list of hidden layer dimensions, sequential
-            out_size (int): output layer dimension
+            D_in (int): Input dimension
+            D_hid (list or int): list of hidden layer dimensions, sequential
+            D_out (int): Output dimension
     """
-    def __init__(self, h_sizes, out_size):
+
+    def __init__(self, D_in, D_hid, D_out):
         super().__init__()
 
-        # Modules w/i ModuleList are properly registered
-        # and visible by all module methods
-        self.hidden = nn.ModuleList()
-        for k in range(len(h_sizes)-1):
-            self.hidden.append(nn.Linear(h_sizes[k], h_sizes[k+1]))
+        # Must be list, cannot be None or other iterable
+        assert isinstance(D_hid, (int, list))
 
-        # Hidden layers
-        self.hidden = []
-        for k in range(len(h_sizes)-1):
-            self.hidden.append(nn.Linear(h_sizes[k], h_sizes[k+1]))
+        # Compose list of NN dimensions
+        if isinstance(D_hid, int):
+            dim_list = [D_in] + [D_hid] + [D_out]
+        else:
+            dim_list = [D_in] + D_hid + [D_out]
 
-        # Output layer
-        self.out = nn.Linear(h_sizes[-1], out_size)
+        # Modules w/i ModuleList are properly accessible
+        self.layers = nn.ModuleList()
+
+        # Construct interlaced dims for self.layers ModuleList
+        for dim in range(len(dim_list) - 1):
+            self.layers.append(nn.Linear(dim_list[dim], dim_list[dim + 1]))
 
     def forward(self, x):
 
         # Feedforward
-        for layer in self.hidden:
+        for layer in self.layers:
             x = F.relu(layer(x))
-        output= F.softmax(self.out(x), dim=1)
+        output = F.softmax(self.out(x), dim=1)
 
         return output
+
 
 def main():
     """Test class implementations"""
@@ -48,12 +53,14 @@ def main():
     FILE = "gs_table_v2.csv"
     SAMPLE_FILE = "gs_table_v2_sample.csv"
 
+    model = DFF(22, [10,11], 1)
+
     dataset = GitStarDataset(DATA_PATH / SAMPLE_FILE)
     train_ds, valid_ds = rand_split_rel(dataset, 0.8)
     train_dl, valid_dl = get_data(train_ds, valid_ds, bs=1)
 
     for i, elem in enumerate(valid_dl):
-        print(i,elem)
+        print(i, elem)
         if i == 3:
             break
 

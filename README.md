@@ -6,29 +6,15 @@ Star predictor based on GitHub heuristics
 │   ├── ETL
 │   │   ├── GQL_QUERIES
 │   │   │   ├── QUERY
-│   │   │   ├── QUERY_RESPONSE_SAMPLE
-│   │   │   ├── TEMPLATE_QUERY
-│   │   │   └── TEST_QUERY
+│   │   │   └── ...
 │   │   ├── SQL_SCHEMA
 │   │   │   ├── SCHEMA_v0
-│   │   │   ├── SCHEMA_v1
-│   │   │   ├── SCHEMA_v2
-│   │   │   └── useful_queries
+│   │   │   └── ...
 │   │   ├── data
-│   │   │   ├── repo_star_0
-│   │   │   ├── repo_star_0.png
-│   │   │   ├── repo_star_0_old
-│   │   │   ├── repo_star_0_old.png
-│   │   │   ├── repo_star_1
-│   │   │   ├── repo_star_1.png
-│   │   │   ├── repo_star_1_old
-│   │   │   ├── repo_star_1_old.png
-│   │   │   ├── repo_star_2
-│   │   │   ├── repo_star_2.png
-│   │   │   ├── repo_star_2_old
-│   │   │   └── repo_star_2_old.png
+│   │   │   ├── ...
 │   │   ├── logs
 │   │   │   ├── ETL.log
+│   │   │   ├── ETL_special.log
 │   │   │   └── discover_params.log
 │   │   ├── __init__.py
 │   │   ├── discover_params.py
@@ -36,19 +22,33 @@ Star predictor based on GitHub heuristics
 │   │   ├── gstransform.py
 │   │   └── main_etl.py
 │   ├── models
-│   │   └── __init__.py
+│   │   ├── dataset
+│   │   │   ├── gs_table_v2.csv
+│   │   │   └── ...
+│   │   ├── features
+│   │   │   ├── ...
+│   │   │   ├── transformed
+│   │   │   │   └── full
+│   │   │   └── plot_all_scaling.py
+│   │   ├── __init__.py
+│   │   ├── dataload.py
+│   │   ├── feature_dist_notes.py
+│   │   └── model.py
 │   ├── __init__.py
 │   ├── config.py
 │   └── config_sample.py
 ├── tests
+│   ├── __init__.py
 │   ├── btest.py
 │   ├── error_test.py
+│   ├── gs_table_v2.csv
 │   ├── loadsql.py
 │   ├── main_etl_bak.py
 │   ├── scratch.py
+│   ├── simple_model1.py
 │   └── sql_test.py
 ├── README.md
 └── setup.py
 
-8 directories, 39 files
+18 directories, 310 files
 ```

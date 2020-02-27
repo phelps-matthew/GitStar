@@ -143,13 +143,14 @@ def scale_hist(data, col, scaler):
     ax = tdata[col].plot.hist(bins=2000, title="{}: {}".format(col, scaler))
     print("\nStatistics - {}: \n{}\n".format(scaler, tdata[col].describe()))
     fig = ax.get_figure()
-    #fig.savefig(
-    #    IMG_PATH / "transformed/full/{}_{}_hist.png".format(col, scaler),
-    #    transparent=False,
-    #    dpi=300,
-    #    bbox_inches="tight",  # fit bounds of figure to plot
-    #)
-    tplt.show()
+    fig.savefig(
+        IMG_PATH / "transformed/full/{}_{}_hist.png".format(col, scaler),
+        transparent=False,
+        dpi=300,
+        bbox_inches="tight",  # fit bounds of figure to plot
+    )
+    plt.close()
+    # tplt.show()
 
 
 def main():

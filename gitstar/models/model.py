@@ -3,6 +3,7 @@
     ToDo:
         Normalize inputs/output
         BS, lr, model dims. Separate affects
+        Model.train() eval()
 """
 
 from pathlib import Path
@@ -98,13 +99,13 @@ def main():
     SAMPLE_FILE = "10ksample.csv"
 
     # Model params
-    bs = 8
-    lr = 0.001
+    bs = 128
+    lr = 0.1
     epochs = 2
-    h_layers = [21]
+    h_layers = [32]
 
     # Load data
-    dataset = GitStarDataset(DATA_PATH / SAMPLE_FILE, sample_frac=1)
+    dataset = GitStarDataset(DATA_PATH / FILE, sample_frac=1)
     train_ds, valid_ds = rand_split_rel(dataset, 0.8)
     train_dl, valid_dl = get_data(train_ds, valid_ds, bs=bs)
 
@@ -133,7 +134,11 @@ def main():
             valid_loss = sum(loss_func(model(xb), yb) for xb, yb in valid_dl)
 
         # Print loss from valid_dl
-        print("Epoch: {}  Validation Loss: {}".format(epoch, valid_loss / len(valid_dl)))
+        print(
+            "Epoch: {}  Validation Loss: {}".format(
+                epoch, valid_loss / len(valid_dl)
+            )
+        )
 
     # fit(epochs, model, loss_func, opt, train_dl, valid_dl)
 

@@ -45,3 +45,14 @@ ORDER BY num DESC
 
 # Total number of languages = 324 (including None)
 SELECT COUNT(DISTINCT primaryLanguage) FROM gs_table_v1
+
+# Correct Nulls by fixing column type
+ALTER TABLE gs_table_v2
+ADD CONSTRAINT zero_null DEFAULT 0 FOR commitnum;
+
+UPDATE gs_table_v2
+SET commitnum = 0
+WHERE commitnum IS NULL;
+
+ALTER TABLE gs_table_v2
+ALTER COLUMN commitnum INT NOT NULL;

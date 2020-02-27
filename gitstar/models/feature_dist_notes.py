@@ -25,6 +25,7 @@ IMG_PATH = BASE_DIR / "features"
 IMG_PATH.mkdir(parents=True, exist_ok=True)
 FILENAME = "gs_table_v2.csv"
 DISTS = {
+    "no scaling": None,
     "standard scaling": StandardScaler(),
     "min-max scaling": MinMaxScaler(),
     "max-abs scaling": MaxAbsScaler(),
@@ -32,7 +33,7 @@ DISTS = {
     "power transformation (Yeo-Johnson)": PowerTransformer(
         method="yeo-johnson"
     ),
-    "power transformation (Box-Cox)": PowerTransformer(method="box-cox"),
+    #"power transformation (Box-Cox)": PowerTransformer(method="box-cox"),
     "quantile transformation (gaussian pdf)": QuantileTransformer(
         output_distribution="normal"
     ),
@@ -89,27 +90,35 @@ def gen_scatter(img_path, data, qtl=None):
         plt.close(fig)
 
 
-def input_menu(data):
+def col_menu(data):
     """Input menu for gathering dataframe column and scale trans. type.
 
         Args:
             data (pandas dataframe or string iterable)
         Return:
-            col name (str), scaler type (str)
+            scaler type (str)
     """
     # User input column
     print("Data Columns:")
     for col in data:
         print("[{}] {}".format(data.columns.get_loc(col), col))
     col_in = int(input("Select Column: "))
+    return data.columns[col_in]
 
+
+def scaler_menu():
+    """Input menu for selecting scaler type.
+
+        Return:
+            scaler type (str)
+    """
     # User input scale transformation
     print("\nScale Transformations:")
     dist_keys = list(DISTS.keys())
     for i in range(len(dist_keys)):
         print("[{}] {}".format(i, dist_keys[i]))
     scale_in = int(input("Select Scaler: "))
-    return data.columns[col_in], dist_keys[scale_in]
+    return dist_keys[scale_in]
 
 
 def scale_hist(img_path, data, col, scaler):
@@ -126,29 +135,26 @@ def scale_hist(img_path, data, col, scaler):
     # deep df copy
     tdata = data[["hasUrl", col]].copy()
     # apply scaler to all cols
-    tdata[tdata.columns] = transformer.fit_transform(tdata[tdata.columns])
-    tplt = plt.figure(1)
+    if transformer is not None:
+        tdata[tdata.columns] = transformer.fit_transform(tdata[tdata.columns])
+    tplt = plt.figure()
     t_ax = tdata[col].plot.hist(bins=2000, title="{}: {}".format(col, scaler))
-    print("\nStatistics: \n{}\n".format(data[col].describe()))
+    print("\nStatistics - {}: \n{}\n".format(scaler, data[col].describe()))
     tplt.show()
-    rplt = plt.figure(2)
-    ax = data[col].plot.hist(bins=2000, title=col)
-    rplt.show()
-    # Method for continutation w/ matplotlib
-    input("Press any key to continue, ctrl+z to exit.")
-    plt.close()
-    os.system("clear")
 
 
 def main():
     mypath = "transformed/full"
     data = pd.read_csv(DATA_PATH / FILENAME)
-    # fmt: off
-    import ipdb,os; ipdb.set_trace(context=5)  # noqa
-    # fmt: on
     while True:
-        col, scaler = input_menu(data)
-        scale_hist(IMG_PATH / mypath, data, col, scaler)
+        col = col_menu(data)
+        for scaler in DISTS.keys():
+            scale_hist(IMG_PATH / mypath, data, col, scaler)
+
+        # Method for continutation w/ matplotlib
+        input("Press any key to continue, ctrl+z to exit.")
+        plt.close()
+        os.system("clear")
 
     ###############################################
     # ti = int(arrow.get("2017-06-01").format("X"))

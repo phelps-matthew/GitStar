@@ -65,6 +65,10 @@ def module_test():
     FILE = "gs_table_v2.csv"
     SAMPLE_FILE = "10ksample.csv"
 
+    data = pd.read_csv(DATA_PATH / SAMPLE_FILE).astype("float64")
+
+    #data.iloc[:10000, :].to_csv(DATA_PATH / SAMPLE_FILE, index=False)
+
     dataset = GitStarDataset(DATA_PATH / SAMPLE_FILE)
     train_ds, valid_ds = rand_split_rel(dataset, 0.8)
     train_dl, valid_dl = get_data(train_ds, valid_ds, bs=1)

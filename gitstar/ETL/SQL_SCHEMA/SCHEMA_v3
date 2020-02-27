@@ -4,7 +4,7 @@ SELECT
     closedissues,
     forkCount,
     pullRequests,
-    commitnum,
+    commitnum, # should fix null values here
     watchers,
     diskUsage_kb,
     ISNULL(readme_bytes, 0) as readme_bytes,

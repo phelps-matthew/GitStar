@@ -15,19 +15,26 @@ class GitStarDataset(Dataset):
     """
 
     def __init__(self, csv_path, sample_frac=1, transform=None):
-        self.data_frame = pd.read_csv(csv_path).astype("float64")
-        sample_size = int(sample_frac * len(self.data_frame))
+        self.df = pd.read_csv(csv_path).astype("float64")
+
         # Slice data frame according to sample_frac
-        self.data_frame = self.data_frame.iloc[:sample_size, :]
+        sample_size = int(sample_frac * len(self.df))
+        self.df = self.df.iloc[:sample_size, :]
+
+        # Form features, target df. Drop method returns deep copy of df
+        self.feature_df = self.df.drop('stargazers', axis=1)
+        self.target_df = self.df['stargazers'].to_frame()
+        
+        # Allow preprocessing
         self.transform = transform
 
     def __len__(self):
-        return len(self.data_frame)
+        return len(self.df)
 
     def __getitem__(self, idx):
         # pd.df -> np.ndarray with dtype float64
-        x_sample = self.data_frame.iloc[idx, 1:].values
-        y_sample = self.data_frame.iloc[idx, 0]
+        x_sample = self.feature_df.iloc[idx].values
+        y_sample = self.target_df.iloc[idx].values
         # np.ndarry -> torch.tensor. float() to match default weights
         x_sample = torch.from_numpy(x_sample).float()
         y_sample = torch.tensor([y_sample]).float()

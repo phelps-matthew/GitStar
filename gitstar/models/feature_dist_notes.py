@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 import time
 import arrow
 import os
+import numpy as np
 
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import minmax_scale
@@ -25,22 +26,23 @@ IMG_PATH = BASE_DIR / "features"
 IMG_PATH.mkdir(parents=True, exist_ok=True)
 FILENAME = "gs_table_v2.csv"
 DISTS = {
-    "no scaling": None,
-    "standard scaling": StandardScaler(),
-    "min-max scaling": MinMaxScaler(),
-    "max-abs scaling": MaxAbsScaler(),
-    "robust scaling": RobustScaler(quantile_range=(25, 75)),
+    # "no scaling": None,
+    # "standard scaling": StandardScaler(),
+    # "min-max scaling": MinMaxScaler(),
+    # "max-abs scaling": MaxAbsScaler(),
+    # "robust scaling": RobustScaler(quantile_range=(25, 75)),
+    # "log scaling": np.log,
     "power transformation (Yeo-Johnson)": PowerTransformer(
         method="yeo-johnson"
     ),
-    #"power transformation (Box-Cox)": PowerTransformer(method="box-cox"),
+    # "power transformation (Box-Cox)": PowerTransformer(method="box-cox"),
     "quantile transformation (gaussian pdf)": QuantileTransformer(
         output_distribution="normal"
     ),
     "quantile transformation (uniform pdf)": QuantileTransformer(
         output_distribution="uniform"
     ),
-    "sample-wise L2 normalizing": Normalizer(),
+    # "sample-wise L2 normalizing": Normalizer(),
 }
 
 
@@ -121,40 +123,53 @@ def scaler_menu():
     return dist_keys[scale_in]
 
 
-def scale_hist(img_path, data, col, scaler):
+def scale_hist(data, col, scaler):
     """Generate histograms of given single column
 
         Args:
-            img_path (Path, str)
             data (pd.df)
             col (str): Single df col name
             scaler (str): based on DISTS dict
     """
-    img_path.mkdir(parents=True, exist_ok=True)
     transformer = DISTS[scaler]
-    # deep df copy
-    tdata = data[["hasUrl", col]].copy()
+    # deep df copy. transformer needs at least 2 cols
+    tdata = data[["stargazers", col]].copy()
     # apply scaler to all cols
-    if transformer is not None:
+    if isinstance(transformer, np.ufunc):
+        tdata[tdata.columns] = np.log(tdata[tdata.columns])
+    elif transformer is not None:
         tdata[tdata.columns] = transformer.fit_transform(tdata[tdata.columns])
     tplt = plt.figure()
-    t_ax = tdata[col].plot.hist(bins=2000, title="{}: {}".format(col, scaler))
-    print("\nStatistics - {}: \n{}\n".format(scaler, data[col].describe()))
+    ax = tdata[col].plot.hist(bins=2000, title="{}: {}".format(col, scaler))
+    print("\nStatistics - {}: \n{}\n".format(scaler, tdata[col].describe()))
+    fig = ax.get_figure()
+    #fig.savefig(
+    #    IMG_PATH / "transformed/full/{}_{}_hist.png".format(col, scaler),
+    #    transparent=False,
+    #    dpi=300,
+    #    bbox_inches="tight",  # fit bounds of figure to plot
+    #)
     tplt.show()
 
 
 def main():
     mypath = "transformed/full"
     data = pd.read_csv(DATA_PATH / FILENAME)
-    while True:
-        col = col_menu(data)
-        for scaler in DISTS.keys():
-            scale_hist(IMG_PATH / mypath, data, col, scaler)
 
+    # qtl=0.9
+    # qrange = (data[col].min(), 1.1 * data[col].quantile(qtl))
+    # ax = mydata[col].plot.hist(bins=2000, range=qrange)
+    # plt.show()
+
+    while True:
+        #col = col_menu(data)
+        for col in data.columns:
+            for scaler in DISTS.keys():
+                scale_hist(data, col, scaler)
         # Method for continutation w/ matplotlib
-        input("Press any key to continue, ctrl+z to exit.")
-        plt.close()
-        os.system("clear")
+        # input("Press any key to continue, ctrl+z to exit.")
+        # plt.close()
+        # os.system("clear")
 
     ###############################################
     # ti = int(arrow.get("2017-06-01").format("X"))

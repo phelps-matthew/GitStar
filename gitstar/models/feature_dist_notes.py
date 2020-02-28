@@ -19,23 +19,26 @@ from sklearn.preprocessing import RobustScaler
 from sklearn.preprocessing import Normalizer
 from sklearn.preprocessing import QuantileTransformer
 from sklearn.preprocessing import PowerTransformer
+from sklearn.compose import make_column_transformer, ColumnTransformer
+from gitstar.models.dataload import GitStarDataset
 
 BASE_DIR = Path(__file__).resolve().parent
 DATA_PATH = BASE_DIR / "dataset"
 IMG_PATH = BASE_DIR / "features"
 IMG_PATH.mkdir(parents=True, exist_ok=True)
 FILENAME = "gs_table_v2.csv"
+SAMPLE_FILE = "10ksample.csv"
 DISTS = {
-    # "no scaling": None,
+    "no scaling": None,
     # "standard scaling": StandardScaler(),
-    # "min-max scaling": MinMaxScaler(),
+    "min-max scaling": MinMaxScaler(),
     # "max-abs scaling": MaxAbsScaler(),
     # "robust scaling": RobustScaler(quantile_range=(25, 75)),
     # "log scaling": np.log,
     "power transformation (Yeo-Johnson)": PowerTransformer(
         method="yeo-johnson"
     ),
-    # "power transformation (Box-Cox)": PowerTransformer(method="box-cox"),
+    "power transformation (Box-Cox)": PowerTransformer(method="box-cox"),
     "quantile transformation (gaussian pdf)": QuantileTransformer(
         output_distribution="normal"
     ),
@@ -98,7 +101,7 @@ def col_menu(data):
         Args:
             data (pandas dataframe or string iterable)
         Return:
-            scaler type (str)
+            column (str)
     """
     # User input column
     print("Data Columns:")
@@ -133,29 +136,38 @@ def scale_hist(data, col, scaler):
     """
     transformer = DISTS[scaler]
     # deep df copy. transformer needs at least 2 cols
-    tdata = data[["stargazers", col]].copy()
+    tdata = data[col].to_frame()
+    # fmt: off
+    import ipdb,os; ipdb.set_trace(context=5)  # noqa
+    # fmt: on
+    # make column transformer
+    ct = make_column_transformer((transformer, [col]))
+    # nd array
+    new_data = ct.fit_transform(tdata)
+    # make new df
+    newdf = pd.DataFrame(new_data, columns=[col])
     # apply scaler to all cols
-    if isinstance(transformer, np.ufunc):
-        tdata[tdata.columns] = np.log(tdata[tdata.columns])
-    elif transformer is not None:
-        tdata[tdata.columns] = transformer.fit_transform(tdata[tdata.columns])
-    tplt = plt.figure()
-    ax = tdata[col].plot.hist(bins=2000, title="{}: {}".format(col, scaler))
-    print("\nStatistics - {}: \n{}\n".format(scaler, tdata[col].describe()))
-    fig = ax.get_figure()
-    fig.savefig(
-        IMG_PATH / "transformed/full/{}_{}_hist.png".format(col, scaler),
-        transparent=False,
-        dpi=300,
-        bbox_inches="tight",  # fit bounds of figure to plot
-    )
-    plt.close()
+    #if isinstance(transformer, np.ufunc):
+    #    tdata[tdata.columns] = np.log(tdata[tdata.columns])
+    #elif transformer is not None:
+    #    tdata[tdata.columns] = transformer.fit_transform(tdata[tdata.columns])
+    # tplt = plt.figure()
+    # ax = tdata[col].plot.hist(bins=2000, title="{}: {}".format(col, scaler))
+    print("\nStatistics - {}: \n{}\n".format(scaler, newdf[col].describe()))
+    # fig = ax.get_figure()
+    # fig.savefig(
+    #    IMG_PATH / "transformed/full/{}_{}_hist.png".format(col, scaler),
+    #    transparent=False,
+    #    dpi=300,
+    #    bbox_inches="tight",  # fit bounds of figure to plot
+    # )
+    # plt.close()
     # tplt.show()
 
 
 def main():
     mypath = "transformed/full"
-    data = pd.read_csv(DATA_PATH / FILENAME)
+    df = GitStarDataset(DATA_PATH / FILENAME, 1).df
 
     # qtl=0.9
     # qrange = (data[col].min(), 1.1 * data[col].quantile(qtl))
@@ -163,10 +175,12 @@ def main():
     # plt.show()
 
     while True:
-        #col = col_menu(data)
-        for col in data.columns:
-            for scaler in DISTS.keys():
-                scale_hist(data, col, scaler)
+        col = col_menu(df)
+        scaler = scaler_menu()
+        print(col, scaler)
+        scale_hist(df, col, scaler)
+        input("Press any key to continue, ctrl+z to exit.")
+
         # Method for continutation w/ matplotlib
         # input("Press any key to continue, ctrl+z to exit.")
         # plt.close()

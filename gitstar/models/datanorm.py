@@ -1,5 +1,6 @@
 from pathlib import Path
 import pandas as pd
+from itertools import chain
 
 from gitstar.models.dataload import GitStarDataset
 from sklearn.preprocessing import MinMaxScaler
@@ -13,16 +14,8 @@ DATA_PATH = BASE_DIR / "dataset"
 FILE = "gs_table_v2.csv"
 SAMPLE_FILE = "10ksample.csv"
 SCALER_COLS = {
-    "Identity": ["hasUrl", "hasLicense", "hasWiki", "hasIssue"],
     "MinMax": ["repositoryTopics"],
-    "Quantile_Gaussian": [
-        "diskUsage_kb",
-        "projects",
-        "milestones",
-        "issuelabels",
-        "created",
-        "updated",
-    ],
+    "Box_Cox": ["stargazers"],
     "Yeo_Johnson": [
         "openissues",
         "closedissues",
@@ -35,44 +28,61 @@ SCALER_COLS = {
         "deployments",
         "descr_len",
     ],
-    "Box_Cox": ["stargazers"],
+    "Quantile_Gaussian": [
+        "diskUsage_kb",
+        "projects",
+        "milestones",
+        "issuelabels",
+        "created",
+        "updated",
+    ],
+    "Identity": ["hasUrl", "hasLicense", "hasWiki", "hasIssue"],
 }
 
-df = GitStarDataset(DATA_PATH / SAMPLE_FILE, 0.1).data_frame
-df = df[['watchers', 'forkCount']]
 
-ct_features = make_column_transformer(
+def col_transform(df, col, scaler):
+    """Scale single pandas dataframe column based on sklearn scaler.
+        Warning: Transforms in-place.
+        Args:
+            df (pd.DataFrame): Must have one or more named columns
+
+            col (str): Column name within DataFrame
+
+            scaler (sklearn.preprocessing.scaler):
+            E.g. MinMaxScaler(), PowerTransformer(method="box-cox"),
+            PowerTransformer(method="yeo-johnson"),
+            QuantileTransformer(output_distribution="normal")
+
+        Return:
+            df (pd.DataFrame): Transformed dataframe
+            scaler (sklearn.preprocessing.scaler): Object holds fit attributes,
+            e.g. lambdas_ for PowerTransformer
+    """
+    # Extract column data
+    col_data = data[col].values.reshape(-1, 1)
+    # Apply transformation. Returns nd.array
+    newdata = scaler.fit_transform(col_data)
+    # Transform new column in place
+    df[col] = newdata
+    return df, scaler
+
+
+col_list = [col for key in SCALER_COLS for col in SCALER_COLS[key]]
+GitStarDataset
+
+data = GitStarDataset(DATA_PATH / SAMPLE_FILE, 1).df
+newdata, fit = col_transform(data, "stargazers", PowerTransformer(method="box-cox"))
+
+preprocess = make_column_transformer(
     (MinMaxScaler(), SCALER_COLS["MinMax"]),
+    (PowerTransformer(method="box-cox"), SCALER_COLS["Box_Cox"]),
+    (PowerTransformer(method="yeo-johnson"), SCALER_COLS["Yeo_Johnson"]),
     (
         QuantileTransformer(output_distribution="normal"),
         SCALER_COLS["Quantile_Gaussian"],
     ),
-    (PowerTransformer(method="yeo-johnson"), SCALER_COLS["Yeo_Johnson"]),
-    #    (PowerTransformer(method="box-cox"), SCALER_COLS["Box_Cox"]),
     remainder="passthrough",
 )
 
-test1 = ColumnTransformer(
-    [
-        ("yj_watchers", PowerTransformer(method="yeo-johnson"), ["watchers"]),
-    ],
-    remainder="passthrough",
-)
-test2 = ColumnTransformer(
-    [
-        (
-            "yj_watchers_forkCount",
-            PowerTransformer(method="yeo-johnson"),
-            ["watchers", "forkCount"],
-        )
-    ],
-    remainder="passthrough",
-)
-out1 = test1.fit_transform(df)
-out2 = test2.fit_transform(df)
-# fmt: off
-import ipdb,os; ipdb.set_trace(context=5)  # noqa
-# fmt: on
-print(df)
-new_array = preprocess.fit_transform(df)
-print(new_array)
+new_array = preprocess.fit_transform(data)
+newdf = pd.DataFrame(new_array, columns=col_list)

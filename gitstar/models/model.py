@@ -70,8 +70,17 @@ def set_logger(filepath):
         filename=filepath,
         filemode="w",  # will rewrite on each run
         level=logging.DEBUG,
-        format="[%(asctime)s] %(name)s - %(message)s",
+        format="[%(asctime)s] %(levelname)s - %(message)s",
     )
+
+
+def error(y_pred, y):
+    """Computes |y-y_pred|/y. Returns scalar representing average error"""
+    err = torch.div(torch.abs(y - y_pred), y)
+    err_len = torch.tensor([err.shape[0]])
+    avg_err = torch.div(torch.sum(err), err_len).item()
+    # Returns float
+    return avg_err, err_len
 
 
 def loss_batch(model, loss_func, xb, yb, opt=None):
@@ -96,9 +105,14 @@ def fit(epochs, model, loss_func, opt, train_dl, valid_dl):
             losses, nums = zip(
                 *[loss_batch(model, loss_func, xb, yb) for xb, yb in valid_dl]
             )
-        # Weighted sum of mean loss per batch. Batches may not be identical.
+            errors, _ = zip(
+                *[error(model(xb), yb) for xb, yb in valid_dl]
+            )
+        # Weighted sum of mean loss or error per batch.
+        # Batches may not be identical.
         val_loss = np.sum(np.multiply(losses, nums)) / np.sum(nums)
-        print(epoch, val_loss)
+        val_error = np.sum(np.multiply(errors, nums)) / np.sum(nums)
+        print(epoch, val_loss, val_error)
 
 
 def main():
@@ -115,19 +129,18 @@ def main():
     # Model params
     bs = 64
     lr = 0.001
-    epochs = 2
+    epochs = 3
     h_layers = [16, 16]
 
     # Load data
-    dataset = GitStarDataset(
-        DATA_PATH / SAMPLE_FILE, sample_frac=1, transform=False
-    )
+    dataset = GitStarDataset(DATA_PATH / FILE, sample_frac=0.4, transform=True)
     train_ds, valid_ds = rand_split_rel(dataset, 0.8)
     train_dl, valid_dl = get_data(train_ds, valid_ds, bs=bs)
 
     # Intialize model, optimization method, and loss function
     model = DFF(21, h_layers, 1, a_fn=F.rrelu)
-    opt = optim.SGD(model.parameters(), lr=lr, momentum=0)
+    # opt = optim.SGD(model.parameters(), lr=lr, momentum=0)
+    opt = optim.Adam(model.parameters())
     loss_func = F.mse_loss
 
     # Train model
@@ -147,13 +160,14 @@ def main():
         model.eval()  # Good habit. Relevant for Dropout, BatchNorm layers
         with torch.no_grad():
             valid_loss = sum(loss_func(model(xb), yb) for xb, yb in valid_dl)
+            valid_error = sum(error(model(xb), yb)[0] for xb, yb in valid_dl)
 
         # Print loss from valid_dl
-        # print(
-        #     "Epoch: {}  Validation Loss: {}".format(
-        #         epoch, valid_loss / len(valid_dl)
-        #     )
-        # )
+        print(
+            "Epoch: {}  Validation Loss: {} Validation Error: {}".format(
+                epoch, valid_loss / len(valid_dl), valid_error / len(valid_dl)
+            )
+        )
 
     # fit(epochs, model, loss_func, opt, train_dl, valid_dl)
 

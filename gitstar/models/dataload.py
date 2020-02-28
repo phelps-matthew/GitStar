@@ -36,8 +36,10 @@ class GitStarDataset(Dataset):
     """
 
     def __init__(self, csv_path, sample_frac=1, transform=True):
-        # Load data, initialize attributes
-        self.df = pd.read_csv(csv_path).astype("float64")
+        # Load data. Take random subset according to sample_frac.
+        self.df = pd.read_csv(csv_path).astype("float64").sample(frac=sample_frac)
+
+        # Intialize transform related attributes
         self.target_inv_fn = None
         self.transform = transform
 

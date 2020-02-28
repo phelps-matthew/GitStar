@@ -7,7 +7,7 @@ import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import QuantileTransformer
 from sklearn.preprocessing import PowerTransformer
-from gitstar.models.dataload import GitStarDataset
+#from gitstar.models.dataload import GitStarDataset
 
 
 FEATURE_SCALERS = [
@@ -31,7 +31,7 @@ FEATURE_SCALERS = [
 TARGET_SCALER = ("stargazers", PowerTransformer(method="box-cox"))
 
 
-def col_transform(data, col, scaler):
+def col_transform(df, col, scaler):
     """Scale single pandas dataframe column based on sklearn scaler.
         Warning: Transforms in-place.
         Args:
@@ -50,15 +50,15 @@ def col_transform(data, col, scaler):
             e.g. lambdas_ for PowerTransformer
     """
     # Extract column data
-    col_data = data[col].values.reshape(-1, 1)
+    col_data = df[col].values.reshape(-1, 1)
     # Apply transformation. Returns nd.array
     newdata = scaler.fit_transform(col_data)
     # Transform new column in place
-    data[col] = newdata
-    return data, scaler
+    df[col] = newdata
+    return df, scaler
 
 
-def feature_transform(data, col_scaler_list=FEATURE_SCALERS):
+def feature_transform(df, col_scaler_list=FEATURE_SCALERS):
     """Scale pandas DataFrame according to FEATURE_SCALERS. Does not return fit
         objects. Warning: Transforms in-place.
         Args:
@@ -69,11 +69,11 @@ def feature_transform(data, col_scaler_list=FEATURE_SCALERS):
             data (pd.DataFrame)
     """
     for feature in col_scaler_list:
-        col_transform(data, *feature)
-    return data
+        col_transform(df, *feature)
+    return df
 
 
-def target_transform(data, col_scaler=TARGET_SCALER):
+def target_transform(df, col_scaler=TARGET_SCALER):
     """Scale pandas DataFrame target column according to TARGET_SCALER. Provides
         inverse fit function. Warning: Transforms in-place.
         Args:
@@ -88,8 +88,8 @@ def target_transform(data, col_scaler=TARGET_SCALER):
             accessible via target_inv_fn.inverse_transform(X), X (nd.array)
 
     """
-    data, scaler = col_transform(data, *col_scaler)
-    return data, scaler
+    df, scaler = col_transform(df, *col_scaler)
+    return df, scaler
 
 
 def module_test():
@@ -98,12 +98,12 @@ def module_test():
     FILE = "gs_table_v2.csv"
     SAMPLE_FILE = "10ksample.csv"
 
-    data = GitStarDataset(DATA_PATH / SAMPLE_FILE, 1).df
+    #data = GitStarDataset(DATA_PATH / SAMPLE_FILE, 1).df
     # feature_transform(data)
 
-    tdata = data.copy()
-    tdata, scaler = target_transform(tdata)
-    ndata = tdata.copy()
+    #tdata = data.copy()
+    #tdata, scaler = target_transform(tdata)
+    #ndata = tdata.copy()
 
 
 if __name__ == "__main__":

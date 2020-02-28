@@ -164,7 +164,7 @@ def scale_hist(data, col, scaler):
 
 def main():
     mypath = "transformed/full"
-    df = GitStarDataset(DATA_PATH / FILENAME, 1).data
+    df = GitStarDataset(DATA_PATH / FILENAME, 1).df
 
     # qtl=0.9
     # qrange = (data[col].min(), 1.1 * data[col].quantile(qtl))

@@ -1,4 +1,8 @@
-"""Data handling for DFF NN"""
+"""Data handling for DFF NN
+
+    TODO:
+        Update get_data or other wrappers as needed.
+"""
 
 from pathlib import Path
 from torch.utils.data import Dataset, DataLoader, random_split
@@ -11,6 +15,8 @@ class GitStarDataset(Dataset):
     """
         Args:
             csv_file (str, Path): Path to the csv file.
+
+            sample_frac (float): [0,1]
 
             transform=True (boolean): Apply scale transformations according to
             datanorm module.
@@ -31,25 +37,25 @@ class GitStarDataset(Dataset):
 
     def __init__(self, csv_path, sample_frac=1, transform=True):
         # Load data, initialize attributes
-        self.data = pd.read_csv(csv_path).astype("float64")
+        self.df = pd.read_csv(csv_path).astype("float64")
         self.target_inv_fn = None
         self.transform = transform
 
         # Slice data frame according to sample_frac
-        sample_size = int(sample_frac * len(self.data))
-        self.data = self.data.iloc[:sample_size, :]
+        sample_size = int(sample_frac * len(self.df))
+        self.df = self.df.iloc[:sample_size, :]
 
         # Apply data scaling
         if self.transform:
-            feature_transform(self.data)
-            _, self.target_inv_fn = target_transform(self.data)
+            feature_transform(self.df)
+            _, self.target_inv_fn = target_transform(self.df)
 
         # Separate features and target. Drop method returns deep copy of df
-        self.features = self.data.drop("stargazers", axis=1)
-        self.target = self.data["stargazers"].to_frame()
+        self.features = self.df.drop("stargazers", axis=1)
+        self.target = self.df["stargazers"].to_frame()
 
     def __len__(self):
-        return len(self.data)
+        return len(self.df)
 
     def __getitem__(self, idx):
         # pd.df -> np.ndarray with dtype float64
@@ -76,7 +82,7 @@ def rand_split_rel(dataset, frac, **kwargs):
 
 
 def get_data(train_ds, valid_ds, bs):
-    """Create dataloaders based on train/test datasets and batch size"""
+    """Create dataloaders based on train/validation datasets and batch size"""
     train_dl = DataLoader(train_ds, batch_size=bs, shuffle=True)
     valid_dl = DataLoader(valid_ds, batch_size=2 * bs)
     return train_dl, valid_dl
@@ -89,11 +95,10 @@ def module_test():
     FILE = "gs_table_v2.csv"
     SAMPLE_FILE = "10ksample.csv"
 
-    data = pd.read_csv(DATA_PATH / SAMPLE_FILE).astype("float64")
-
-    # data.iloc[:10000, :].to_csv(DATA_PATH / SAMPLE_FILE, index=False)
-
     dataset = GitStarDataset(DATA_PATH / SAMPLE_FILE)
+    # fmt: off
+    import ipdb,os; ipdb.set_trace(context=5)  # noqa
+    # fmt: on
     train_ds, valid_ds = rand_split_rel(dataset, 0.8)
     train_dl, valid_dl = get_data(train_ds, valid_ds, bs=1)
 

@@ -137,9 +137,6 @@ def scale_hist(data, col, scaler):
     transformer = DISTS[scaler]
     # deep df copy. transformer needs at least 2 cols
     tdata = data[col].to_frame()
-    # fmt: off
-    import ipdb,os; ipdb.set_trace(context=5)  # noqa
-    # fmt: on
     # make column transformer
     ct = make_column_transformer((transformer, [col]))
     # nd array
@@ -167,7 +164,7 @@ def scale_hist(data, col, scaler):
 
 def main():
     mypath = "transformed/full"
-    df = GitStarDataset(DATA_PATH / FILENAME, 1).df
+    df = GitStarDataset(DATA_PATH / FILENAME, 1).data
 
     # qtl=0.9
     # qrange = (data[col].min(), 1.1 * data[col].quantile(qtl))

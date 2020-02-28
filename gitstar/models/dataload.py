@@ -1,46 +1,63 @@
-"""Data handling for NN"""
+"""Data handling for DFF NN"""
 
 from pathlib import Path
 from torch.utils.data import Dataset, DataLoader, random_split
 import pandas as pd
 import torch
+from gitstar.models.datanorm import feature_transform, target_transform
 
 
 class GitStarDataset(Dataset):
-    """GitStar Dataset.
+    """
         Args:
-            csv_file (str, Path): Path to the csv file. Target must be col. 0.
-            transform (callable, optional): Optional transform to be applied
-                on a sample.
+            csv_file (str, Path): Path to the csv file.
+
+            transform=True (boolean): Apply scale transformations according to
+            datanorm module.
+
+        Attributes:
+            data (pd.DataFrame): Entire dataset
+
+            transform (boolean): Apply scale transformation
+
+            target_inv_fn (sklearn.preprocessing.scaler()): Scaler object that holds
+            target fit parameters. Access inv. function via
+            target_inv_fn.inverse_transform(X), X (nd.array)
+
+            features (pd.DataFrame):
+
+            target (pd.DataFrame):
     """
 
-    def __init__(self, csv_path, sample_frac=1, transform=None):
-        self.df = pd.read_csv(csv_path).astype("float64")
-
-        # Slice data frame according to sample_frac
-        sample_size = int(sample_frac * len(self.df))
-        self.df = self.df.iloc[:sample_size, :]
-
-        # Form features, target df. Drop method returns deep copy of df
-        self.feature_df = self.df.drop('stargazers', axis=1)
-        self.target_df = self.df['stargazers'].to_frame()
-        
-        # Allow preprocessing
+    def __init__(self, csv_path, sample_frac=1, transform=True):
+        # Load data, initialize attributes
+        self.data = pd.read_csv(csv_path).astype("float64")
+        self.target_inv_fn = None
         self.transform = transform
 
+        # Slice data frame according to sample_frac
+        sample_size = int(sample_frac * len(self.data))
+        self.data = self.data.iloc[:sample_size, :]
+
+        # Apply data scaling
+        if self.transform:
+            feature_transform(self.data)
+            _, self.target_inv_fn = target_transform(self.data)
+
+        # Separate features and target. Drop method returns deep copy of df
+        self.features = self.data.drop("stargazers", axis=1)
+        self.target = self.data["stargazers"].to_frame()
+
     def __len__(self):
-        return len(self.df)
+        return len(self.data)
 
     def __getitem__(self, idx):
         # pd.df -> np.ndarray with dtype float64
-        x_sample = self.feature_df.iloc[idx].values
-        y_sample = self.target_df.iloc[idx].values
-        # np.ndarry -> torch.tensor. float() to match default weights
+        x_sample = self.features.iloc[idx].values
+        y_sample = self.target.iloc[idx].values
+        # np.ndarry -> torch.tensor.float() to match weights datatype
         x_sample = torch.from_numpy(x_sample).float()
         y_sample = torch.tensor([y_sample]).float()
-
-        if self.transform:
-            x_sample = self.transform(x_sample)
 
         return x_sample, y_sample
 
@@ -74,7 +91,7 @@ def module_test():
 
     data = pd.read_csv(DATA_PATH / SAMPLE_FILE).astype("float64")
 
-    #data.iloc[:10000, :].to_csv(DATA_PATH / SAMPLE_FILE, index=False)
+    # data.iloc[:10000, :].to_csv(DATA_PATH / SAMPLE_FILE, index=False)
 
     dataset = GitStarDataset(DATA_PATH / SAMPLE_FILE)
     train_ds, valid_ds = rand_split_rel(dataset, 0.8)

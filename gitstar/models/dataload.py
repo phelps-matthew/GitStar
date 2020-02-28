@@ -63,7 +63,7 @@ class GitStarDataset(Dataset):
         y_sample = self.target.iloc[idx].values
         # np.ndarry -> torch.tensor.float() to match weights datatype
         x_sample = torch.from_numpy(x_sample).float()
-        y_sample = torch.tensor([y_sample]).float()
+        y_sample = torch.tensor(y_sample).float()
 
         return x_sample, y_sample
 
@@ -96,11 +96,14 @@ def module_test():
     SAMPLE_FILE = "10ksample.csv"
 
     dataset = GitStarDataset(DATA_PATH / SAMPLE_FILE)
-    # fmt: off
-    import ipdb,os; ipdb.set_trace(context=5)  # noqa
-    # fmt: on
     train_ds, valid_ds = rand_split_rel(dataset, 0.8)
-    train_dl, valid_dl = get_data(train_ds, valid_ds, bs=1)
+    train_dl, valid_dl = get_data(train_ds, valid_ds, bs=64)
+    for xb, yb in train_dl:
+        print(xb,yb)
+        # fmt: off
+        import ipdb,os; ipdb.set_trace(context=5)  # noqa
+        # fmt: on
+
 
 
 if __name__ == "__main__":

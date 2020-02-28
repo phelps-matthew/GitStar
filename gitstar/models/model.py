@@ -1,9 +1,8 @@
 """Deep feedforward model
 
     ToDo:
-        Normalize inputs/output
         BS, lr, model dims. Separate affects
-        Model.train() eval()
+        Accuracy
 """
 
 from pathlib import Path
@@ -11,8 +10,9 @@ import torch
 from torch import nn
 import torch.nn.functional as F
 from torch import optim
-from gitstar.models.dataload import GitStarDataset, rand_split_rel, get_data
 import numpy as np
+import logging
+from gitstar.models.dataload import GitStarDataset, rand_split_rel, get_data
 
 
 class DFF(nn.Module):
@@ -57,11 +57,21 @@ class DFF(nn.Module):
             Args:
                 x (torch.tensor): Input from DataLoader
         """
-        # We shall try ReLU on hidden layers
+        # ReLU on hidden layers
         for layer in self.layers:
             x = self.a_fn(layer(x))
-        # Relu activation on output layer (since target strictly > 0)
-        return F.relu(self.out(x))
+        # No activation on output layer (linear)
+        return self.out(x)
+
+
+def set_logger(filepath):
+    """Intialize root logger here."""
+    logging.basicConfig(
+        filename=filepath,
+        filemode="w",  # will rewrite on each run
+        level=logging.DEBUG,
+        format="[%(asctime)s] %(name)s - %(message)s",
+    )
 
 
 def loss_batch(model, loss_func, xb, yb, opt=None):
@@ -95,50 +105,55 @@ def main():
     """Test class implementations"""
     BASE_DIR = Path(__file__).resolve().parent
     DATA_PATH = BASE_DIR / "dataset"
+    LOG_PATH = BASE_DIR / "logs"
     FILE = "gs_table_v2.csv"
     SAMPLE_FILE = "10ksample.csv"
 
+    # Initialize logger
+    set_logger(LOG_PATH / "model.log")
+
     # Model params
-    bs = 128
-    lr = 0.1
+    bs = 64
+    lr = 0.001
     epochs = 2
-    h_layers = [32]
+    h_layers = [16, 16]
 
     # Load data
-    dataset = GitStarDataset(DATA_PATH / FILE, sample_frac=1)
+    dataset = GitStarDataset(
+        DATA_PATH / SAMPLE_FILE, sample_frac=1, transform=False
+    )
     train_ds, valid_ds = rand_split_rel(dataset, 0.8)
     train_dl, valid_dl = get_data(train_ds, valid_ds, bs=bs)
 
     # Intialize model, optimization method, and loss function
-    model = DFF(21, h_layers, 1)
-    opt = optim.SGD(model.parameters(), lr=lr, momentum=0.9)
+    model = DFF(21, h_layers, 1, a_fn=F.rrelu)
+    opt = optim.SGD(model.parameters(), lr=lr, momentum=0)
     loss_func = F.mse_loss
 
     # Train model
     for epoch in range(epochs):
-        model.train()
+        model.train()  # Good habit. Relevant for Dropout, BatchNorm layers
         i = 0
         for xb, yb in train_dl:
             loss = loss_func(model(xb), yb)
-            # Print initial train_dl loss
-            if i == 0:
-                print(loss)
+            logging.info(loss)
 
+            # SGD
             loss.backward()
             opt.step()
             opt.zero_grad()
             i += 1
 
-        model.eval()
+        model.eval()  # Good habit. Relevant for Dropout, BatchNorm layers
         with torch.no_grad():
             valid_loss = sum(loss_func(model(xb), yb) for xb, yb in valid_dl)
 
         # Print loss from valid_dl
-        print(
-            "Epoch: {}  Validation Loss: {}".format(
-                epoch, valid_loss / len(valid_dl)
-            )
-        )
+        # print(
+        #     "Epoch: {}  Validation Loss: {}".format(
+        #         epoch, valid_loss / len(valid_dl)
+        #     )
+        # )
 
     # fit(epochs, model, loss_func, opt, train_dl, valid_dl)
 

@@ -197,7 +197,10 @@ def main():
     opt = optim.Adam(model.parameters(), lr=0.001)
     loss_func = F.mse_loss
 
+    # Train DFF. Evaluate on validation set. Print valid loss and error.
     train_loss = fit(epochs, model, loss_func, opt, train_dl, valid_dl)
+
+    # Plot training loss
     plot_loss(train_loss)
 
 

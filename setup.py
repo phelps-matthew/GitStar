@@ -9,6 +9,7 @@ setup(
         "numpy",
         "pandas",
         "pathlib",
+        "sklearn",
         "requests",
         "matplotlib",
         "arrow",

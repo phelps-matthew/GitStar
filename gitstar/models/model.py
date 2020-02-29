@@ -9,10 +9,16 @@ import torch
 from torch import nn
 import torch.nn.functional as F
 from torch import optim
+import pandas as pd
 import numpy as np
 import logging
 import matplotlib.pyplot as plt
-from gitstar.models.dataload import GitStarDataset, rand_split_rel, get_data
+from gitstar.models.dataload import (
+    GitStarDataset,
+    WrappedDataLoader,
+    rand_split_rel,
+    get_data,
+)
 
 
 class DFF(nn.Module):
@@ -77,7 +83,7 @@ def set_logger(filepath):
     )
 
 
-def plot_loss(loss_array, ylabel="MSE Loss", ylim=(0,2)):
+def plot_loss(loss_array, ylabel="MSE Loss", ylim=(0, 2)):
     """Simple plot of 1d array.
 
         Args:
@@ -125,7 +131,7 @@ def loss_batch(model, loss_func, xb, yb, opt=None):
         opt.step()
         opt.zero_grad()
         # Capture loss
-        logging.info(loss)
+        # logging.info(loss)
     # loss returns torch.tensor
     return loss.item(), len(xb)
 
@@ -175,32 +181,73 @@ def main():
     FILE = "gs_table_v2.csv"
     SAMPLE_FILE = "10ksample.csv"
 
+    # Enable GPU support
+    print("torch.cuda_is_available: {}".format(torch.cuda.is_available()))
+    print("torch.cuda.current_device(): {}".format(torch.cuda.current_device()))
+    print("torch.cuda.device(0): {}".format(torch.cuda.device(0)))
+    print("torch.cuda.device_count(): {}".format(torch.cuda.device_count()))
+    print("torch.cuda.get_device_name(0): {}".format(torch.cuda.get_device_name(0)))
+    dev = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+    def preprocess(x, y):
+        return x.to(dev), y.to(dev)
+    print("torch.cuda_is_available: {}".format(torch.cuda.is_available()))
+    print("torch.cuda.current_device(): {}".format(torch.cuda.current_device()))
+
     # Initialize logger
+    # fmt: off
+    import ipdb,os; ipdb.set_trace(context=5)  # noqa
+    # fmt: on
     set_logger(LOG_PATH / "model.log")
 
     # Load data
-    bs = 5
-    dataset = GitStarDataset(
-        DATA_PATH / SAMPLE_FILE, sample_frac=0.4, transform=True, shuffle=False
-    )
+    batch_size = 64
+    dataset = GitStarDataset(DATA_PATH / SAMPLE_FILE)
     train_ds, valid_ds = rand_split_rel(dataset, 0.8)
-    train_dl, valid_dl = get_data(train_ds, valid_ds, bs=bs)
+    train_dl, valid_dl = get_data(train_ds, valid_ds, bs=batch_size)
+    train_dl = WrappedDataLoader(train_dl, preprocess)
+    valid_dl = WrappedDataLoader(valid_dl, preprocess)
 
     # Hyperparameters
-    h_layers = [16, 16]
+    h_layers = [21]
     lr = 0.001
-    epochs = 1
+    epochs = 5
 
     # Intialize model, optimization method, and loss function
     model = DFF(21, h_layers, 1, a_fn=F.rrelu)
-    opt = optim.Adam(model.parameters(), lr=0.001)
+    model.to(dev)
+    opt = optim.Adam(model.parameters(), lr=lr)
     loss_func = F.mse_loss
 
-    # Train DFF. Validate. Print validation loss and error.
+    rates = [
+        10 ** (-6),
+        10 ** (-5),
+        10 ** (-4),
+        10 ** (-3),
+        10 ** (-2),
+        10 ** (-1),
+    ]
+
     train_loss = fit(epochs, model, loss_func, opt, train_dl, valid_dl)
 
-    # Plot training loss
-    plot_loss(train_loss)
+    # for lr in rates:
+    #    # Train DFF. Validate. Print validation loss and error.
+    #    opt = optim.Adam(model.parameters(), lr=lr)
+    #    train_loss = fit(epochs, model, loss_func, opt, train_dl, valid_dl)
+
+    #    # Export training loss
+    #    loss_df = pd.DataFrame(train_loss, columns=["lr={}".format(lr)])
+    #    loss_df.to_csv(LOG_PATH / "lr_{}.csv".format(lr))
+
+    # csv_paths = [pth for pth in LOG_PATH.iterdir() if pth.suffix == ".csv"]
+    # fig, *ax = plt.subplots(2,3, sharey=True, sharex=True)
+    # ax_list = [ax_n for row in ax[0] for ax_n in row]
+
+    # for path, ax_n in zip(csv_paths, ax_list):
+    #     df = pd.read_csv(path, usecols=[1])
+    #     ax_n.plot(df.values)
+    #     ax_n.set(xlabel="batch number", ylabel="MSE", title=df.columns[0])
+    #     ax_n.set_ylim(0,2)
+    # plt.show()
 
 
 if __name__ == "__main__":

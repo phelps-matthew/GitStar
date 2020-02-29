@@ -84,7 +84,7 @@ def rand_split_rel(dataset, frac, **kwargs):
             dataset (torch.utils.data.Dataset)
             frac (float): [0,1]
         Return:
-            (ds_frac, ds_remainder) (tuple)
+            ds_frac, ds_remainder (tuple): torch.utils.Dataset
     """
     size_1 = int(frac * len(dataset))
     size_2 = len(dataset) - size_1
@@ -107,6 +107,20 @@ def get_data(train_ds, valid_ds, bs):
     return train_dl, valid_dl
 
 
+class WrappedDataLoader:
+    def __init__(self, dl, func):
+        self.dl = dl
+        self.func = func
+
+    def __len__(self):
+        return len(self.dl)
+
+    def __iter__(self):
+        batches = iter(self.dl)
+        for b in batches:
+            yield (self.func(*b))
+
+
 def module_test():
     """Test class implementations"""
     BASE_DIR = Path(__file__).resolve().parent
@@ -115,6 +129,9 @@ def module_test():
     SAMPLE_FILE = "10ksample.csv"
 
     dataset = GitStarDataset(DATA_PATH / SAMPLE_FILE)
+    # fmt: off
+    import ipdb,os; ipdb.set_trace(context=5)  # noqa
+    # fmt: on
     train_ds, valid_ds = rand_split_rel(dataset, 0.8)
     train_dl, valid_dl = get_data(train_ds, valid_ds, bs=64)
     for xb, yb in train_dl:

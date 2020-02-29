@@ -13,6 +13,5 @@ setup(
         "matplotlib",
         "arrow",
         "pyodbc",
-        "time",
     ],
 )

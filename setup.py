@@ -13,5 +13,7 @@ setup(
         "matplotlib",
         "arrow",
         "pyodbc",
+        "ipython",
+        "ipdb",
     ],
 )

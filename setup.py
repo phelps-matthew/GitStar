@@ -10,7 +10,6 @@ setup(
         "pandas",
         "pathlib",
         "requests",
-        "logging",
         "matplotlib",
         "arrow",
         "pyodbc",

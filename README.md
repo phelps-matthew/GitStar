@@ -6,7 +6,7 @@ To install:
 * Clone into desired directory
 * Enable virtual environement
 ```
-python -m venv venv
+python -m myvenv venv
 . venv/bin/activate
 ```
 

@@ -1,8 +1,7 @@
 """Deep feedforward model
 
     ToDo:
-        BS, lr, model dims. Separate affects
-        Accuracy
+        Hyperparameter tuning
 """
 
 from pathlib import Path
@@ -12,6 +11,7 @@ import torch.nn.functional as F
 from torch import optim
 import numpy as np
 import logging
+import matplotlib.pyplot as plt
 from gitstar.models.dataload import GitStarDataset, rand_split_rel, get_data
 
 
@@ -65,7 +65,10 @@ class DFF(nn.Module):
 
 
 def set_logger(filepath):
-    """Intialize root logger here."""
+    """Intialize root logger here.
+        Args:
+            filepath (str, Path)
+    """
     logging.basicConfig(
         filename=filepath,
         filemode="w",  # will rewrite on each run
@@ -74,45 +77,94 @@ def set_logger(filepath):
     )
 
 
+def plot_loss(loss_array, ylabel="MSE Loss", ylim=(0,2)):
+    """Simple plot of 1d array.
+
+        Args:
+            loss_array (list, nd.array)
+            ylabel (str)
+            ylim (tuple)
+    """
+    fig, ax = plt.subplots()
+    ax.plot(loss_array)
+    ax.set_ylim(ylim)
+    ax.set(xlabel="batch", ylabel=ylabel)
+    ax.grid()
+    plt.show()
+
+
 def error(y_pred, y):
-    """Computes |y-y_pred|/y. Returns scalar representing average error"""
-    err = torch.div(torch.abs(y - y_pred), y)
-    err_len = torch.tensor([err.shape[0]])
-    avg_err = torch.div(torch.sum(err), err_len).item()
-    # Returns float
-    return avg_err, err_len
+    """Computes |y-y_pred|/y. Returns scalar representing average error
+        
+        Args:
+            y_pred (torch.tensor 1d)
+            y (torch.tensor 1d)
+    """
+    err = torch.div(torch.abs(y - y_pred), torch.abs(y))
+    avg_err = torch.div(torch.sum(err), len(err)).item()
+    # Returns float, int
+    return avg_err, len(err)
 
 
 def loss_batch(model, loss_func, xb, yb, opt=None):
-    """Computes batch loss for training (with opt) and validation"""
+    """Computes batch loss for training (with opt) and validation.
+        
+        Args:
+            model (DFF)
+            loss_func (torch.nn.functional)
+            xb (torch.tensor)
+            yb (torch.tensor)
+            opt (torch.optim)
+        Return:
+            loss.item() (float)
+            len(xb) (int)
+    """
     loss = loss_func(model(xb), yb)
     if opt is not None:
         loss.backward()
         opt.step()
         opt.zero_grad()
+        # Capture loss
+        logging.info(loss)
     # loss returns torch.tensor
     return loss.item(), len(xb)
 
 
 def fit(epochs, model, loss_func, opt, train_dl, valid_dl):
-    for epoch in range(epochs):
-        model.train()
-        for xb, yb in train_dl:
-            loss_batch(model, loss_func, xb, yb, opt)
+    """Iterates feedforward and validation loops.
 
-        model.eval()
+        Args:
+            epocs (int)
+            model (DFF)
+            loss_func (torch.nn.functional)
+            opt (torch.optim)
+            train_dl (torch.utils.data.DataLoader)
+            valid_dl (torch.utils.data.DataLoader)
+        Return:
+            batch_loss (list(float)): 1d
+    """
+    batch_loss = []
+    for epoch in range(epochs):
+        model.train()  # Good habit. Relevant for Dropout, BatchNorm layers
+        for xb, yb in train_dl:
+            train_loss, _ = loss_batch(model, loss_func, xb, yb, opt)
+            # Store for plotting
+            batch_loss.append(train_loss)
+
+        model.eval()  # Good habit. Relevant for Dropout, BatchNorm layers
         with torch.no_grad():
             losses, nums = zip(
                 *[loss_batch(model, loss_func, xb, yb) for xb, yb in valid_dl]
             )
-            errors, _ = zip(
-                *[error(model(xb), yb) for xb, yb in valid_dl]
-            )
+            errors, _ = zip(*[error(model(xb), yb) for xb, yb in valid_dl])
         # Weighted sum of mean loss or error per batch.
         # Batches may not be identical.
         val_loss = np.sum(np.multiply(losses, nums)) / np.sum(nums)
         val_error = np.sum(np.multiply(errors, nums)) / np.sum(nums)
-        print(epoch, val_loss, val_error)
+        print(
+            "Epoch: {}  Loss: {}  Error: {}".format(epoch, val_loss, val_error)
+        )
+    return batch_loss
 
 
 def main():
@@ -127,49 +179,26 @@ def main():
     set_logger(LOG_PATH / "model.log")
 
     # Model params
-    bs = 64
+    bs = 5
     lr = 0.001
-    epochs = 3
+    epochs = 1
     h_layers = [16, 16]
 
     # Load data
-    dataset = GitStarDataset(DATA_PATH / FILE, sample_frac=0.4, transform=True)
+    dataset = GitStarDataset(
+        DATA_PATH / SAMPLE_FILE, sample_frac=1, transform=True, shuffle=False
+    )
     train_ds, valid_ds = rand_split_rel(dataset, 0.8)
     train_dl, valid_dl = get_data(train_ds, valid_ds, bs=bs)
 
     # Intialize model, optimization method, and loss function
     model = DFF(21, h_layers, 1, a_fn=F.rrelu)
     # opt = optim.SGD(model.parameters(), lr=lr, momentum=0)
-    opt = optim.Adam(model.parameters())
+    opt = optim.Adam(model.parameters(), lr=0.001)
     loss_func = F.mse_loss
 
-    # Train model
-    for epoch in range(epochs):
-        model.train()  # Good habit. Relevant for Dropout, BatchNorm layers
-        i = 0
-        for xb, yb in train_dl:
-            loss = loss_func(model(xb), yb)
-            logging.info(loss)
-
-            # SGD
-            loss.backward()
-            opt.step()
-            opt.zero_grad()
-            i += 1
-
-        model.eval()  # Good habit. Relevant for Dropout, BatchNorm layers
-        with torch.no_grad():
-            valid_loss = sum(loss_func(model(xb), yb) for xb, yb in valid_dl)
-            valid_error = sum(error(model(xb), yb)[0] for xb, yb in valid_dl)
-
-        # Print loss from valid_dl
-        print(
-            "Epoch: {}  Validation Loss: {} Validation Error: {}".format(
-                epoch, valid_loss / len(valid_dl), valid_error / len(valid_dl)
-            )
-        )
-
-    # fit(epochs, model, loss_func, opt, train_dl, valid_dl)
+    train_loss = fit(epochs, model, loss_func, opt, train_dl, valid_dl)
+    plot_loss(train_loss)
 
 
 if __name__ == "__main__":

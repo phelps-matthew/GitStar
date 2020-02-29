@@ -35,9 +35,15 @@ class GitStarDataset(Dataset):
             target (pd.DataFrame):
     """
 
-    def __init__(self, csv_path, sample_frac=1, transform=True):
+    def __init__(self, csv_path, sample_frac=1, transform=True, shuffle=False):
         # Load data. Take random subset according to sample_frac.
-        self.df = pd.read_csv(csv_path).astype("float64").sample(frac=sample_frac)
+        if shuffle:
+            self.df = (
+                pd.read_csv(csv_path).astype("float64").sample(frac=sample_frac)
+            )
+        else:
+            self.df = pd.read_csv(csv_path).astype("float64")
+            self.df = self.df.head(int(sample_frac * len(self.df)))
 
         # Intialize transform related attributes
         self.target_inv_fn = None
@@ -101,11 +107,10 @@ def module_test():
     train_ds, valid_ds = rand_split_rel(dataset, 0.8)
     train_dl, valid_dl = get_data(train_ds, valid_ds, bs=64)
     for xb, yb in train_dl:
-        print(xb,yb)
+        print(xb, yb)
         # fmt: off
         import ipdb,os; ipdb.set_trace(context=5)  # noqa
         # fmt: on
-
 
 
 if __name__ == "__main__":

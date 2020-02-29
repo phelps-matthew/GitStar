@@ -21,6 +21,8 @@ class GitStarDataset(Dataset):
             transform=True (boolean): Apply scale transformations according to
             datanorm module.
 
+            shuffle=False (boolean): Randomize dataframe.
+
         Attributes:
             data (pd.DataFrame): Entire dataset
 
@@ -90,7 +92,16 @@ def rand_split_rel(dataset, frac, **kwargs):
 
 
 def get_data(train_ds, valid_ds, bs):
-    """Create dataloaders based on train/validation datasets and batch size"""
+    """Create dataloaders based on train/validation datasets and batch size.
+
+        Args:
+            train_ds (torch.utils.data.Dataset)
+            valid_ds (torch.utils.data.Dataset)
+            bs (int)
+        Return:
+            train_dl (torch.utils.data.DataLoader)
+            valid_dl (torch.utils.data.DataLoader)
+    """
     train_dl = DataLoader(train_ds, batch_size=bs, shuffle=True)
     valid_dl = DataLoader(valid_ds, batch_size=2 * bs)
     return train_dl, valid_dl
@@ -108,9 +119,6 @@ def module_test():
     train_dl, valid_dl = get_data(train_ds, valid_ds, bs=64)
     for xb, yb in train_dl:
         print(xb, yb)
-        # fmt: off
-        import ipdb,os; ipdb.set_trace(context=5)  # noqa
-        # fmt: on
 
 
 if __name__ == "__main__":

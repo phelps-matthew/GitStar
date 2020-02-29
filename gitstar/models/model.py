@@ -88,7 +88,7 @@ def plot_loss(loss_array, ylabel="MSE Loss", ylim=(0,2)):
     fig, ax = plt.subplots()
     ax.plot(loss_array)
     ax.set_ylim(ylim)
-    ax.set(xlabel="batch", ylabel=ylabel)
+    ax.set(xlabel="batch number", ylabel=ylabel)
     ax.grid()
     plt.show()
 
@@ -178,26 +178,25 @@ def main():
     # Initialize logger
     set_logger(LOG_PATH / "model.log")
 
-    # Model params
-    bs = 5
-    lr = 0.001
-    epochs = 1
-    h_layers = [16, 16]
-
     # Load data
+    bs = 5
     dataset = GitStarDataset(
-        DATA_PATH / SAMPLE_FILE, sample_frac=1, transform=True, shuffle=False
+        DATA_PATH / SAMPLE_FILE, sample_frac=0.4, transform=True, shuffle=False
     )
     train_ds, valid_ds = rand_split_rel(dataset, 0.8)
     train_dl, valid_dl = get_data(train_ds, valid_ds, bs=bs)
 
+    # Hyperparameters
+    h_layers = [16, 16]
+    lr = 0.001
+    epochs = 1
+
     # Intialize model, optimization method, and loss function
     model = DFF(21, h_layers, 1, a_fn=F.rrelu)
-    # opt = optim.SGD(model.parameters(), lr=lr, momentum=0)
     opt = optim.Adam(model.parameters(), lr=0.001)
     loss_func = F.mse_loss
 
-    # Train DFF. Evaluate on validation set. Print valid loss and error.
+    # Train DFF. Validate. Print validation loss and error.
     train_loss = fit(epochs, model, loss_func, opt, train_dl, valid_dl)
 
     # Plot training loss

@@ -1,6 +1,23 @@
 # GitStar
 Star predictor based on GitHub heuristics
+
+To install:
+
+* Clone into desired directory
+* Enable virtual environement
 ```
+python -m venv venv
+. venv/bin/activate
+```
+
+* Within GitStar repository directory:
+```
+pip install .
+
+# For editable
+pip install -e .
+```
+
 .
 ├── gitstar
 │   ├── ETL

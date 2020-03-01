@@ -254,7 +254,7 @@ def main():
     # Hyperparameters
     lr = 10 ** (-5)
     h_layers = [16, 16]
-    epochs = 10
+    epochs = 1
     a_fn = F.rrelu
 
     # Intialize model, optimization method, and loss function

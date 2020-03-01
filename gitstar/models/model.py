@@ -280,6 +280,7 @@ def main():
     h_layer_ls = [[16], [16, 16], [16, 16, 16], [16, 16, 16, 16]]
     optims = [
         optim.SGD(model.parameters(), lr=lr, momentum=0.9),
+        optim.Adam(model.parameters(), lr=lr),
         optim.SparseAdam(model.parameters(), lr=lr),
     ]
 

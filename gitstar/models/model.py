@@ -208,7 +208,7 @@ def main():
     # fmt: off
     import ipdb,os; ipdb.set_trace(context=5)  # noqa
     # fmt: on
-    set_logger(LOG_PATH / "model.log")
+    set_logger(str(LOG_PATH / "model.log"))
 
     # Load data
     batch_size = 64

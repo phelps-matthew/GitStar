@@ -12,6 +12,7 @@ from torch import optim
 import pandas as pd
 import numpy as np
 import logging
+import re
 import matplotlib.pyplot as plt
 from gitstar.models.dataload import (
     GitStarDataset,
@@ -72,15 +73,22 @@ class DFF(nn.Module):
 
 def print_gpu():
     """Print GPU torch cuda status"""
-    print("torch.cuda.device(0): {}".format(torch.cuda.device(0)))
-    print("torch.cuda.device_count(): {}".format(torch.cuda.device_count()))
-    print(
-        "torch.cuda.get_device_name(0): {}".format(
-            torch.cuda.get_device_name(0)
+    try:
+        print("torch.cuda.device(0): {}".format(torch.cuda.device(0)))
+        print("torch.cuda.device_count(): {}".format(torch.cuda.device_count()))
+        print(
+            "torch.cuda.get_device_name(0): {}".format(
+                torch.cuda.get_device_name(0)
+            )
         )
-    )
-    print("torch.cuda_is_available: {}".format(torch.cuda.is_available()))
-    print("torch.cuda.current_device(): {}".format(torch.cuda.current_device()))
+        print("torch.cuda_is_available: {}".format(torch.cuda.is_available()))
+        print(
+            "torch.cuda.current_device(): {}".format(
+                torch.cuda.current_device()
+            )
+        )
+    except:
+        print("Some torch.cuda functionality unavailable")
 
 
 def set_logger(filepath):
@@ -155,7 +163,7 @@ def loss_batch(model, loss_func, xb, yb, opt=None):
     return loss.item(), len(xb)
 
 
-def fit(epochs, model, loss_func, opt, train_dl, valid_dl):
+def fit(epochs, model, loss_func, opt, train_dl, valid_dl, path, hyper_str):
     """Iterates feedforward and validation loops.
 
         Args:
@@ -168,7 +176,7 @@ def fit(epochs, model, loss_func, opt, train_dl, valid_dl):
         Return:
             batch_loss (list(float)): 1d
     """
-    batch_loss = []
+    batch_loss, valid_loss, valid_error = [], [], []
     for epoch in range(epochs):
         model.train()  # Good habit. Relevant for Dropout, BatchNorm layers
         for xb, yb in train_dl:
@@ -186,10 +194,29 @@ def fit(epochs, model, loss_func, opt, train_dl, valid_dl):
         # Batches may not be identical.
         val_loss = np.sum(np.multiply(losses, nums)) / np.sum(nums)
         val_error = np.sum(np.multiply(errors, nums)) / np.sum(nums)
+        valid_loss.append(val_loss)
+        valid_error.append(val_error)
         print(
             "Epoch: {}  Loss: {}  Error: {}".format(epoch, val_loss, val_error)
         )
-    return batch_loss
+    # Log losses
+    np.savetxt(path / ("train_bloss_" + hyper_str + ".csv"), batch_loss)
+    np.savetxt(path / ("valid_loss_" + hyper_str + ".csv"), valid_loss)
+    np.savetxt(path / ("valid_error_" + hyper_str + ".csv"), valid_error)
+    return batch_loss, valid_loss, valid_error
+
+
+def hyper_str(h_layers, lr, opt, a_fn, bs, epochs):
+    """Generate str for DFF model for path names"""
+    h_layers_str = "x".join(list(map(str, h_layers)))
+    a_fn_sub = re.search("^<\w+\s(\w+)\w.*$", str(a_fn))
+    a_fn_str = a_fn_sub.group(1)
+    opt_sub = re.search("^(\w+)\s.*", str(opt))
+    opt_str = opt_sub.group(1)
+    full_str = "{}_lr_{}_{}_{}_bs_{}_epochs_{}".format(
+        h_layers_str, lr, opt_str, a_fn_str, bs, epochs
+    )
+    return full_str
 
 
 def main():
@@ -207,24 +234,22 @@ def main():
         if torch.cuda.is_available()
         else torch.device("cpu")
     )
+    print_gpu()
 
     def preprocess(x, y):
         return x.to(dev), y.to(dev)
 
-    # Initialize logger
-    set_logger(str(LOG_PATH / "model.log"))
-
     # Load data
     batch_size = 64
-    dataset = GitStarDataset(DATA_PATH / SAMPLE_FILE, sample_frac=0.5)
+    dataset = GitStarDataset(DATA_PATH / SAMPLE_FILE, sample_frac=0.1)
     train_ds, valid_ds = rand_split_rel(dataset, 0.8)
     train_dl, valid_dl = get_data(train_ds, valid_ds, bs=batch_size)
     train_dl = WrappedDataLoader(train_dl, preprocess)
     valid_dl = WrappedDataLoader(valid_dl, preprocess)
 
     # Hyperparameters
-    h_layers = [21]
     lr = 10 ** (-5)
+    h_layers = [15, 15]
     epochs = 1
     a_fn = F.rrelu
 
@@ -234,20 +259,15 @@ def main():
     opt = optim.Adam(model.parameters(), lr=lr)
     loss_func = F.mse_loss
 
-    # Some housecleaning
-    df = pd.read_csv(LOG_PATH/"Adam_1e-05_ReLU.csv")
-    # fmt: off
-    import ipdb,os; ipdb.set_trace(context=5)  # noqa
-    # fmt: on
-    array = df[columns=[0]].values
-    np.savetxt(LOG_PATH / "Adam_lr_{}_DFF_21_rrelu.csv".format(lr), train_loss)
-    plot_loss(train_loss, path=IMG_PATH/"Adam_lr_{}_DFF_21_rrelu.csv")
-
+    # Generate descriptive string
+    model_str = hyper_str(h_layers, lr, opt, a_fn, batch_size, epochs)
 
     # Train, validate, save loss
-    train_loss = fit(epochs, model, loss_func, opt, train_dl, valid_dl)
+    train_loss, _, _ = fit(
+        epochs, model, loss_func, opt, train_dl, valid_dl, LOG_PATH, model_str
+    )
     np.savetxt(LOG_PATH / "Adam_lr_{}_DFF_21_rrelu.csv".format(lr), train_loss)
-    plot_loss(train_loss, path=IMG_PATH/"Adam_lr_{}_DFF_21_rrelu.csv")
+    plot_loss(train_loss, path=IMG_PATH / (model_str + ".png"))
 
     # ########################################################################
     # for lr in rates:

@@ -307,7 +307,7 @@ def main():
                     LOG_PATH,
                     model_str,
                 )
-                plot_loss(train_loss, path=IMG_PATH / (model_str + ".png"))
+                plot_loss(train_loss, path=str(IMG_PATH / (model_str + ".png")))
 
     #    # Export training loss
     # csv_paths = [pth for pth in LOG_PATH.iterdir() if pth.suffix == ".csv"]

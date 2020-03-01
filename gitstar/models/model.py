@@ -205,11 +205,14 @@ def main():
         return x.to(dev), y.to(dev)
 
     # Initialize logger
+    # fmt: off
+    import ipdb,os; ipdb.set_trace(context=5)  # noqa
+    # fmt: on
     set_logger(LOG_PATH / "model.log")
 
     # Load data
     batch_size = 64
-    dataset = GitStarDataset(DATA_PATH / SAMPLE_FILE)
+    dataset = GitStarDataset(DATA_PATH / FILE)
     train_ds, valid_ds = rand_split_rel(dataset, 0.8)
     train_dl, valid_dl = get_data(train_ds, valid_ds, bs=batch_size)
     train_dl = WrappedDataLoader(train_dl, preprocess)

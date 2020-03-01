@@ -131,9 +131,6 @@ def plot_loss(loss_array, path=None, ylabel="MSE Loss", ylim=(0, 2)):
     ax.set_ylim(ylim)
     ax.set(xlabel="batch number", ylabel=ylabel)
     ax.grid()
-    # fmt: off
-    import ipdb,os; ipdb.set_trace(context=5)  # noqa
-    # fmt: on
     if path:
         fig.savefig(
             str(path), transparent=False, dpi=300, bbox_inches="tight",

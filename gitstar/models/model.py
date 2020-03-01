@@ -103,6 +103,17 @@ def set_logger(filepath):
         format="[%(asctime)s] %(levelname)s - %(message)s",
     )
 
+def hyper_str(h_layers, lr, opt, a_fn, bs, epochs):
+    """Generate str for DFF model for path names"""
+    h_layers_str = "x".join(list(map(str, h_layers)))
+    a_fn_sub = re.search("^<\w+\s(\w+)\w.*$", str(a_fn))
+    a_fn_str = a_fn_sub.group(1)
+    opt_sub = re.search("^(\w+)\s.*", str(opt))
+    opt_str = opt_sub.group(1)
+    full_str = "{}_lr_{}_{}_{}_bs_{}_epochs_{}".format(
+        h_layers_str, lr, opt_str, a_fn_str, bs, epochs
+    )
+    return full_str
 
 def plot_loss(loss_array, path=None, ylabel="MSE Loss", ylim=(0, 2)):
     """Simple plot of 1d array.
@@ -206,19 +217,6 @@ def fit(epochs, model, loss_func, opt, train_dl, valid_dl, path, hyper_str):
     return batch_loss, valid_loss, valid_error
 
 
-def hyper_str(h_layers, lr, opt, a_fn, bs, epochs):
-    """Generate str for DFF model for path names"""
-    h_layers_str = "x".join(list(map(str, h_layers)))
-    a_fn_sub = re.search("^<\w+\s(\w+)\w.*$", str(a_fn))
-    a_fn_str = a_fn_sub.group(1)
-    opt_sub = re.search("^(\w+)\s.*", str(opt))
-    opt_str = opt_sub.group(1)
-    full_str = "{}_lr_{}_{}_{}_bs_{}_epochs_{}".format(
-        h_layers_str, lr, opt_str, a_fn_str, bs, epochs
-    )
-    return full_str
-
-
 def main():
     """Test class implementations"""
     BASE_DIR = Path(__file__).resolve().parent
@@ -241,7 +239,7 @@ def main():
 
     # Load data
     batch_size = 64
-    dataset = GitStarDataset(DATA_PATH / SAMPLE_FILE, sample_frac=0.1)
+    dataset = GitStarDataset(DATA_PATH / FILE, sample_frac=1)
     train_ds, valid_ds = rand_split_rel(dataset, 0.8)
     train_dl, valid_dl = get_data(train_ds, valid_ds, bs=batch_size)
     train_dl = WrappedDataLoader(train_dl, preprocess)
@@ -249,8 +247,8 @@ def main():
 
     # Hyperparameters
     lr = 10 ** (-5)
-    h_layers = [15, 15]
-    epochs = 1
+    h_layers = [16, 16]
+    epochs = 10
     a_fn = F.rrelu
 
     # Intialize model, optimization method, and loss function
@@ -266,7 +264,6 @@ def main():
     train_loss, _, _ = fit(
         epochs, model, loss_func, opt, train_dl, valid_dl, LOG_PATH, model_str
     )
-    np.savetxt(LOG_PATH / "Adam_lr_{}_DFF_21_rrelu.csv".format(lr), train_loss)
     plot_loss(train_loss, path=IMG_PATH / (model_str + ".png"))
 
     # ########################################################################

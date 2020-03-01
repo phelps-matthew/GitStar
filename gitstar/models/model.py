@@ -205,9 +205,6 @@ def main():
         return x.to(dev), y.to(dev)
 
     # Initialize logger
-    # fmt: off
-    import ipdb,os; ipdb.set_trace(context=5)  # noqa
-    # fmt: on
     set_logger(str(LOG_PATH / "model.log"))
 
     # Load data

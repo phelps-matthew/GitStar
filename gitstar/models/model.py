@@ -136,7 +136,7 @@ def plot_loss(loss_array, path=None, ylabel="MSE Loss", ylim=(0, 2)):
     # fmt: on
     if path:
         fig.savefig(
-            path, transparent=False, dpi=300, bbox_inches="tight",
+            str(path), transparent=False, dpi=300, bbox_inches="tight",
         )
         plt.close()
     else:
@@ -245,7 +245,7 @@ def main():
 
     # Load data
     batch_size = 64
-    dataset = GitStarDataset(DATA_PATH / SAMPLE_FILE, sample_frac=1)
+    dataset = GitStarDataset(DATA_PATH / FILE)
     train_ds, valid_ds = rand_split_rel(dataset, 0.8)
     train_dl, valid_dl = get_data(train_ds, valid_ds, bs=batch_size)
     train_dl = WrappedDataLoader(train_dl, preprocess)
@@ -254,7 +254,7 @@ def main():
     # Hyperparameters
     lr = 10 ** (-5)
     h_layers = [16, 16]
-    epochs = 1
+    epochs = 10
     a_fn = F.rrelu
 
     # Intialize model, optimization method, and loss function
@@ -307,7 +307,7 @@ def main():
                     LOG_PATH,
                     model_str,
                 )
-                plot_loss(train_loss, path=str(IMG_PATH / (model_str + ".png")))
+                plot_loss(train_loss, path=IMG_PATH / (model_str + ".png"))
 
     #    # Export training loss
     # csv_paths = [pth for pth in LOG_PATH.iterdir() if pth.suffix == ".csv"]

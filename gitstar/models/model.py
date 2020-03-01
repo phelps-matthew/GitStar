@@ -103,6 +103,7 @@ def set_logger(filepath):
         format="[%(asctime)s] %(levelname)s - %(message)s",
     )
 
+
 def hyper_str(h_layers, lr, opt, a_fn, bs, epochs):
     """Generate str for DFF model for path names"""
     h_layers_str = "x".join(list(map(str, h_layers)))
@@ -114,6 +115,7 @@ def hyper_str(h_layers, lr, opt, a_fn, bs, epochs):
         h_layers_str, lr, opt_str, a_fn_str, bs, epochs
     )
     return full_str
+
 
 def plot_loss(loss_array, path=None, ylabel="MSE Loss", ylim=(0, 2)):
     """Simple plot of 1d array.
@@ -133,6 +135,7 @@ def plot_loss(loss_array, path=None, ylabel="MSE Loss", ylim=(0, 2)):
         fig.savefig(
             path, transparent=False, dpi=300, bbox_inches="tight",
         )
+        plt.close()
     else:
         plt.show()
 
@@ -261,16 +264,46 @@ def main():
     model_str = hyper_str(h_layers, lr, opt, a_fn, batch_size, epochs)
 
     # Train, validate, save loss
-    train_loss, _, _ = fit(
-        epochs, model, loss_func, opt, train_dl, valid_dl, LOG_PATH, model_str
-    )
-    plot_loss(train_loss, path=IMG_PATH / (model_str + ".png"))
+    # train_loss, _, _ = fit(
+    #    epochs, model, loss_func, opt, train_dl, valid_dl, LOG_PATH, model_str
+    # )
+    # plot_loss(train_loss, path=IMG_PATH / (model_str + ".png"))
 
-    # ########################################################################
-    # for lr in rates:
-    #    # Train DFF. Validate. Print validation loss and error.
-    #    opt = optim.Adam(model.parameters(), lr=lr)
-    #    train_loss = fit(epochs, model, loss_func, opt, train_dl, valid_dl)
+    rates = [
+        10 ** (-6),
+        10 ** (-5),
+        10 ** (-4),
+        10 ** (-3),
+        10 ** (-2),
+        10 ** (-1),
+    ]
+    h_layer_ls = [[16], [16, 16], [16, 16, 16], [16, 16, 16, 16]]
+    optims = [
+        optim.SGD(model.parameters(), lr=lr, momentum=0.9),
+        optim.SparseAdam(model.parameters(), lr=lr),
+    ]
+
+    for h_lay in h_layer_ls:
+        for lr in rates:
+            for opts in optims:
+                # Train DFF. Validate. Print validation loss and error.
+                opt = opts
+                model = DFF(21, h_lay, 1, a_fn=a_fn)
+                model.to(dev)
+                model_str = hyper_str(
+                    h_lay, lr, opt, a_fn, batch_size, epochs
+                )
+                train_loss, _, _ = fit(
+                    epochs,
+                    model,
+                    loss_func,
+                    opt,
+                    train_dl,
+                    valid_dl,
+                    LOG_PATH,
+                    model_str,
+                )
+                plot_loss(train_loss, path=IMG_PATH / (model_str + ".png"))
 
     #    # Export training loss
     # csv_paths = [pth for pth in LOG_PATH.iterdir() if pth.suffix == ".csv"]

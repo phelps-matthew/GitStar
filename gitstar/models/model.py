@@ -96,11 +96,12 @@ def set_logger(filepath):
     )
 
 
-def plot_loss(loss_array, ylabel="MSE Loss", ylim=(0, 2)):
+def plot_loss(loss_array, path=None, ylabel="MSE Loss", ylim=(0, 2)):
     """Simple plot of 1d array.
 
         Args:
             loss_array (list, nd.array)
+            path=None (str, Path): Image path
             ylabel (str)
             ylim (tuple)
     """
@@ -109,7 +110,12 @@ def plot_loss(loss_array, ylabel="MSE Loss", ylim=(0, 2)):
     ax.set_ylim(ylim)
     ax.set(xlabel="batch number", ylabel=ylabel)
     ax.grid()
-    plt.show()
+    if path:
+        fig.savefig(
+            path, transparent=False, dpi=300, bbox_inches="tight",
+        )
+    else:
+        plt.show()
 
 
 def error(y_pred, y):
@@ -190,6 +196,7 @@ def main():
     """Test class implementations"""
     BASE_DIR = Path(__file__).resolve().parent
     DATA_PATH = BASE_DIR / "dataset"
+    IMG_PATH = BASE_DIR / "hyperparams"
     LOG_PATH = BASE_DIR / "logs"
     FILE = "gs_table_v2.csv"
     SAMPLE_FILE = "10ksample.csv"
@@ -209,7 +216,7 @@ def main():
 
     # Load data
     batch_size = 64
-    dataset = GitStarDataset(DATA_PATH / FILE)
+    dataset = GitStarDataset(DATA_PATH / SAMPLE_FILE, sample_frac=0.5)
     train_ds, valid_ds = rand_split_rel(dataset, 0.8)
     train_dl, valid_dl = get_data(train_ds, valid_ds, bs=batch_size)
     train_dl = WrappedDataLoader(train_dl, preprocess)
@@ -217,20 +224,32 @@ def main():
 
     # Hyperparameters
     h_layers = [21]
-    lr = 10**(-5)
-    epochs = 20
+    lr = 10 ** (-5)
+    epochs = 1
+    a_fn = F.rrelu
 
     # Intialize model, optimization method, and loss function
-    model = DFF(21, h_layers, 1, a_fn=F.rrelu)
+    model = DFF(21, h_layers, 1, a_fn=a_fn)
     model.to(dev)
     opt = optim.Adam(model.parameters(), lr=lr)
     loss_func = F.mse_loss
 
+    # Some housecleaning
+    df = pd.read_csv(LOG_PATH/"Adam_1e-05_ReLU.csv")
+    # fmt: off
+    import ipdb,os; ipdb.set_trace(context=5)  # noqa
+    # fmt: on
+    array = df[columns=[0]].values
+    np.savetxt(LOG_PATH / "Adam_lr_{}_DFF_21_rrelu.csv".format(lr), train_loss)
+    plot_loss(train_loss, path=IMG_PATH/"Adam_lr_{}_DFF_21_rrelu.csv")
+
+
+    # Train, validate, save loss
     train_loss = fit(epochs, model, loss_func, opt, train_dl, valid_dl)
-    loss_df = pd.DataFrame(train_loss, columns=["lr={}".format(lr)])
-    loss_df.to_csv(LOG_PATH / "Adam_lr_{}_DFF_21_ReLU.csv".format(lr))
+    np.savetxt(LOG_PATH / "Adam_lr_{}_DFF_21_rrelu.csv".format(lr), train_loss)
+    plot_loss(train_loss, path=IMG_PATH/"Adam_lr_{}_DFF_21_rrelu.csv")
 
-
+    # ########################################################################
     # for lr in rates:
     #    # Train DFF. Validate. Print validation loss and error.
     #    opt = optim.Adam(model.parameters(), lr=lr)

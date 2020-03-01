@@ -70,6 +70,19 @@ class DFF(nn.Module):
         return self.out(x)
 
 
+def print_gpu():
+    """Print GPU torch cuda status"""
+    print("torch.cuda.device(0): {}".format(torch.cuda.device(0)))
+    print("torch.cuda.device_count(): {}".format(torch.cuda.device_count()))
+    print(
+        "torch.cuda.get_device_name(0): {}".format(
+            torch.cuda.get_device_name(0)
+        )
+    )
+    print("torch.cuda_is_available: {}".format(torch.cuda.is_available()))
+    print("torch.cuda.current_device(): {}".format(torch.cuda.current_device()))
+
+
 def set_logger(filepath):
     """Intialize root logger here.
         Args:
@@ -182,21 +195,16 @@ def main():
     SAMPLE_FILE = "10ksample.csv"
 
     # Enable GPU support
-    print("torch.cuda_is_available: {}".format(torch.cuda.is_available()))
-    print("torch.cuda.current_device(): {}".format(torch.cuda.current_device()))
-    print("torch.cuda.device(0): {}".format(torch.cuda.device(0)))
-    print("torch.cuda.device_count(): {}".format(torch.cuda.device_count()))
-    print("torch.cuda.get_device_name(0): {}".format(torch.cuda.get_device_name(0)))
-    dev = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+    dev = (
+        torch.device("cuda")
+        if torch.cuda.is_available()
+        else torch.device("cpu")
+    )
+
     def preprocess(x, y):
         return x.to(dev), y.to(dev)
-    print("torch.cuda_is_available: {}".format(torch.cuda.is_available()))
-    print("torch.cuda.current_device(): {}".format(torch.cuda.current_device()))
 
     # Initialize logger
-    # fmt: off
-    import ipdb,os; ipdb.set_trace(context=5)  # noqa
-    # fmt: on
     set_logger(LOG_PATH / "model.log")
 
     # Load data
@@ -209,8 +217,8 @@ def main():
 
     # Hyperparameters
     h_layers = [21]
-    lr = 0.001
-    epochs = 5
+    lr = 10**(-5)
+    epochs = 20
 
     # Intialize model, optimization method, and loss function
     model = DFF(21, h_layers, 1, a_fn=F.rrelu)
@@ -218,16 +226,10 @@ def main():
     opt = optim.Adam(model.parameters(), lr=lr)
     loss_func = F.mse_loss
 
-    rates = [
-        10 ** (-6),
-        10 ** (-5),
-        10 ** (-4),
-        10 ** (-3),
-        10 ** (-2),
-        10 ** (-1),
-    ]
-
     train_loss = fit(epochs, model, loss_func, opt, train_dl, valid_dl)
+    loss_df = pd.DataFrame(train_loss, columns=["lr={}".format(lr)])
+    loss_df.to_csv(LOG_PATH / "Adam_lr_{}_DFF_21_ReLU.csv".format(lr))
+
 
     # for lr in rates:
     #    # Train DFF. Validate. Print validation loss and error.
@@ -235,9 +237,6 @@ def main():
     #    train_loss = fit(epochs, model, loss_func, opt, train_dl, valid_dl)
 
     #    # Export training loss
-    #    loss_df = pd.DataFrame(train_loss, columns=["lr={}".format(lr)])
-    #    loss_df.to_csv(LOG_PATH / "lr_{}.csv".format(lr))
-
     # csv_paths = [pth for pth in LOG_PATH.iterdir() if pth.suffix == ".csv"]
     # fig, *ax = plt.subplots(2,3, sharey=True, sharex=True)
     # ax_list = [ax_n for row in ax[0] for ax_n in row]

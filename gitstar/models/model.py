@@ -131,6 +131,9 @@ def plot_loss(loss_array, path=None, ylabel="MSE Loss", ylim=(0, 2)):
     ax.set_ylim(ylim)
     ax.set(xlabel="batch number", ylabel=ylabel)
     ax.grid()
+    # fmt: off
+    import ipdb,os; ipdb.set_trace(context=5)  # noqa
+    # fmt: on
     if path:
         fig.savefig(
             path, transparent=False, dpi=300, bbox_inches="tight",
@@ -242,7 +245,7 @@ def main():
 
     # Load data
     batch_size = 64
-    dataset = GitStarDataset(DATA_PATH / FILE, sample_frac=1)
+    dataset = GitStarDataset(DATA_PATH / SAMPLE_FILE, sample_frac=1)
     train_ds, valid_ds = rand_split_rel(dataset, 0.8)
     train_dl, valid_dl = get_data(train_ds, valid_ds, bs=batch_size)
     train_dl = WrappedDataLoader(train_dl, preprocess)

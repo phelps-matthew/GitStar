@@ -313,11 +313,8 @@ def main():
         10 ** (-6),
         10 ** (-5),
         10 ** (-4),
-        10 ** (-3),
-        10 ** (-2),
-        10 ** (-1),
     ]
-    h_layer_ls = [[16, 16, 16, 16]]
+    h_layer_ls = [21, 32][16, 16, 16, 16]]
     optims = [
         optim.SGD(model.parameters(), lr=lr, momentum=0.9),
         optim.Adam(model.parameters(), lr=lr),

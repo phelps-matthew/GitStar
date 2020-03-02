@@ -24,12 +24,9 @@ FILE = "gs_table_v2.csv"
 SAMPLE_FILE = "10ksample.csv"
 
 # Enable GPU support
-dev = (
-    torch.device("cuda")
-    if torch.cuda.is_available()
-    else torch.device("cpu")
-)
+dev = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
 dff.print_gpu()
+
 
 def preprocess(x, y):
     """Cast tensors into GPU/CPU device type.
@@ -70,10 +67,46 @@ def main():
     model_str = dff.hyper_str(h_layers, lr, opt, a_fn, batch_size, epochs)
 
     # Train, validate, save loss
-    train_loss, _, _ = dff.fit(
-        epochs, model, loss_func, opt, train_dl, valid_dl, LOG_PATH, model_str
-    )
-    dff.plot_loss(train_loss, path=IMG_PATH / model_str, title=model_str)
+    # train_loss, _, _ = dff.fit(
+    #     epochs, model, loss_func, opt, train_dl, valid_dl, LOG_PATH, model_str
+    # )
+    # dff.plot_loss(train_loss, path=IMG_PATH / model_str, title=model_str)
+
+    rates = [
+        10 ** (-6),
+        10 ** (-5),
+        10 ** (-4),
+    ]
+    h_layer_ls = [21, 32]
+    optims = [
+        optim.SGD(model.parameters(), lr=lr, momentum=0.9),
+        optim.Adam(model.parameters(), lr=lr),
+        optim.SparseAdam(model.parameters(), lr=lr),
+    ]
+
+    for h_lay in h_layer_ls:
+        for lr in rates:
+            for opts in optims:
+                # Train DFF. Validate. Print validation loss and error.
+                opt = opts
+                model = dff.DFF(21, h_lay, 1, a_fn=a_fn)
+                model.to(dev)
+                model_str = dff.hyper_str(
+                    h_lay, lr, opt, a_fn, batch_size, epochs
+                )
+                train_loss, _, _ = dff.fit(
+                    epochs,
+                    model,
+                    loss_func,
+                    opt,
+                    train_dl,
+                    valid_dl,
+                    LOG_PATH,
+                    model_str,
+                )
+                dff.plot_loss(
+                    train_loss, path=IMG_PATH / model_str, title=model_str
+                )
 
 
 if __name__ == "__main__":

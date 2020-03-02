@@ -117,7 +117,9 @@ def hyper_str(h_layers, lr, opt, a_fn, bs, epochs):
     return full_str
 
 
-def plot_loss(loss_array, path=None, ylabel="MSE Loss", ylim=(0, 2)):
+def plot_loss(
+    loss_array, path=None, title="Loss", ylabel="MSE Loss", ylim=(0, 2)
+):
     """Simple plot of 1d array.
 
         Args:
@@ -129,11 +131,15 @@ def plot_loss(loss_array, path=None, ylabel="MSE Loss", ylim=(0, 2)):
     fig, ax = plt.subplots()
     ax.plot(loss_array)
     ax.set_ylim(ylim)
-    ax.set(xlabel="batch number", ylabel=ylabel)
+    ax.set(xlabel="batch number", ylabel=ylabel, title=title)
     ax.grid()
     if path:
         fig.savefig(
-            str(path), transparent=False, dpi=300, bbox_inches="tight",
+            str(path),
+            transparent=False,
+            dpi=300,
+            format="png",
+            bbox_inches="tight",
         )
         plt.close()
     else:
@@ -270,14 +276,11 @@ def main():
     # plot_loss(train_loss, path=IMG_PATH / (model_str + ".png"))
 
     rates = [
-        10 ** (-6),
-        10 ** (-5),
-        10 ** (-4),
         10 ** (-3),
         10 ** (-2),
         10 ** (-1),
     ]
-    h_layer_ls = [[16], [16, 16], [16, 16, 16], [16, 16, 16, 16]]
+    h_layer_ls = [[16, 16, 16]]
     optims = [
         optim.SGD(model.parameters(), lr=lr, momentum=0.9),
         optim.Adam(model.parameters(), lr=lr),
@@ -291,9 +294,7 @@ def main():
                 opt = opts
                 model = DFF(21, h_lay, 1, a_fn=a_fn)
                 model.to(dev)
-                model_str = hyper_str(
-                    h_lay, lr, opt, a_fn, batch_size, epochs
-                )
+                model_str = hyper_str(h_lay, lr, opt, a_fn, batch_size, epochs)
                 train_loss, _, _ = fit(
                     epochs,
                     model,
@@ -304,8 +305,46 @@ def main():
                     LOG_PATH,
                     model_str,
                 )
-                plot_loss(train_loss, path=IMG_PATH / (model_str + ".png"))
+                plot_loss(
+                    train_loss, path=IMG_PATH / model_str, title=model_str
+                )
 
+    rates = [
+        10 ** (-6),
+        10 ** (-5),
+        10 ** (-4),
+        10 ** (-3),
+        10 ** (-2),
+        10 ** (-1),
+    ]
+    h_layer_ls = [[16, 16, 16, 16]]
+    optims = [
+        optim.SGD(model.parameters(), lr=lr, momentum=0.9),
+        optim.Adam(model.parameters(), lr=lr),
+        optim.SparseAdam(model.parameters(), lr=lr),
+    ]
+
+    for h_lay in h_layer_ls:
+        for lr in rates:
+            for opts in optims:
+                # Train DFF. Validate. Print validation loss and error.
+                opt = opts
+                model = DFF(21, h_lay, 1, a_fn=a_fn)
+                model.to(dev)
+                model_str = hyper_str(h_lay, lr, opt, a_fn, batch_size, epochs)
+                train_loss, _, _ = fit(
+                    epochs,
+                    model,
+                    loss_func,
+                    opt,
+                    train_dl,
+                    valid_dl,
+                    LOG_PATH,
+                    model_str,
+                )
+                plot_loss(
+                    train_loss, path=IMG_PATH / model_str, title=model_str
+                )
     #    # Export training loss
     # csv_paths = [pth for pth in LOG_PATH.iterdir() if pth.suffix == ".csv"]
     # fig, *ax = plt.subplots(2,3, sharey=True, sharex=True)

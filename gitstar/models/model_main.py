@@ -77,7 +77,7 @@ def main():
         10 ** (-5),
         10 ** (-4),
     ]
-    h_layer_ls = [21, 32]
+    h_layer_ls = [[21], [32]]
     optims = [
         optim.SGD(model.parameters(), lr=lr, momentum=0.9),
         optim.Adam(model.parameters(), lr=lr),

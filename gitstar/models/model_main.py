@@ -105,7 +105,9 @@ def main():
                     model_str,
                 )
                 dff.plot_loss(
-                    train_loss, path=IMG_PATH / model_str, title=model_str
+                    train_loss,
+                    path=IMG_PATH / (model_str + ".png"),
+                    title=model_str,
                 )
 
 

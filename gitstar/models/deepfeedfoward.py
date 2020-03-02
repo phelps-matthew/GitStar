@@ -149,11 +149,7 @@ def plot_loss(
     ax.grid()
     if path:
         fig.savefig(
-            str(path),
-            transparent=False,
-            dpi=300,
-            format="png",
-            bbox_inches="tight",
+            str(path), transparent=False, dpi=300, bbox_inches="tight",
         )
         plt.close()
     else:

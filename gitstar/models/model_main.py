@@ -54,11 +54,6 @@ def main():
     train_dl, valid_dl = get_data(train_ds, valid_ds, bs=batch_size)
     train_dl = WrappedDataLoader(train_dl, preprocess)
     valid_dl = WrappedDataLoader(valid_dl, preprocess)
-    print(train_dl.__iter__())
-    # fmt: off
-    import ipdb,os; ipdb.set_trace(context=5)  # noqa
-    # fmt: on
-
 
     # Hyperparameters
     lr = 10 ** (-5)
@@ -69,7 +64,6 @@ def main():
     # Intialize model (w/ GPU support), optimization method, and loss function
     model = dff.DFF(D_in=21, D_hid=h_layers, D_out=1, a_fn=a_fn)
     model.to(dev)
-    print(model)
     opt = optim.Adam(model.parameters(), lr=lr)
     loss_func = F.mse_loss
 

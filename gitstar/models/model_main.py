@@ -47,7 +47,7 @@ def main():
 
     # Load data. Apply scaler transformations to training data. Get DataLoader.
     batch_size = 64
-    train_df, valid_df = split_csv(DATA_PATH/FILE, sample_frac = 0.4)
+    train_df, valid_df = split_csv(DATA_PATH / FILE, sample_frac=1)
     train_ds = GitStarDataset(train_df)
     valid_ds = GitStarDataset(
         valid_df,

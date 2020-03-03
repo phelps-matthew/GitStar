@@ -57,7 +57,7 @@ def main():
     valid_dl = WrappedDataLoader(valid_dl, preprocess)
 
     # Hyperparameters
-    lr = 10 ** (-5)
+    lr = 10 ** (-6)
     h_layers = [64, 64, 64]
     epochs = 10
     a_fn = F.rrelu

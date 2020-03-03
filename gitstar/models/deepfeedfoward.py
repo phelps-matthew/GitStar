@@ -14,6 +14,7 @@ import numpy as np
 import logging
 import re
 import matplotlib.pyplot as plt
+import arrow
 from gitstar.models.dataload import (
     GitStarDataset,
     WrappedDataLoader,
@@ -227,7 +228,9 @@ def fit(epochs, model, loss_func, opt, train_dl, valid_dl, path, hyper_str):
         valid_loss.append(val_loss)
         valid_error.append(val_error)
         print(
-            "Epoch: {}  Loss: {}  Error: {}".format(epoch, val_loss, val_error)
+            "[{}] Epoch: {}  Loss: {}  Error: {}".format(
+                arrow.now(), epoch, val_loss, val_error
+            )
         )
     # Log losses
     np.savetxt(path / ("train_bloss_" + hyper_str + ".csv"), batch_loss)

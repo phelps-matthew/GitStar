@@ -49,7 +49,7 @@ def main():
 
     # Load data
     batch_size = 64
-    dataset = GitStarDataset(DATA_PATH / FILE)
+    dataset = GitStarDataset(DATA_PATH / FILE, sample_frac=0.4, shuffle=True)
     train_ds, valid_ds = rand_split_rel(dataset, 0.8)
     train_dl, valid_dl = get_data(train_ds, valid_ds, bs=batch_size)
     train_dl = WrappedDataLoader(train_dl, preprocess)
@@ -58,13 +58,13 @@ def main():
     # Hyperparameters
     lr = 10 ** (-5)
     h_layers = [21]
-    epochs = 3
+    epochs = 4
     a_fn = F.rrelu
 
     # Intialize model (w/ GPU support), optimization method, and loss function
     model = dff.DFF(D_in=21, D_hid=h_layers, D_out=1, a_fn=a_fn)
     model.to(dev)
-    opt = optim.SparseAdam(model.parameters(), lr=lr)
+    opt = optim.Adam(model.parameters(), lr=lr)
     loss_func = F.mse_loss
 
     # Generate descriptive parameter string (for pngs and csvs)

@@ -56,13 +56,13 @@ def main():
     # Hyperparameters
     lr = 10 ** (-5)
     h_layers = [21]
-    epochs = 4
+    epochs = 5
     a_fn = F.rrelu
 
     # Intialize model (w/ GPU support), optimization method, and loss function
     model = dff.DFF(D_in=21, D_hid=h_layers, D_out=1, a_fn=a_fn)
     model.to(dev)
-    opt = optim.SGD(model.parameters(), lr=lr, momentum=0.5)
+    opt = optim.Adam(model.parameters(), lr=lr, weight_decay=0.01)
     loss_func = F.mse_loss
 
     # Generate descriptive parameter string (for pngs and csvs)

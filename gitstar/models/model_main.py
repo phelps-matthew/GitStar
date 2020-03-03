@@ -53,7 +53,7 @@ def main():
 
     # Hyperparameters
     lr = 10 ** (-5)
-    h_layers = [16, 16]
+    h_layers = [21]
     epochs = 10
     a_fn = F.rrelu
 
@@ -65,50 +65,53 @@ def main():
 
     # Generate descriptive parameter string (for pngs and csvs)
     model_str = dff.hyper_str(h_layers, lr, opt, a_fn, batch_size, epochs)
+    print(model_str)
 
     # Train, validate, save loss
-    # train_loss, _, _ = dff.fit(
-    #     epochs, model, loss_func, opt, train_dl, valid_dl, LOG_PATH, model_str
-    # )
-    # dff.plot_loss(train_loss, path=IMG_PATH / model_str, title=model_str)
+    train_loss, _, _ = dff.fit(
+        epochs, model, loss_func, opt, train_dl, valid_dl, LOG_PATH, model_str
+    )
+    dff.plot_loss(
+        train_loss, path=IMG_PATH / (model_str + ".png"), title=model_str
+    )
 
-    rates = [
-        10 ** (-6),
-        10 ** (-5),
-        10 ** (-4),
-    ]
-    h_layer_ls = [[21], [32]]
-    optims = [
-        optim.SGD(model.parameters(), lr=lr, momentum=0.9),
-        optim.Adam(model.parameters(), lr=lr),
-        optim.SparseAdam(model.parameters(), lr=lr),
-    ]
+    # rates = [
+    #     10 ** (-6),
+    #     10 ** (-5),
+    #     10 ** (-4),
+    # ]
+    # h_layer_ls = [[21], [32]]
+    # optims = [
+    #     optim.SGD(model.parameters(), lr=lr, momentum=0.9),
+    #     optim.Adam(model.parameters(), lr=lr),
+    #     optim.SparseAdam(model.parameters(), lr=lr),
+    # ]
 
-    for h_lay in h_layer_ls:
-        for lr in rates:
-            for opts in optims:
-                # Train DFF. Validate. Print validation loss and error.
-                opt = opts
-                model = dff.DFF(21, h_lay, 1, a_fn=a_fn)
-                model.to(dev)
-                model_str = dff.hyper_str(
-                    h_lay, lr, opt, a_fn, batch_size, epochs
-                )
-                train_loss, _, _ = dff.fit(
-                    epochs,
-                    model,
-                    loss_func,
-                    opt,
-                    train_dl,
-                    valid_dl,
-                    LOG_PATH,
-                    model_str,
-                )
-                dff.plot_loss(
-                    train_loss,
-                    path=IMG_PATH / (model_str + ".png"),
-                    title=model_str,
-                )
+    # for h_lay in h_layer_ls:
+    #     for lr in rates:
+    #         for opts in optims:
+    #             # Train DFF. Validate. Print validation loss and error.
+    #             opt = opts
+    #             model = dff.DFF(21, h_lay, 1, a_fn=a_fn)
+    #             model.to(dev)
+    #             model_str = dff.hyper_str(
+    #                 h_lay, lr, opt, a_fn, batch_size, epochs
+    #             )
+    #             train_loss, _, _ = dff.fit(
+    #                 epochs,
+    #                 model,
+    #                 loss_func,
+    #                 opt,
+    #                 train_dl,
+    #                 valid_dl,
+    #                 LOG_PATH,
+    #                 model_str,
+    #             )
+    #             dff.plot_loss(
+    #                 train_loss,
+    #                 path=IMG_PATH / (model_str + ".png"),
+    #                 title=model_str,
+    #             )
 
 
 if __name__ == "__main__":

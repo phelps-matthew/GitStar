@@ -105,6 +105,12 @@ def get_data(train_ds, valid_ds, bs):
 
 
 class WrappedDataLoader:
+    """Applied preprocessing function to torch.utils.Data.Dataloader objects
+
+    Args:
+        dl : torch.utilts.Data.Dataloader
+        func : function()
+    """
     def __init__(self, dl, func):
         self.dl = dl
         self.func = func

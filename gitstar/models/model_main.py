@@ -7,7 +7,6 @@ from pathlib import Path
 import torch
 import torch.nn.functional as F
 from torch import optim
-import numpy as np
 from gitstar.models.dataload import (
     GitStarDataset,
     WrappedDataLoader,
@@ -15,7 +14,6 @@ from gitstar.models.dataload import (
     get_data,
 )
 import gitstar.models.deepfeedfoward as dff
-import matplotlib.pyplot as plt
 
 # Path Globals
 BASE_DIR = Path(__file__).resolve().parent

@@ -100,7 +100,7 @@ def set_logger(filepath):
         filepath : str or Path
     """
     logging.basicConfig(
-        filename=filepath,
+        filename=str(filepath),
         filemode="w",  # will rewrite on each run
         level=logging.DEBUG,
         format="[%(asctime)s] %(levelname)s - %(message)s",

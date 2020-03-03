@@ -157,19 +157,6 @@ def plot_loss(
         plt.show()
 
 
-def error(y_pred, y):
-    """Computes |y-y_pred|/y. Returns scalar representing average error
-        
-    Args:
-        y_pred, y : torch.tensor
-            One dimensional.
-    """
-    err = torch.div(torch.abs(y - y_pred), torch.abs(y))
-    avg_err = torch.div(torch.sum(err), len(err)).item()
-    # Returns float, int
-    return avg_err, len(err)
-
-
 def loss_batch(model, loss_func, xb, yb, opt=None):
     """Computes batch loss for training (with opt) and validation.
         
@@ -207,33 +194,38 @@ def fit(epochs, model, loss_func, opt, train_dl, valid_dl, path, hyper_str):
         batch_loss : list of float))
             One dimensional.
     """
-    batch_loss, valid_loss, valid_error = [], [], []
+    batch_loss, valid_loss, valid_rs = [], [], []
     for epoch in range(epochs):
         model.train()  # Good habit. Relevant for Dropout, BatchNorm layers
+
         for xb, yb in train_dl:
             train_loss, _ = loss_batch(model, loss_func, xb, yb, opt)
             # Store for plotting
             batch_loss.append(train_loss)
 
         model.eval()  # Good habit. Relevant for Dropout, BatchNorm layers
+
         with torch.no_grad():
             losses, nums = zip(
                 *[loss_batch(model, loss_func, xb, yb) for xb, yb in valid_dl]
             )
-            errors, _ = zip(*[error(model(xb), yb) for xb, yb in valid_dl])
-        # Weighted sum of mean loss or error per batch.
-        # Batches may not be identical.
+
+        # Weighted sum of mean loss per batch. Batches may not be identical.
         val_loss = np.sum(np.multiply(losses, nums)) / np.sum(nums)
-        val_error = np.sum(np.multiply(errors, nums)) / np.sum(nums)
         valid_loss.append(val_loss)
-        valid_error.append(val_error)
+
+        # R^2 = valid_loss/var(valid_dl)
+        val_var = torch.cat([yb for xb, yb in valid_dl]).var().item()
+        val_rs = 1 - (val_loss / val_var)
+        valid_rs.append(val_rs)
+
         print(
-            "[{}] Epoch: {}  Loss: {}  Error: {}".format(
-                arrow.now(), epoch, val_loss, val_error
+            "[{}] Epoch: {}  MSE: {}  R^2: {}".format(
+                arrow.now(), epoch, val_loss, val_rs
             )
         )
     # Log losses
     np.savetxt(path / ("train_bloss_" + hyper_str + ".csv"), batch_loss)
     np.savetxt(path / ("valid_loss_" + hyper_str + ".csv"), valid_loss)
-    np.savetxt(path / ("valid_error_" + hyper_str + ".csv"), valid_error)
-    return batch_loss, valid_loss, valid_error
+    np.savetxt(path / ("valid_rs_" + hyper_str + ".csv"), valid_rs)
+    return batch_loss, valid_loss, valid_rs

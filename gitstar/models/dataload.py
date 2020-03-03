@@ -47,10 +47,6 @@ class GitStarDataset(Dataset):
         self.target_inv_fn = None
         self.transform = transform
 
-        # Slice data frame according to sample_frac
-        sample_size = int(sample_frac * len(self.df))
-        self.df = self.df.iloc[:sample_size, :]
-
         # Apply data scaling
         if self.transform:
             feature_transform(self.df)

@@ -25,14 +25,12 @@ SAMPLE_FILE = "10ksample.csv"
 
 # Enable GPU support
 dev = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-# dev = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
 dff.print_gpu()
 print(dev)
 
 
 def preprocess(x, y):
     """Cast tensors into GPU/CPU device type.
-
     Args:
         x,y : torch.tensor
 

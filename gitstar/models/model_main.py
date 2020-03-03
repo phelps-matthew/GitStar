@@ -44,8 +44,6 @@ def preprocess(x, y):
 
 def main():
     """Train, validate, optimize model."""
-    # Log DEBUG
-    dff.set_logger(LOG_PATH/"model.log")
 
     # Load data
     batch_size = 64
@@ -64,7 +62,7 @@ def main():
     # Intialize model (w/ GPU support), optimization method, and loss function
     model = dff.DFF(D_in=21, D_hid=h_layers, D_out=1, a_fn=a_fn)
     model.to(dev)
-    opt = optim.Adam(model.parameters(), lr=lr)
+    opt = optim.SparseAdam(model.parameters(), lr=lr)
     loss_func = F.mse_loss
 
     # Generate descriptive parameter string (for pngs and csvs)

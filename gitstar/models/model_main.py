@@ -54,7 +54,11 @@ def main():
     train_dl, valid_dl = get_data(train_ds, valid_ds, bs=batch_size)
     train_dl = WrappedDataLoader(train_dl, preprocess)
     valid_dl = WrappedDataLoader(valid_dl, preprocess)
-    print(valid_dl, train_dl)
+    print(train_dl.__iter__())
+    # fmt: off
+    import ipdb,os; ipdb.set_trace(context=5)  # noqa
+    # fmt: on
+
 
     # Hyperparameters
     lr = 10 ** (-5)

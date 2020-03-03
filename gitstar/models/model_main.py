@@ -57,9 +57,9 @@ def main():
     valid_dl = WrappedDataLoader(valid_dl, preprocess)
 
     # Hyperparameters
-    lr = 10 ** (-6)
-    h_layers = [64, 64, 64]
-    epochs = 10
+    lr = 10 ** (-5)
+    h_layers = [128, 128, 128, 128]
+    epochs = 100
     a_fn = F.rrelu
 
     # Intialize model (w/ GPU support), optimization method, and loss function

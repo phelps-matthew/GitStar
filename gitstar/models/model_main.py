@@ -10,7 +10,7 @@ from torch import optim
 from gitstar.models.dataload import (
     GitStarDataset,
     WrappedDataLoader,
-    rand_split_rel,
+    split_csv,
     get_data,
 )
 import gitstar.models.deepfeedfoward as dff
@@ -45,10 +45,15 @@ def preprocess(x, y):
 def main():
     """Train, validate, optimize model."""
 
-    # Load data
+    # Load data. Apply scaler transformations to training data. Get DataLoader.
     batch_size = 64
-    dataset = GitStarDataset(DATA_PATH / FILE, sample_frac=0.5, shuffle=True)
-    train_ds, valid_ds = rand_split_rel(dataset, 0.8)
+    train_df, valid_df = split_csv(DATA_PATH/FILE, sample_frac = 0.4)
+    train_ds = GitStarDataset(train_df)
+    valid_ds = GitStarDataset(
+        valid_df,
+        f_scale=train_ds.feature_scalers,
+        t_scale=train_ds.target_scaler,
+    )
     train_dl, valid_dl = get_data(train_ds, valid_ds, bs=batch_size)
     train_dl = WrappedDataLoader(train_dl, preprocess)
     valid_dl = WrappedDataLoader(valid_dl, preprocess)
@@ -69,51 +74,13 @@ def main():
     model_str = dff.hyper_str(h_layers, lr, opt, a_fn, batch_size, epochs)
     print(model_str)
 
-    # Train, validate, save loss
+    # Train, validate, save and plot loss
     train_loss, _, _ = dff.fit(
         epochs, model, loss_func, opt, train_dl, valid_dl, LOG_PATH, model_str
     )
     dff.plot_loss(
         train_loss, path=IMG_PATH / (model_str + ".png"), title=model_str
     )
-
-    # rates = [
-    #     10 ** (-6),
-    #     10 ** (-5),
-    #     10 ** (-4),
-    # ]
-    # h_layer_ls = [[21], [32]]
-    # optims = [
-    #     optim.SGD(model.parameters(), lr=lr, momentum=0.9),
-    #     optim.Adam(model.parameters(), lr=lr),
-    #     optim.SparseAdam(model.parameters(), lr=lr),
-    # ]
-
-    # for h_lay in h_layer_ls:
-    #     for lr in rates:
-    #         for opts in optims:
-    #             # Train DFF. Validate. Print validation loss and error.
-    #             opt = opts
-    #             model = dff.DFF(21, h_lay, 1, a_fn=a_fn)
-    #             model.to(dev)
-    #             model_str = dff.hyper_str(
-    #                 h_lay, lr, opt, a_fn, batch_size, epochs
-    #             )
-    #             train_loss, _, _ = dff.fit(
-    #                 epochs,
-    #                 model,
-    #                 loss_func,
-    #                 opt,
-    #                 train_dl,
-    #                 valid_dl,
-    #                 LOG_PATH,
-    #                 model_str,
-    #             )
-    #             dff.plot_loss(
-    #                 train_loss,
-    #                 path=IMG_PATH / (model_str + ".png"),
-    #                 title=model_str,
-    #             )
 
 
 if __name__ == "__main__":

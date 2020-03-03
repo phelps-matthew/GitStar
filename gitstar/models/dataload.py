@@ -1,7 +1,4 @@
-"""Data handling for DFF NN
-
-    TODO:
-        Update get_data or other wrappers as needed.
+"""Data handling for DFF model.
 """
 
 from pathlib import Path
@@ -13,28 +10,27 @@ from gitstar.models.datanorm import feature_transform, target_transform
 
 class GitStarDataset(Dataset):
     """
-        Args:
-            csv_file (str, Path): Path to the csv file.
+    Args:
+        csv_file : str or Path
 
-            sample_frac (float): [0,1]
+        sample_frac :  float or int
+            [0,1]
 
-            transform=True (boolean): Apply scale transformations according to
-            datanorm module.
+        transform : boolean, default True
+            Apply scale transformations according to datanorm module.
 
-            shuffle=False (boolean): Randomize dataframe.
+        shuffle : boolean, default False
+            Randomize dataframe.
 
-        Attributes:
-            data (pd.DataFrame): Entire dataset
+    Attributes:
+        df : pd.DataFrame
+            Entire dataset
 
-            transform (boolean): Apply scale transformation
+        target_inv_fn : sklearn.preprocessing.scaler()
+            Scaler object that holds target fit parameters. Access inv.
+            function via target_inv_fn.inverse_transform(X), X : nd.array
 
-            target_inv_fn (sklearn.preprocessing.scaler()): Scaler object that holds
-            target fit parameters. Access inv. function via
-            target_inv_fn.inverse_transform(X), X (nd.array)
-
-            features (pd.DataFrame):
-
-            target (pd.DataFrame):
+        features, target : pd.DataFrame
     """
 
     def __init__(self, csv_path, sample_frac=1, transform=True, shuffle=False):
@@ -80,11 +76,14 @@ class GitStarDataset(Dataset):
 
 def rand_split_rel(dataset, frac, **kwargs):
     """Splits dataset as fraction of total. Based on torch random_split.
+
         Args:
-            dataset (torch.utils.data.Dataset)
-            frac (float): [0,1]
-        Return:
-            ds_frac, ds_remainder (tuple): torch.utils.Dataset
+            dataset : torch.utils.data.Dataset
+
+            frac : float or int
+                [0,1]
+        Returns:
+            ds_frac, ds_remainder : tuple of torch.utils.Dataset
     """
     size_1 = int(frac * len(dataset))
     size_2 = len(dataset) - size_1
@@ -95,12 +94,10 @@ def get_data(train_ds, valid_ds, bs):
     """Create dataloaders based on train/validation datasets and batch size.
 
         Args:
-            train_ds (torch.utils.data.Dataset)
-            valid_ds (torch.utils.data.Dataset)
-            bs (int)
-        Return:
-            train_dl (torch.utils.data.DataLoader)
-            valid_dl (torch.utils.data.DataLoader)
+            train_ds, valid_ds : torch.utils.data.Dataset
+            bs : int
+        Returns:
+            train_dl, valid_dl : torch.utils.data.DataLoader
     """
     train_dl = DataLoader(train_ds, batch_size=bs, shuffle=True)
     valid_dl = DataLoader(valid_ds, batch_size=2 * bs)
@@ -129,9 +126,6 @@ def module_test():
     SAMPLE_FILE = "10ksample.csv"
 
     dataset = GitStarDataset(DATA_PATH / SAMPLE_FILE)
-    # fmt: off
-    import ipdb,os; ipdb.set_trace(context=5)  # noqa
-    # fmt: on
     train_ds, valid_ds = rand_split_rel(dataset, 0.8)
     train_dl, valid_dl = get_data(train_ds, valid_ds, bs=64)
     for xb, yb in train_dl:

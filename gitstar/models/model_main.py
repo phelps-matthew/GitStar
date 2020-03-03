@@ -55,7 +55,7 @@ def main():
 
     # Hyperparameters
     lr = 10 ** (-5)
-    h_layers = [64, 64]
+    h_layers = [64, 64, 64, 64]
     epochs = 6
     a_fn = F.rrelu
 

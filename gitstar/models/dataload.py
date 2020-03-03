@@ -5,22 +5,15 @@ from pathlib import Path
 from torch.utils.data import Dataset, DataLoader, random_split
 import pandas as pd
 import torch
+from sklearn.model_selection import train_test_split
 from gitstar.models.datanorm import feature_transform, target_transform
 
 
 class GitStarDataset(Dataset):
     """
     Args:
-        csv_file : str or Path
-
-        sample_frac :  float or int
-            [0,1]
-
         transform : boolean, default True
             Apply scale transformations according to datanorm module.
-
-        shuffle : boolean, default False
-            Randomize dataframe.
 
     Attributes:
         df : pd.DataFrame
@@ -33,24 +26,22 @@ class GitStarDataset(Dataset):
         features, target : pd.DataFrame
     """
 
-    def __init__(self, csv_path, sample_frac=1, transform=True, shuffle=False):
-        # Load data. Take random subset according to sample_frac.
-        if shuffle:
-            self.df = (
-                pd.read_csv(csv_path).astype("float64").sample(frac=sample_frac)
-            )
-        else:
-            self.df = pd.read_csv(csv_path).astype("float64")
-            self.df = self.df.head(int(sample_frac * len(self.df)))
-
+    def __init__(self, df, transform=True, f_scale=None, t_scale=None):
         # Intialize transform related attributes
-        self.target_inv_fn = None
+        self.df = df
         self.transform = transform
 
-        # Apply data scaling
+        # Apply data scaling. If scalers are provided, use them.
         if self.transform:
-            feature_transform(self.df)
-            _, self.target_inv_fn = target_transform(self.df)
+            if f_scale is not None:
+                self.feature_scalers = feature_transform(self.df, f_scale)
+                self.target_scaler = target_transform(self.df, t_scale)
+            else:
+                self.feature_scalers = feature_transform(self.df)
+                self.target_scaler = target_transform(self.df)
+        else:
+            self.target_scaler = f_scale
+            self.feature_scalers = t_scale
 
         # Separate features and target. Drop method returns deep copy of df
         self.features = self.df.drop("stargazers", axis=1)
@@ -66,24 +57,30 @@ class GitStarDataset(Dataset):
         # np.ndarry -> torch.tensor.float() to match weights datatype
         x_sample = torch.from_numpy(x_sample).float()
         y_sample = torch.tensor(y_sample).float()
-
         return x_sample, y_sample
 
 
-def rand_split_rel(dataset, frac, **kwargs):
-    """Splits dataset as fraction of total. Based on torch random_split.
+def split_csv(csv_path, split_frac=0.8, sample_frac=1):
+    """Random splitting of dataframe.
 
         Args:
-            dataset : torch.utils.data.Dataset
+            csv_path : str or Path 
 
-            frac : float or int
+            split_frac : float or int
                 [0,1]
+
+            sample_frac : float or int, default 1
+                [0,1]. Total fraction of data.
         Returns:
-            ds_frac, ds_remainder : tuple of torch.utils.Dataset
+            train_df, valid_df : tuple of pd.DataFrame
     """
-    size_1 = int(frac * len(dataset))
-    size_2 = len(dataset) - size_1
-    return random_split(dataset, [size_1, size_2], **kwargs)
+    if sample_frac < 1:
+        df = pd.read_csv(csv_path).astype("float64").sample(sample_frac)
+    else:
+        df = pd.read_csv(csv_path).astype("float64")
+    # Split the df
+    train_df, valid_df = train_test_split(df, train_size=split_frac)
+    return train_df, valid_df
 
 
 def get_data(train_ds, valid_ds, bs):
@@ -107,6 +104,7 @@ class WrappedDataLoader:
         dl : torch.utilts.Data.Dataloader
         func : function()
     """
+
     def __init__(self, dl, func):
         self.dl = dl
         self.func = func
@@ -127,6 +125,13 @@ def module_test():
     FILE = "gs_table_v2.csv"
     SAMPLE_FILE = "10ksample.csv"
 
+    train_df, valid_df = split_csv(DATA_PATH / SAMPLE_FILE)
+    train_ds = GitStarDataset(train_df)
+    valid_ds = GitStarDataset(
+        valid_df,
+        f_scale=train_ds.feature_scalers,
+        t_scale=train_ds.target_scaler,
+    )
     dataset = GitStarDataset(DATA_PATH / SAMPLE_FILE)
     train_ds, valid_ds = rand_split_rel(dataset, 0.8)
     train_dl, valid_dl = get_data(train_ds, valid_ds, bs=64)

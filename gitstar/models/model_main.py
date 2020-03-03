@@ -62,7 +62,7 @@ def main():
     # Intialize model (w/ GPU support), optimization method, and loss function
     model = dff.DFF(D_in=21, D_hid=h_layers, D_out=1, a_fn=a_fn)
     model.to(dev)
-    opt = optim.SparseAdam(model.parameters(), lr=lr)
+    opt = optim.SGD(model.parameters(), lr=lr, momentum=0.5)
     loss_func = F.mse_loss
 
     # Generate descriptive parameter string (for pngs and csvs)

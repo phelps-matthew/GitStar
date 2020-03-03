@@ -7,6 +7,7 @@ from pathlib import Path
 import torch
 import torch.nn.functional as F
 from torch import optim
+import numpy as np
 from gitstar.models.dataload import (
     GitStarDataset,
     WrappedDataLoader,
@@ -14,6 +15,7 @@ from gitstar.models.dataload import (
     get_data,
 )
 import gitstar.models.deepfeedfoward as dff
+import matplotlib.pyplot as plt
 
 # Path Globals
 BASE_DIR = Path(__file__).resolve().parent
@@ -42,6 +44,8 @@ def preprocess(x, y):
 
 def main():
     """Train, validate, optimize model."""
+    # Log DEBUG
+    dff.set_logger(LOG_PATH/"model.log")
 
     # Load data
     batch_size = 64
@@ -54,7 +58,7 @@ def main():
     # Hyperparameters
     lr = 10 ** (-5)
     h_layers = [21]
-    epochs = 10
+    epochs = 3
     a_fn = F.rrelu
 
     # Intialize model (w/ GPU support), optimization method, and loss function

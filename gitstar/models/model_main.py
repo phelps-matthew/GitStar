@@ -47,7 +47,7 @@ def main():
 
     # Load data
     batch_size = 64
-    dataset = GitStarDataset(DATA_PATH / FILE, sample_frac=0.4, shuffle=True)
+    dataset = GitStarDataset(DATA_PATH / FILE, sample_frac=1, shuffle=True)
     train_ds, valid_ds = rand_split_rel(dataset, 0.8)
     train_dl, valid_dl = get_data(train_ds, valid_ds, bs=batch_size)
     train_dl = WrappedDataLoader(train_dl, preprocess)
@@ -56,7 +56,7 @@ def main():
     # Hyperparameters
     lr = 10 ** (-5)
     h_layers = [128, 128, 128, 128]
-    epochs = 6
+    epochs = 10
     a_fn = F.rrelu
 
     # Intialize model (w/ GPU support), optimization method, and loss function

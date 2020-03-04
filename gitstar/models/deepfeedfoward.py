@@ -108,7 +108,7 @@ def set_logger(filepath):
     )
 
 
-def hyper_str(h_layers, lr, opt, a_fn, bs, epochs):
+def hyper_str(h_layers, lr, opt, a_fn, bs, epochs, prefix=None, suffix=None):
     """Generate str for DFF model for path names
 
     Args:
@@ -117,17 +117,26 @@ def hyper_str(h_layers, lr, opt, a_fn, bs, epochs):
         opt : torch.optim
         a_fn : F.functional
         bs, epochs : int
+        prefix, suffix : str, default None
     Returns:
         full_str : str
     """
+    prefix = "" if prefix is None else prefix
+    suffix = "" if suffix is None else suffix
+
+    # e.g. 16x16 hidden dims
     h_layers_str = "x".join(list(map(str, h_layers)))
+
+    # regex search patterns based on fn str
     a_fn_sub = re.search("^<\w+\s(\w+)\w.*$", str(a_fn))
     a_fn_str = a_fn_sub.group(1)
     opt_sub = re.search("^(\w+)\s.*", str(opt))
     opt_str = opt_sub.group(1)
-    full_str = "{}_lr_{}_{}_{}_bs_{}_epochs_{}".format(
+
+    param_str = "{}_lr_{}_{}_{}_bs_{}_epochs_{}".format(
         h_layers_str, lr, opt_str, a_fn_str, bs, epochs
     )
+    full_str = prefix + param_str + suffix
     return full_str
 
 
@@ -220,7 +229,7 @@ def fit(epochs, model, loss_func, opt, train_dl, valid_dl, path, hyper_str):
         valid_rs.append(val_rs)
 
         print(
-            "[{}] Epoch: {}  MSE: {}  R^2: {}".format(
+            "[{}] Epoch: {:02d}  MSE: {:8.7f}  R^2: {:8.7f}".format(
                 arrow.now(), epoch, val_loss, val_rs
             )
         )

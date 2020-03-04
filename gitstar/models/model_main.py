@@ -48,7 +48,7 @@ def main():
     batch_size = 64
     df = pd.read_csv(DATA_PATH / FILE).astype("float64")
     df = df.loc[df["stargazers"] >= 100]
-    train_df, valid_df = split_df(df)
+    train_df, valid_df = split_df(df, sample_frac=1)
     train_ds = GitStarDataset(train_df)
     valid_ds = GitStarDataset(
         valid_df,
@@ -61,8 +61,8 @@ def main():
 
     # Hyperparameters
     lr = 10 ** (-5)
-    h_layers = [128, 128, 128, 128]
-    epochs = 10
+    h_layers = [128, 64, 32]
+    epochs = 100
     a_fn = F.rrelu
 
     # Intialize model (w/ GPU support), optimization method, and loss function
@@ -72,9 +72,8 @@ def main():
     loss_func = F.mse_loss
 
     # Generate descriptive parameter string (for pngs and csvs)
-    model_str = (
-        dff.hyper_str(h_layers, lr, opt, a_fn, batch_size, epochs)
-        + "_stars_ge_100"
+    model_str = dff.hyper_str(
+        h_layers, lr, opt, a_fn, batch_size, epochs, prefix="stars_ge_100_"
     )
     print(model_str)
 

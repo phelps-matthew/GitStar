@@ -7,10 +7,11 @@ from pathlib import Path
 import torch
 import torch.nn.functional as F
 from torch import optim
+import pandas as pd
 from gitstar.models.dataload import (
     GitStarDataset,
     WrappedDataLoader,
-    split_csv,
+    split_df,
     get_data,
 )
 import gitstar.models.deepfeedfoward as dff
@@ -45,7 +46,9 @@ def main():
 
     # Load data. Apply scaler transformations to training data. Get DataLoader.
     batch_size = 64
-    train_df, valid_df = split_csv(DATA_PATH / FILE, sample_frac=1)
+    df = pd.read_csv(DATA_PATH / FILE).astype("float64")
+    df = df.loc[df["stargazers"] >= 100]
+    train_df, valid_df = split_df(df)
     train_ds = GitStarDataset(train_df)
     valid_ds = GitStarDataset(
         valid_df,
@@ -59,7 +62,7 @@ def main():
     # Hyperparameters
     lr = 10 ** (-5)
     h_layers = [128, 128, 128, 128]
-    epochs = 100
+    epochs = 10
     a_fn = F.rrelu
 
     # Intialize model (w/ GPU support), optimization method, and loss function
@@ -69,7 +72,10 @@ def main():
     loss_func = F.mse_loss
 
     # Generate descriptive parameter string (for pngs and csvs)
-    model_str = dff.hyper_str(h_layers, lr, opt, a_fn, batch_size, epochs)
+    model_str = (
+        dff.hyper_str(h_layers, lr, opt, a_fn, batch_size, epochs)
+        + "_stars_ge_100"
+    )
     print(model_str)
 
     # Train, validate, save and plot loss

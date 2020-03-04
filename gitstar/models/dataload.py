@@ -1,4 +1,8 @@
 """Data handling for DFF model.
+
+    ToDo:
+        Comment + Docstrings
+        Possible wrappers for csv -> ds -> dataloader
 """
 
 from pathlib import Path
@@ -60,11 +64,11 @@ class GitStarDataset(Dataset):
         return x_sample, y_sample
 
 
-def split_csv(csv_path, split_frac=0.8, sample_frac=1):
+def split_df(df, split_frac=0.8, sample_frac=1):
     """Random splitting of dataframe.
 
         Args:
-            csv_path : str or Path 
+            df : pd.DataFrame
 
             split_frac : float or int
                 [0,1]
@@ -74,12 +78,10 @@ def split_csv(csv_path, split_frac=0.8, sample_frac=1):
         Returns:
             train_df, valid_df : tuple of pd.DataFrame
     """
-    if sample_frac < 1:
-        df = pd.read_csv(csv_path).astype("float64").sample(sample_frac)
-    else:
-        df = pd.read_csv(csv_path).astype("float64")
+    # Collect subset of dataframe if specified. Must use copy here!
+    new_df = df.sample(sample_frac).copy() if sample_frac < 1 else df.copy()
     # Split the df
-    train_df, valid_df = train_test_split(df, train_size=split_frac)
+    train_df, valid_df = train_test_split(new_df, train_size=split_frac)
     return train_df, valid_df
 
 
@@ -125,15 +127,15 @@ def module_test():
     FILE = "gs_table_v2.csv"
     SAMPLE_FILE = "10ksample.csv"
 
-    train_df, valid_df = split_csv(DATA_PATH / SAMPLE_FILE)
+    df = pd.read_csv(DATA_PATH / FILE).astype("float64")
+    df = df.loc[df["stargazers"] >= 100].reset_index(drop=True)
+    train_df, valid_df = split_df(df)
     train_ds = GitStarDataset(train_df)
     valid_ds = GitStarDataset(
         valid_df,
         f_scale=train_ds.feature_scalers,
         t_scale=train_ds.target_scaler,
     )
-    dataset = GitStarDataset(DATA_PATH / SAMPLE_FILE)
-    train_ds, valid_ds = rand_split_rel(dataset, 0.8)
     train_dl, valid_dl = get_data(train_ds, valid_ds, bs=64)
     for xb, yb in train_dl:
         print(xb, yb)

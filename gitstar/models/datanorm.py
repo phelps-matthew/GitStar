@@ -7,7 +7,8 @@ import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import QuantileTransformer
 from sklearn.preprocessing import PowerTransformer
-#from gitstar.models.dataload import GitStarDataset
+
+# from gitstar.models.dataload import GitStarDataset
 
 
 FEATURE_SCALERS = {
@@ -50,11 +51,11 @@ def col_transform(df, col, scaler):
             e.g. lambdas_ for PowerTransformer
     """
     # Extract column data
-    col_data = df[col].values.reshape(-1, 1)
+    col_data = df.loc[:, col].values.reshape(-1, 1)
     # Apply transformation. Returns nd.array
     newdata = scaler.fit_transform(col_data)
     # Transform new column in place
-    df[col] = newdata
+    df.loc[:, col] = newdata
     return df, scaler
 
 
@@ -107,15 +108,12 @@ def module_test():
     FILE = "gs_table_v2.csv"
     SAMPLE_FILE = "10ksample.csv"
 
-    data = pd.read_csv(DATA_PATH/SAMPLE_FILE)
-    # fmt: off
-    import ipdb,os; ipdb.set_trace(context=5)  # noqa
-    # fmt: on
+    data = pd.read_csv(DATA_PATH / SAMPLE_FILE)
     feature_transform(data)
 
-    #tdata = data.copy()
-    #tdata, scaler = target_transform(tdata)
-    #ndata = tdata.copy()
+    # tdata = data.copy()
+    # tdata, scaler = target_transform(tdata)
+    # ndata = tdata.copy()
 
 
 if __name__ == "__main__":

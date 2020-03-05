@@ -16,7 +16,7 @@ python -m venv myvenv
 ```
 pip install .
 
-# Or, make package editable:
+# Or, make package editable
 pip install -e .
 ```
 Public modules/API: 

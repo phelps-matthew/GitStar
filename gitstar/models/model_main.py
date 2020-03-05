@@ -8,6 +8,7 @@ import torch
 import torch.nn.functional as F
 from torch import optim
 import pandas as pd
+import numpy as np
 from gitstar.models.dataload import (
     GitStarDataset,
     WrappedDataLoader,
@@ -61,8 +62,8 @@ def main():
 
     # Hyperparameters
     lr = 10 ** (-5)
-    h_layers = [128, 64, 32]
-    epochs = 100
+    h_layers = [64, 32]
+    epochs = 1000
     a_fn = F.rrelu
 
     # Intialize model (w/ GPU support), optimization method, and loss function

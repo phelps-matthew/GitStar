@@ -152,6 +152,7 @@ def plot_loss(
         ylabel : str
         ylim : tuple of int or float
     """
+    plt.close()
     fig, ax = plt.subplots()
     ax.plot(loss_array)
     ax.set_ylim(ylim)
@@ -229,7 +230,7 @@ def fit(epochs, model, loss_func, opt, train_dl, valid_dl, path, hyper_str):
         valid_rs.append(val_rs)
 
         print(
-            "[{}] Epoch: {:02d}  MSE: {:8.7f}  R^2: {:8.7f}".format(
+            "[{}] Epoch: {:02d}  MSE: {:8.7f}  R^2: {: 8.7f}".format(
                 arrow.now(), epoch, val_loss, val_rs
             )
         )

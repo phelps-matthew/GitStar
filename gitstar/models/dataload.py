@@ -1,8 +1,9 @@
-"""Data handling for DFF model.
+"""
+Data handling for DFF model.
 
-    ToDo:
-        Comment + Docstrings
-        Possible wrappers for csv -> ds -> dataloader
+ToDo:
+    Comment + Docstrings
+    Possible wrappers for csv -> ds -> dataloader
 """
 
 from pathlib import Path

@@ -1,5 +1,6 @@
-"""Normalizes/Transforms/Scales GitStar features and target. Provides necessary
-    function for inverse target transformation.
+"""
+Normalizes/Transforms/Scales GitStar features and target. Provides necessary
+function for inverse target transformation.
 """
 from pathlib import Path
 import pandas as pd
@@ -31,24 +32,28 @@ FEATURE_SCALERS = {
 }
 TARGET_SCALER = {"stargazers": PowerTransformer(method="box-cox")}
 
-
 def col_transform(df, col, scaler):
-    """Scale single pandas dataframe column based on sklearn scaler.
-        Warning: Transforms in-place.
-        Args:
-            data (pd.DataFrame): Must have one or more named columns
+    """
+    Scale single pandas dataframe column based on sklearn scaler.
+    Warning: Transforms in-place.
 
-            col (str): Column name within DataFrame
+    Parameters
+    ----------
+    data : pd.DataFrame
+        Must have one or more named columns
+    col : str
+        Column name within DataFrame
+    scaler : sklearn.preprocessing.scaler
+        E.g. MinMaxScaler(), PowerTransformer(method="box-cox"),
+        PowerTransformer(method="yeo-johnson"),
+        QuantileTransformer(output_distribution="normal")
 
-            scaler (sklearn.preprocessing.scaler):
-            E.g. MinMaxScaler(), PowerTransformer(method="box-cox"),
-            PowerTransformer(method="yeo-johnson"),
-            QuantileTransformer(output_distribution="normal")
-
-        Return:
-            data (pd.DataFrame): Transformed dataframe
-            scaler (sklearn.preprocessing.scaler): Object holds fit attributes,
-            e.g. lambdas_ for PowerTransformer
+    Returns
+    -------
+    data : pd.DataFrame
+        Transformed dataframe.
+    scaler : sklearn.preprocessing.scaler
+        Object holds fit attributes, e.g. lambdas_ for PowerTransformer()
     """
     # Extract column data
     col_data = df.loc[:, col].values.reshape(-1, 1)
@@ -60,18 +65,20 @@ def col_transform(df, col, scaler):
 
 
 def feature_transform(df, col_scaler=FEATURE_SCALERS):
-    """Scale pandas DataFrame according to FEATURE_SCALERS. Does not return fit
+    """
+    Scale pandas DataFrame according to FEATURE_SCALERS. Does not return fit
     objects. Warning: Transforms in-place.
-    Args:
-        data : pd.DataFrame
-            Must adhere to FEATURE_SCALERS format.
-        col_scaler : dict {"col_name" : sklearn.preprocessing.scaler() obj}
-            Default FEATURE_SCALERS.
 
-    Return:
-        scaler_dict : dict of sklearn.preprocessing.scaler() objs
-            Holds inverse function, accessible via
-            scaler().inverse_transform(X), X (nd.array)
+    Parameters
+    ----------
+    data : pd.DataFrame
+    col_scaler : dict {"col_name" : sklearn.preprocessing.scaler()}, optional
+
+    Returns
+    -------
+    scaler_dict : dict of sklearn.preprocessing.scaler()
+        Holds inverse function, accessible via
+        scaler().inverse_transform(X), X : nd.array.
     """
     scaler_dict = {}
     for key in col_scaler:
@@ -81,19 +88,20 @@ def feature_transform(df, col_scaler=FEATURE_SCALERS):
 
 
 def target_transform(df, col_scaler=TARGET_SCALER):
-    """Scale pandas DataFrame target column according to TARGET_SCALER. Provides
-    inverse fit function. Warning: Transforms in-place.
-    Args:
-        data : pd.DataFrame
-            Must adhere to FEATURE_SCALERS format.
+    """
+    Scale pandas DataFrame according to TARGET_SCALER. Does not return fit
+    objects. Warning: Transforms in-place.
 
-        col_scaler : dict {"col_name" : sklearn.preprocessing.scaler() obj}
-            Default TARGET_SCALER.
+    Parameters
+    ----------
+    data : pd.DataFrame
+    col_scaler : dict {"col_name" : sklearn.preprocessing.scaler()}, optional
 
-    Return:
-        scaler_dict : dict of sklearn.preprocessing.scaler() objs
-            Holds inverse function, accessible via
-            scaler().inverse_transform(X), X (nd.array)
+    Returns
+    -------
+    scaler_dict : dict of sklearn.preprocessing.scaler()
+        Holds inverse function, accessible via
+        scaler().inverse_transform(X), X : nd.array.
     """
     scaler_dict = {}
     for key in col_scaler:

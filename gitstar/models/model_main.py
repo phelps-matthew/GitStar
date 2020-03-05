@@ -1,6 +1,7 @@
-"""Implements deep feedforward model for consuming the GitStar dataset. Loads
-    training and validation datasets, optimizes hyperparameters, and generates
-    loss plots/data. Cuda GPU ready.
+"""
+Implements deep feedforward model for consuming the GitStar dataset. Loads
+training and validation datasets, optimizes hyperparameters, and generates
+loss plots/data. Cuda GPU ready.
 """
 
 from pathlib import Path
@@ -8,7 +9,6 @@ import torch
 import torch.nn.functional as F
 from torch import optim
 import pandas as pd
-import numpy as np
 from gitstar.models.dataload import (
     GitStarDataset,
     WrappedDataLoader,

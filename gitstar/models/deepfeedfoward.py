@@ -1,7 +1,7 @@
-"""Deep feedforward NN model, with variable activation functions and layer
-    size/depth. Inlcudes helper functions for logging,
-    plotting, and storing loss data.
-
+"""
+Deep feedforward NN model, with variable activation functions and layer
+size/depth. Inlcudes helper functions for logging, plotting, and storing
+loss data.
 """
 
 from pathlib import Path
@@ -24,15 +24,25 @@ import arrow
 
 
 class DFF(nn.Module):
-    """Construct basic deep FF net with len(D_hid) hidden layers.
+    """
+    Construct basic deep FF net with len(D_hid) hidden layers.
 
-    Args:
-        D_in, D_out : int
-            Input, output dimension.
-        D_hid : list or int
-            List of hidden layer dimensions, sequential.
-        a_fn, optional : torch.nn.functional, default F.relu
-            Activation function on hidden layers.
+    Parameters
+    ----------
+    D_in, D_out : int
+        Input, output dimension.
+    D_hid : list or int
+        List of hidden layer dimensions, sequential.
+    a_fn : torch.nn.functional, optional
+        Activation function on hidden layers.
+
+    Attributes
+    ----------
+    a_fn : torch.nn.functional
+    layers : list of nn.Module
+        Does not include ouput layer.
+    out : nn.Module
+        Output layer.
     """
 
     def __init__(self, D_in, D_hid, D_out, a_fn=F.relu):
@@ -63,10 +73,16 @@ class DFF(nn.Module):
         self.layers = nn.ModuleList(self.layers)
 
     def forward(self, x):
-        """Execute feedforward with input x
-        Args:
-            x : torch.tensor
-                Input from DataLoader
+        """
+        Execute feedforward from input.
+
+        Parameters
+        ----------
+        x : torch.tensor
+
+        Returns
+        -------
+        out(x) : torch.tensor
         """
         # ReLU on hidden layers
         for layer in self.layers:
@@ -96,9 +112,16 @@ def print_gpu():
 
 
 def set_logger(filepath):
-    """Intialize root logger here.
-    Args:
-        filepath : str or Path
+    """
+    Intialize basic root logger.
+
+    Parameters
+    ----------
+    filepath : str or Path
+
+    Returns
+    -------
+    None
     """
     logging.basicConfig(
         filename=str(filepath),
@@ -107,19 +130,28 @@ def set_logger(filepath):
         format="[%(asctime)s] %(levelname)s - %(message)s",
     )
 
-
 def hyper_str(h_layers, lr, opt, a_fn, bs, epochs, prefix=None, suffix=None):
-    """Generate str for DFF model for path names
+    """
+    Generate str for DFF model for path names.
 
-    Args:
-        h_layers : int or list of int
-        lr : float
-        opt : torch.optim
-        a_fn : F.functional
-        bs, epochs : int
-        prefix, suffix : str, default None
-    Returns:
-        full_str : str
+    Parameters
+    ----------
+    h_layers : int or list of int
+        Hidden layer dimensions, e.g. \[16,16].
+    lr : float
+        Learning rate.
+    opt : torch.optim
+        Optimizer, e.g. torch.optim.SGD(..).
+    a_fn : F.functional
+        Activation function applied to hidden layers.
+    bs, epochs : int
+        Batch size.
+    prefix, suffix : str, optional
+        Consider appending with '_'
+
+    Returns
+    -------
+    full_str : str
     """
     prefix = "" if prefix is None else prefix
     suffix = "" if suffix is None else suffix
@@ -143,14 +175,20 @@ def hyper_str(h_layers, lr, opt, a_fn, bs, epochs, prefix=None, suffix=None):
 def plot_loss(
     loss_array, path=None, title="Loss", ylabel="MSE Loss", ylim=(0, 2)
 ):
-    """Simple plot of 1d array.
+    """
+    Simple plot of 1d array.
 
-    Args:
-        loss_array : list or nd.array
-        path : str or Path. default None
-            Image path.
-        ylabel : str
-        ylim : tuple of int or float
+    Parameters
+    ----------
+    loss_array : list or nd.array
+    path : str or Path, optional
+        Path to store image.
+    ylabel : str
+    ylim : tuple of int or float
+
+    Returns
+    -------
+    None
     """
     plt.close()
     fig, ax = plt.subplots()
@@ -168,17 +206,22 @@ def plot_loss(
 
 
 def loss_batch(model, loss_func, xb, yb, opt=None):
-    """Computes batch loss for training (with opt) and validation.
+    """
+    Computes batch loss for training (with opt) and validation.
         
-    Args:
-        model : DFF
-        loss_func : torch.nn.functional
-        xb, yb : torch.tensor
-        opt : torch.optim
+    Parameters
+    ----------
+    model : DFF
+    loss_func : torch.nn.functional
+    xb, yb : torch.tensor
+    opt : torch.optim
 
-    Returns:
-        loss.item() : float
-        len(xb) : int
+    Returns
+    -------
+    float
+        Loss of batch.
+    int
+        Batch size.
     """
     loss = loss_func(model(xb), yb)
     if opt is not None:
@@ -192,17 +235,21 @@ def loss_batch(model, loss_func, xb, yb, opt=None):
 
 
 def fit(epochs, model, loss_func, opt, train_dl, valid_dl, path, hyper_str):
-    """Iterates feedforward and validation loops.
+    """
+    Iterates feedforward and validation loops.
 
-    Args:
-        epochs : int
-        model : DFF
-        loss_func : torch.nn.functional
-        opt : torch.optim
-        train_dl, valid_dl : torch.utils.data.DataLoader
-    Returns:
-        batch_loss : list of float))
-            One dimensional.
+    Parameters
+    ----------
+    epochs : int
+    model : DFF
+    loss_func : torch.nn.functional
+    opt : torch.optim
+    train_dl, valid_dl : torch.utils.data.DataLoader
+
+    Returns
+    _______
+    batch_loss : list of float
+        One dimensional.
     """
     batch_loss, valid_loss, valid_rs = [], [], []
     for epoch in range(epochs):

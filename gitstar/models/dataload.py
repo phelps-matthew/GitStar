@@ -15,19 +15,26 @@ from gitstar.models.datanorm import feature_transform, target_transform
 
 class GitStarDataset(Dataset):
     """
-    Args:
-        transform : boolean, default True
-            Apply scale transformations according to datanorm module.
+    Implements torch.utils.data.Dataset with optional transformations upon
+    the features and/or target. See datanorm for scale transformations.
 
-    Attributes:
-        df : pd.DataFrame
-            Entire dataset
+    Parameters
+    ----------
+    df : pd.DataFrame
+    transform : boolean, optional
+        Apply scale transformations according to datanorm module.
+    f_scale, t_scale : dict, optional
+        Feature or target scalers, e.g.
+        {"openissues": PowerTransformer(method="yeo-johnson")}
 
-        target_inv_fn : sklearn.preprocessing.scaler()
-            Scaler object that holds target fit parameters. Access inv.
-            function via target_inv_fn.inverse_transform(X), X : nd.array
-
-        features, target : pd.DataFrame
+    Attributes
+    ----------
+    df : pd.DataFrame
+    transform : boolean
+        Apply scale transformations according to datanorm module.
+    f_scale, t_scale : dict
+        Feature or target scalers, e.g.
+        {"openissues": PowerTransformer(method="yeo-johnson")}
     """
 
     def __init__(self, df, transform=True, f_scale=None, t_scale=None):
@@ -65,18 +72,22 @@ class GitStarDataset(Dataset):
 
 
 def split_df(df, split_frac=0.8, sample_frac=1):
-    """Random splitting of dataframe.
+    """
+    Random splitting of dataframe.
 
-        Args:
-            df : pd.DataFrame
+    Parameters
+    ----------
+    df : pd.DataFrame
+    split_frac : float or int
+        [0,1]. Split of train/validation.
+    sample_frac : float or int, optional
+        [0,1]. Total fraction of data.
+    train_ds, valid_ds : torch.utils.data.Dataset
+    bs : int
 
-            split_frac : float or int
-                [0,1]
-
-            sample_frac : float or int, default 1
-                [0,1]. Total fraction of data.
-        Returns:
-            train_df, valid_df : tuple of pd.DataFrame
+    Returns
+    -------
+    train_df, valid_df : tuple of pd.DataFrame
     """
     # Collect subset of dataframe if specified. Must use copy here!
     new_df = df.sample(sample_frac).copy() if sample_frac < 1 else df.copy()
@@ -86,13 +97,17 @@ def split_df(df, split_frac=0.8, sample_frac=1):
 
 
 def get_data(train_ds, valid_ds, bs):
-    """Create dataloaders based on train/validation datasets and batch size.
+    """
+    Create dataloaders based on train/validation datasets and batch size.
 
-        Args:
-            train_ds, valid_ds : torch.utils.data.Dataset
-            bs : int
-        Returns:
-            train_dl, valid_dl : torch.utils.data.DataLoader
+    Parameters
+    ----------
+    train_ds, valid_ds : torch.utils.data.Dataset
+    bs : int
+
+    Returns
+    -------
+    train_dl, valid_dl : torch.utils.data.DataLoader
     """
     train_dl = DataLoader(train_ds, batch_size=bs, shuffle=True)
     valid_dl = DataLoader(valid_ds, batch_size=2 * bs)
@@ -100,11 +115,18 @@ def get_data(train_ds, valid_ds, bs):
 
 
 class WrappedDataLoader:
-    """Applied preprocessing function to torch.utils.Data.Dataloader objects
+    """
+    Applied preprocessing function to torch.utils.Data.Dataloader objects.
 
-    Args:
-        dl : torch.utilts.Data.Dataloader
-        func : function()
+    Parameters
+    ----------
+    dl : torch.utilts.Data.Dataloader
+    func : function()
+
+    Attributes
+    ----------
+    dl : torch.utilts.Data.Dataloader
+    func : function()
     """
 
     def __init__(self, dl, func):

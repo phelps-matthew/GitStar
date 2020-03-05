@@ -1,6 +1,7 @@
-"""This script explores the distributions and properties of input features, as
-    well as the output. Most importantly, we explore various
-    normalization/standardization tranforms from sklearn.preprocessing.
+"""
+This script explores the distributions and properties of input features, as
+well as the output. Most importantly, we explore various
+normalization/standardization transforms from sklearn.preprocessing.
 """
 from pathlib import Path
 import json
@@ -19,7 +20,6 @@ from sklearn.preprocessing import RobustScaler
 from sklearn.preprocessing import Normalizer
 from sklearn.preprocessing import QuantileTransformer
 from sklearn.preprocessing import PowerTransformer
-from sklearn.compose import make_column_transformer, ColumnTransformer
 from gitstar.models.dataload import GitStarDataset
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -30,11 +30,11 @@ FILENAME = "gs_table_v2.csv"
 SAMPLE_FILE = "10ksample.csv"
 DISTS = {
     "no scaling": None,
-    # "standard scaling": StandardScaler(),
+    "standard scaling": StandardScaler(),
     "min-max scaling": MinMaxScaler(),
     # "max-abs scaling": MaxAbsScaler(),
     # "robust scaling": RobustScaler(quantile_range=(25, 75)),
-    # "log scaling": np.log,
+    "log scaling": np.log,
     "power transformation (Yeo-Johnson)": PowerTransformer(
         method="yeo-johnson"
     ),
@@ -50,7 +50,20 @@ DISTS = {
 
 
 def gen_hist(img_path, data, qtl=None):
-    """Generate histograms of columns"""
+    """
+    Generate histograms of columns.
+
+    Parameters
+    ----------
+    img_path : str or Path
+    data : DataFrame
+    qtl : float, optional
+        [0,1]
+
+    Returns
+    -------
+    None
+    """
     img_path.mkdir(parents=True, exist_ok=True)
     for col in data:
         if qtl:
@@ -75,7 +88,20 @@ def gen_hist(img_path, data, qtl=None):
 
 
 def gen_scatter(img_path, data, qtl=None):
-    """Generate scatter plots of columns vs stargazers"""
+    """
+    Generate scatter plots of columns vs stargazers.
+
+    Parameters
+    ----------
+    img_path : str or Path
+    data : DataFrame
+    qtl : float, optional
+        [0,1]
+
+    Returns
+    -------
+    None
+    """
     img_path.mkdir(parents=True, exist_ok=True)
     for col in data.iloc[:, 1:]:
         ax = data.plot.scatter(x=col, y="stargazers", s=5, alpha=0.5)
@@ -96,12 +122,16 @@ def gen_scatter(img_path, data, qtl=None):
 
 
 def col_menu(data):
-    """Input menu for gathering dataframe column and scale trans. type.
+    """
+    Convenient input menu for fetching gitstar dataframe column name.
 
-        Args:
-            data (pandas dataframe or string iterable)
-        Return:
-            column (str)
+    Parameters
+    ----------
+    data : pd.Dataframe or iterable of str
+
+    Returns
+    _______
+    column : str
     """
     # User input column
     print("Data Columns:")
@@ -112,10 +142,13 @@ def col_menu(data):
 
 
 def scaler_menu():
-    """Input menu for selecting scaler type.
+    """
+    Input menu for selecting scaler type.
 
-        Return:
-            scaler type (str)
+    Returns
+    -------
+    str
+        scaler key.
     """
     # User input scale transformation
     print("\nScale Transformations:")
@@ -127,12 +160,20 @@ def scaler_menu():
 
 
 def scale_hist(data, col, scaler):
-    """Generate histograms of given single column
+    """
+    Generate histograms of given single column.
 
-        Args:
-            data (pd.df)
-            col (str): Single df col name
-            scaler (str): based on DISTS dict
+    Parameters
+    ----------
+    data : DataFrame
+    col : str
+        Single DataFrame col name.
+    scaler : str
+        based on DISTS dict.
+
+    Returns
+    -------
+    None
     """
     transformer = DISTS[scaler]
     # deep df copy. transformer needs at least 2 cols

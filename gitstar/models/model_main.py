@@ -32,12 +32,16 @@ print(dev)
 
 
 def preprocess(x, y):
-    """Cast tensors into GPU/CPU device type.
-    Args:
-        x,y : torch.tensor
+    """
+    Cast tensors into GPU/CPU device type.
 
-    Returns:
-        x.to(dev), y.to(dev) : torch.tensor
+    Parameters
+    ----------
+    x,y : torch.tensor.
+
+    Returns
+    -------
+    x.to(dev), y.to(dev) : torch.tensor
     """
     return x.to(dev), y.to(dev)
 

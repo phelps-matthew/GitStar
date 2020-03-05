@@ -3,19 +3,20 @@ Star predictor based on GitHub heuristics.
 
 Suggested installation method:
 
-* Clone into desired directory
+* Clone into desired directory (denoted as `.`)
+```
+git clone https://github.com/phelps-matthew/GitStar.git
+```
 * Enable virtual environement
 ```
-# Cloned dir is denoted as .
 python -m venv myvenv
 . venv/bin/activate
 ```
-
 * Install package to virtual environement
 ```
 pip install .
 
-# If you would like to edit the package contents, use
+# Or, make package editable:
 pip install -e .
 ```
 Public modules/API: 

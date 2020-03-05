@@ -1,7 +1,7 @@
 # GitStar
 Star predictor based on GitHub heuristics.
 
-### Suggested installation method:
+### Installation:
 
 * Clone into desired directory (denoted as `.`)
 ```

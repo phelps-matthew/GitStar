@@ -30,7 +30,7 @@ pip install -e .
 │   ├── models
 │   │   ├── dataload.py
 │   │   ├── datanorm.py
-│   │   ├── deepfeedfoward.py
+│   │   ├── deepfeedforward.py
 │   │   └── main_model.py
 │   └── config_sample.py
 ├── README.md

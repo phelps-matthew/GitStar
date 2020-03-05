@@ -1,7 +1,7 @@
 # GitStar
 Star predictor based on GitHub heuristics.
 
-Suggested installation method:
+### Suggested installation method:
 
 * Clone into desired directory (denoted as `.`)
 ```
@@ -19,7 +19,7 @@ pip install .
 # Or, make package editable
 pip install -e .
 ```
-Public modules/API: 
+### Public modules/API: 
 ```
 .
 ├── gitstar

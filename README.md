@@ -1,18 +1,18 @@
 # GitStar
 Star predictor based on GitHub heuristics.
 
-### Suggested installation method:
+### Installation:
 
 * Clone into desired directory (denoted as `.`)
 ```
 git clone https://github.com/phelps-matthew/GitStar.git
 ```
-* Enable virtual environement
+* Enable virtual environment (optional)
 ```
 python -m venv myvenv
 . venv/bin/activate
 ```
-* Install package to virtual environement
+* Install package
 ```
 pip install .
 

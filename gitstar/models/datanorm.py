@@ -32,6 +32,7 @@ FEATURE_SCALERS = {
 }
 TARGET_SCALER = {"stargazers": PowerTransformer(method="box-cox")}
 
+
 def col_transform(df, col, scaler):
     """
     Scale single pandas dataframe column based on sklearn scaler.

@@ -15,7 +15,8 @@ from gitstar.models.dataload import (
     split_df,
     get_data,
 )
-import gitstar.models.deepfeedfoward as dff
+import gitstar.models.deepfeedforward as dff
+import numpy as np
 
 # Path Globals
 BASE_DIR = Path(__file__).resolve().parent

@@ -74,7 +74,8 @@ class GitStarDataset(Dataset):
 
 def split_df(df, split_frac=0.8, sample_frac=1):
     """
-    Random splitting of dataframe.
+    Random splitting of dataframe. Generate train and validation
+    DataFrames.
 
     Parameters
     ----------

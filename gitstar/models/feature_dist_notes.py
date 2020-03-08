@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent
 DATA_PATH = BASE_DIR / "dataset"
 IMG_PATH = BASE_DIR / "features"
 IMG_PATH.mkdir(parents=True, exist_ok=True)
-FILENAME = "gs_table_v2.csv"
+FILE = "gs_table_v2.csv"
 SAMPLE_FILE = "10ksample.csv"
 DISTS = {
     "no scaling": None,
@@ -87,38 +87,34 @@ def gen_hist(img_path, data, qtl=None):
         os.system("clear")
 
 
-def gen_scatter(img_path, data, qtl=None):
+def gen_scatter(x, y, path=None, xlabel="x", ylabel="y", title=None):
     """
-    Generate scatter plots of columns vs stargazers.
+    Generate scatter plot of x vs y.
 
     Parameters
     ----------
-    img_path : str or Path
-    data : DataFrame
-    qtl : float, optional
-        [0,1]
+    x, y : nd.array
+    path : str or Path, optional
+    xlabel, ylabel, title : str, optional
 
     Returns
     -------
     None
     """
-    img_path.mkdir(parents=True, exist_ok=True)
-    for col in data.iloc[:, 1:]:
-        ax = data.plot.scatter(x=col, y="stargazers", s=5, alpha=0.5)
-        if qtl:
-            ax.set_xlim(left=data[col].min(), right=data[col].quantile(qtl))
-            ax.margins(x=0.05)
-            ax.autoscale(True)
-            # print("{}:".format(col)+str(1.1*data[col].quantile(qtl)))
-        ax.set_ylim(top=100000)  # outlier 996.ICU
-        fig = ax.get_figure()
+    fig, ax = plt.subplots()
+    ax.scatter(x, y, marker="o", s=4, alpha=0.2)
+    # ax.set_ylim(ylim)
+    ax.set(xlabel=xlabel, ylabel=ylabel, title=title)
+    if path:
+        path.mkdir(parents=True, exist_ok=True)
         fig.savefig(
-            img_path / ("{}_star.png".format(col)),
-            transparent=False,
-            dpi=300,
-            bbox_inches="tight",  # fit bounds of figure to plot
+            str(path), transparent=False, dpi=300, bbox_inches="tight",
         )
-        plt.close(fig)
+        plt.close()
+    else:
+        plt.show()
+        input("Press any key to continue")
+        plt.close()
 
 
 def col_menu(data):
@@ -159,6 +155,31 @@ def scaler_menu():
     return dist_keys[scale_in]
 
 
+def scatter_menu_loop(df):
+    """
+    Input menu for selecting scaler type.
+
+    Parameters
+    ----------
+    data : pd.Dataframe
+
+    Returns
+    -------
+    col_x, col_y : str
+        Selected columns
+    """
+
+    # Run menu for selecting two df columns
+    while True:
+        input("Press any key to continue, ctrl+z to exit.")
+        col_x = col_menu(df)
+        col_y = col_menu(df)
+        print(col_x, col_y)
+        array_x = df.loc[:, col_x].values
+        array_y = df.loc[:, col_y].values
+        gen_scatter(array_x, array_y, xlabel=col_x, ylabel=col_y)
+
+
 def scale_hist(data, col, scaler):
     """
     Generate histograms of given single column.
@@ -185,9 +206,9 @@ def scale_hist(data, col, scaler):
     # make new df
     newdf = pd.DataFrame(new_data, columns=[col])
     # apply scaler to all cols
-    #if isinstance(transformer, np.ufunc):
+    # if isinstance(transformer, np.ufunc):
     #    tdata[tdata.columns] = np.log(tdata[tdata.columns])
-    #elif transformer is not None:
+    # elif transformer is not None:
     #    tdata[tdata.columns] = transformer.fit_transform(tdata[tdata.columns])
     # tplt = plt.figure()
     # ax = tdata[col].plot.hist(bins=2000, title="{}: {}".format(col, scaler))
@@ -204,25 +225,27 @@ def scale_hist(data, col, scaler):
 
 
 def main():
-    mypath = "transformed/full"
-    df = GitStarDataset(DATA_PATH / FILENAME, 1).df
+    df = pd.read_csv(DATA_PATH / FILE).astype("float64")
+    # df = df.loc[df["stargazers"] >= 100]
+    trans_df = GitStarDataset(df).df
+    scatter_menu_loop(trans_df)
 
     # qtl=0.9
     # qrange = (data[col].min(), 1.1 * data[col].quantile(qtl))
     # ax = mydata[col].plot.hist(bins=2000, range=qrange)
     # plt.show()
 
-    while True:
-        col = col_menu(df)
-        scaler = scaler_menu()
-        print(col, scaler)
-        scale_hist(df, col, scaler)
-        input("Press any key to continue, ctrl+z to exit.")
+    # while True:
+    #     col = col_menu(df)
+    #     scaler = scaler_menu()
+    #     print(col, scaler)
+    #     scale_hist(df, col, scaler)
+    #     input("Press any key to continue, ctrl+z to exit.")
 
-        # Method for continutation w/ matplotlib
-        # input("Press any key to continue, ctrl+z to exit.")
-        # plt.close()
-        # os.system("clear")
+    # Method for continutation w/ matplotlib
+    # input("Press any key to continue, ctrl+z to exit.")
+    # plt.close()
+    # os.system("clear")
 
     ###############################################
     # ti = int(arrow.get("2017-06-01").format("X"))

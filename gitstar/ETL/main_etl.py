@@ -1,19 +1,20 @@
-""" ETL main application entry point. Extract github data. Transform and clean
-    relevant fields. Load into SQL database. Fetch -> clean -> load process is
-    iterated serially.
+""" 
+ETL main application entry point. Extract github data. Transform and clean
+relevant fields. Load into SQL database. Fetch -> clean -> load process is
+iterated serially.
 
-    Notes:
-        GitHub limits had to be probed experimentally - did not adhere to
-        rate limits as suggested in documentation. May only return 1000 repo
-        nodes per search query.
+Notes:
+    GitHub limits had to be probed experimentally - did not adhere to
+    rate limits as suggested in documentation. May only return 1000 repo
+    nodes per search query.
 
-        Repo data is iterated based on creation date, incremented daily
-        through a range (c.f. created_start, created_end).
+    Repo data is iterated based on creation date, incremented daily
+    through a range (c.f. created_start, created_end).
 
-        50 items/(http request) was reasonable fetching param. Approx. 1KB
-        data/repo to be held in RAM.
+    50 items/(http request) was reasonable fetching param. Approx. 1KB
+    data/repo to be held in RAM.
 
-    TODO:
+TODO:
 """
 import json
 import logging

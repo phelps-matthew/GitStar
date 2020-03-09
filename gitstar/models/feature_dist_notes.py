@@ -102,7 +102,7 @@ def gen_scatter(x, y, path=None, xlabel="x", ylabel="y", title=None):
     None
     """
     fig, ax = plt.subplots()
-    ax.scatter(x, y, marker="o", s=4, alpha=0.2)
+    ax.scatter(x, y, marker="o", s=4, alpha=0.4)
     # ax.set_ylim(ylim)
     ax.set(xlabel=xlabel, ylabel=ylabel, title=title)
     if path:
@@ -113,8 +113,6 @@ def gen_scatter(x, y, path=None, xlabel="x", ylabel="y", title=None):
         plt.close()
     else:
         plt.show()
-        input("Press any key to continue")
-        plt.close()
 
 
 def col_menu(data):
@@ -226,8 +224,8 @@ def scale_hist(data, col, scaler):
 
 def main():
     df = pd.read_csv(DATA_PATH / FILE).astype("float64")
-    # df = df.loc[df["stargazers"] >= 100]
-    trans_df = GitStarDataset(df).df
+    df = df.loc[df["stargazers"] >= 5000]
+    trans_df = GitStarDataset(df, transform=True).df
     scatter_menu_loop(trans_df)
 
     # qtl=0.9

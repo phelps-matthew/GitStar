@@ -65,10 +65,13 @@ def main():
     train_dl = WrappedDataLoader(train_dl, preprocess)
     valid_dl = WrappedDataLoader(valid_dl, preprocess)
 
+    # Gather inverse target scaler
+    target_inv_scaler = train_ds.target_scaler['stargazers']
+
     # Hyperparameters
     lr = 10 ** (-5)
     h_layers = [64, 32]
-    epochs = 1000
+    epochs = 100
     a_fn = F.rrelu
 
     # Intialize model (w/ GPU support), optimization method, and loss function
@@ -85,11 +88,19 @@ def main():
 
     # Train, validate, save and plot loss
     train_loss, _, _ = dff.fit(
-        epochs, model, loss_func, opt, train_dl, valid_dl, LOG_PATH, model_str
+        epochs,
+        model,
+        loss_func,
+        opt,
+        train_dl,
+        valid_dl,
+        LOG_PATH,
+        model_str,
+        t_scaler=target_inv_scaler,
     )
-    dff.plot_loss(
-        train_loss, path=IMG_PATH / (model_str + ".png"), title=model_str
-    )
+    # dff.plot_loss(
+    #     train_loss, path=IMG_PATH / (model_str + ".png"), title=model_str
+    # )
 
 
 if __name__ == "__main__":

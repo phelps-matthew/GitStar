@@ -67,8 +67,8 @@ def col_transform(df, col, scaler):
 
 def feature_transform(df, col_scaler=FEATURE_SCALERS):
     """
-    Scale pandas DataFrame according to FEATURE_SCALERS. Does not return fit
-    objects. Warning: Transforms in-place.
+    Scale pandas DataFrame according to FEATURE_SCALERS.
+    Warning: Transforms in-place.
 
     Parameters
     ----------
@@ -90,8 +90,8 @@ def feature_transform(df, col_scaler=FEATURE_SCALERS):
 
 def target_transform(df, col_scaler=TARGET_SCALER):
     """
-    Scale pandas DataFrame according to TARGET_SCALER. Does not return fit
-    objects. Warning: Transforms in-place.
+    Scale pandas DataFrame according to TARGET_SCALER.
+    Warning: Transforms in-place.
 
     Parameters
     ----------

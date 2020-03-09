@@ -15,6 +15,7 @@ import logging
 import re
 import matplotlib.pyplot as plt
 import arrow
+
 # from gitstar.models.dataload import (
 #     GitStarDataset,
 #     WrappedDataLoader,
@@ -130,6 +131,7 @@ def set_logger(filepath):
         format="[%(asctime)s] %(levelname)s - %(message)s",
     )
 
+
 def hyper_str(h_layers, lr, opt, a_fn, bs, epochs, prefix=None, suffix=None):
     """
     Generate str for DFF model for path names.
@@ -224,6 +226,7 @@ def loss_batch(model, loss_func, xb, yb, opt=None):
         Batch size.
     """
     loss = loss_func(model(xb), yb)
+
     if opt is not None:
         loss.backward()
         opt.step()
@@ -234,7 +237,48 @@ def loss_batch(model, loss_func, xb, yb, opt=None):
     return loss.item(), len(xb)
 
 
-def fit(epochs, model, loss_func, opt, train_dl, valid_dl, path, hyper_str):
+def loss_un_batch(model, loss_func, xb, yb, t_scaler):
+    # Determine unscaled MSE
+    if t_scaler is not None:
+        # numpy -> inverse transformation -> torch.tensor
+        inv_y_pred = t_scaler.inverse_transform(model(xb).numpy())
+        inv_y = t_scaler.inverse_transform(yb.numpy())
+
+        # Delete possible NaNs from sklearn scaler inverse
+        if np.any(np.isnan(inv_y_pred)):
+            bool_array = np.isnan(inv_y_pred)
+            # Pass only True non-NaNs
+            inv_y_pred = inv_y_pred[~bool_array]
+            inv_y = inv_y[~bool_array]
+
+        # Convert back to torch.tensor
+        model_yb_unorm = torch.from_numpy(inv_y_pred)
+        yb_unorm = torch.from_numpy(inv_y)
+        unorm_loss = loss_func(model_yb_unorm, yb_unorm).item()
+        size = len(yb_unorm)
+    else:
+        unorm_loss = 0
+        size = 1
+    return unorm_loss, size
+
+
+def loss_inv_fn(y_pred, y, loss_fn, t_scaler):
+    y_pred_inv = torch.from_numpy(t_scaler.inverse_transform(y_pred.numpy()))
+    y_inv = torch.from_numpy(t_scaler.inverse_transform(y.numpy()))
+    return loss_fn(y_pred_inv, y_inv)
+
+
+def fit(
+    epochs,
+    model,
+    loss_func,
+    opt,
+    train_dl,
+    valid_dl,
+    path,
+    hyper_str,
+    t_scaler=None,
+):
     """
     Iterates feedforward and validation loops.
 
@@ -251,7 +295,13 @@ def fit(epochs, model, loss_func, opt, train_dl, valid_dl, path, hyper_str):
     batch_loss : list of float
         One dimensional.
     """
-    batch_loss, valid_loss, valid_rs = [], [], []
+    batch_loss, valid_loss, valid_unorm_loss, valid_rs, valid_un_rs = (
+        [],
+        [],
+        [],
+        [],
+        [],
+    )
     for epoch in range(epochs):
         model.train()  # Good habit. Relevant for Dropout, BatchNorm layers
 
@@ -266,7 +316,12 @@ def fit(epochs, model, loss_func, opt, train_dl, valid_dl, path, hyper_str):
             losses, nums = zip(
                 *[loss_batch(model, loss_func, xb, yb) for xb, yb in valid_dl]
             )
-
+            unorm_losses, un_nums = zip(
+                *[
+                    loss_un_batch(model, loss_func, xb, yb, t_scaler)
+                    for xb, yb in valid_dl
+                ]
+            )
         # Weighted sum of mean loss per batch. Batches may not be identical.
         val_loss = np.sum(np.multiply(losses, nums)) / np.sum(nums)
         valid_loss.append(val_loss)
@@ -276,13 +331,36 @@ def fit(epochs, model, loss_func, opt, train_dl, valid_dl, path, hyper_str):
         val_rs = 1 - (val_loss / val_var)
         valid_rs.append(val_rs)
 
+        # Unscaled validation loss
+        val_un_loss = np.sum(np.multiply(unorm_losses, un_nums)) / np.sum(
+            un_nums
+        )
+        valid_unorm_loss.append(val_un_loss)
+
+        # Unormalized R^2
+        if t_scaler is not None:
+            to_inv = lambda x: torch.from_numpy(
+                t_scaler.inverse_transform(x.numpy())
+            )
+            val_un_var = (
+                torch.cat([to_inv(yb) for xb, yb in valid_dl]).var().item()
+            )
+            val_un_rs = 1 - (val_un_loss / val_un_var)
+            valid_un_rs.append(val_un_rs)
+        else:
+            val_un_rs = 0
+
         print(
-            "[{}] Epoch: {:02d}  MSE: {:8.7f}  R^2: {: 8.7f}".format(
-                arrow.now(), epoch, val_loss, val_rs
+            "[{}]\n Epoch: {:02d}  MSE: {:8.7f}  R^2: {: 8.7f} uMSE: {:2.7f}  uR^2: {: 2.7f}".format(
+                arrow.now(), epoch, val_loss, val_rs, val_un_loss, val_un_rs
             )
         )
     # Log losses
     np.savetxt(path / ("train_bloss_" + hyper_str + ".csv"), batch_loss)
     np.savetxt(path / ("valid_loss_" + hyper_str + ".csv"), valid_loss)
     np.savetxt(path / ("valid_rs_" + hyper_str + ".csv"), valid_rs)
-    return batch_loss, valid_loss, valid_rs
+    return (
+        batch_loss,
+        valid_loss,
+        valid_rs,
+    )

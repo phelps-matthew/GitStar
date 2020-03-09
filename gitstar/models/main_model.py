@@ -66,7 +66,7 @@ def main():
     valid_dl = WrappedDataLoader(valid_dl, preprocess)
 
     # Gather target inverse scaler fn
-    target_inv_scaler = train_ds.target_scaler['stargazers']
+    target_inv_scaler = train_ds.target_scaler["stargazers"]
 
     # Hyperparameters
     lr = 10 ** (-5)
@@ -98,9 +98,9 @@ def main():
         model_str,
         t_scaler=target_inv_scaler,
     )
-    # dff.plot_loss(
-    #     train_loss, path=IMG_PATH / (model_str + ".png"), title=model_str
-    # )
+    dff.plot_loss(
+        train_loss, path=IMG_PATH / (model_str + ".png"), title=model_str
+    )
 
 
 if __name__ == "__main__":

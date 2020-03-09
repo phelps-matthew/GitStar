@@ -27,7 +27,7 @@ FILE = "gs_table_v2.csv"
 SAMPLE_FILE = "10ksample.csv"
 
 # Enable GPU support
-dev = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+#dev = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 dff.print_gpu()
 print(dev)
 

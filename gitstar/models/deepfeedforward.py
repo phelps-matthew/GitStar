@@ -48,7 +48,7 @@ class DFF(nn.Module):
         # Must be list, cannot be None or other iterable
         assert isinstance(D_hid, (int, list))
 
-       # Compose list of DFF dimensions
+        # Compose list of DFF dimensions
         if isinstance(D_hid, int):
             dim_list = [D_in] + [D_hid] + [D_out]
         else:
@@ -359,8 +359,10 @@ def fit(
             val_inv_rs = 0
 
         print(
-            "[{}]\n Epoch: {:02d}  MSE: {:8.7f}  R^2: {: 8.7f}\
-                    uMSE: {:2.7f}  uR^2: {: 2.7f}".format(
+            (
+                "[{}]\n Epoch: {:02d}  MSE: {:8.7f}  R^2: {: 8.7f} "
+                + "uMSE: {:2.7f}  uR^2: {: 2.7f}"
+            ).format(
                 arrow.now(), epoch, val_loss, val_rs, val_inv_loss, val_inv_rs
             )
         )

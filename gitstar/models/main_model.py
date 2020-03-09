@@ -73,7 +73,7 @@ def main():
     lr = 10 ** (-5)
     h_layers = [64, 32]
     epochs = 100
-    a_fn = F.rrelu
+    a_fn = F.relu
 
     # Intialize model (w/ GPU support), optimization method, and loss function
     model = dff.DFF(D_in=21, D_hid=h_layers, D_out=1, a_fn=a_fn)

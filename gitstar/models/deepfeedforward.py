@@ -48,7 +48,7 @@ class DFF(nn.Module):
         # Must be list, cannot be None or other iterable
         assert isinstance(D_hid, (int, list))
 
-        # Compose list of DFF dimensions
+       # Compose list of DFF dimensions
         if isinstance(D_hid, int):
             dim_list = [D_in] + [D_hid] + [D_out]
         else:

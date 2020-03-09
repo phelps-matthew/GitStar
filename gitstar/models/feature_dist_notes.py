@@ -11,6 +11,7 @@ import time
 import arrow
 import os
 import numpy as np
+import seaborn as sns
 
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import minmax_scale
@@ -21,6 +22,12 @@ from sklearn.preprocessing import Normalizer
 from sklearn.preprocessing import QuantileTransformer
 from sklearn.preprocessing import PowerTransformer
 from gitstar.models.dataload import GitStarDataset
+from gitstar.models.datanorm import (
+    Log10Transformer,
+    IdentityTransformer,
+    feature_transform,
+)
+from sklearn.preprocessing import MinMaxScaler
 
 BASE_DIR = Path(__file__).resolve().parent
 DATA_PATH = BASE_DIR / "dataset"
@@ -223,37 +230,69 @@ def scale_hist(data, col, scaler):
 
 
 def main():
+    f_logs = {
+        "repositoryTopics": Log10Transformer(),
+        "openissues": Log10Transformer(),
+        "closedissues": Log10Transformer(),
+        "forkCount": Log10Transformer(),
+        "pullRequests": Log10Transformer(),
+        "commitnum": Log10Transformer(),
+        "watchers": Log10Transformer(),
+        "readme_bytes": Log10Transformer(),
+        "deployments": Log10Transformer(),
+        "descr_len": Log10Transformer(),
+        "diskUsage_kb": Log10Transformer(),
+        "projects": Log10Transformer(),
+        "milestones": Log10Transformer(),
+        "issuelabels": MinMaxScaler(),
+        "created": MinMaxScaler(),
+        "updated": MinMaxScaler(),
+    }
+    t_logs = {"stargazers": Log10Transformer()}
     df = pd.read_csv(DATA_PATH / FILE).astype("float64")
     df = df.loc[df["stargazers"] >= 5000]
-    trans_df = GitStarDataset(df, transform=True).df
-    scatter_menu_loop(trans_df)
-
-    # qtl=0.9
-    # qrange = (data[col].min(), 1.1 * data[col].quantile(qtl))
-    # ax = mydata[col].plot.hist(bins=2000, range=qrange)
-    # plt.show()
-
-    # while True:
-    #     col = col_menu(df)
-    #     scaler = scaler_menu()
-    #     print(col, scaler)
-    #     scale_hist(df, col, scaler)
-    #     input("Press any key to continue, ctrl+z to exit.")
-
-    # Method for continutation w/ matplotlib
-    # input("Press any key to continue, ctrl+z to exit.")
-    # plt.close()
-    # os.system("clear")
-
-    ###############################################
-    # ti = int(arrow.get("2017-06-01").format("X"))
-    # tf = int(arrow.get("2018-01-01").format("X"))
-    # star_min = 100
-    # qtl = None
-    # data_sub = data[data["created"].between(ti, tf)]
-    # data = data[data["stargazers"] >= star_min]
-    # gen_hist(IMG_PATH/mypath, data, qtl=qtl)
-    # gen_scatter(IMG_PATH/mypath, data, qtl=qtl)
+    trans_df = df.copy()
+    # Plotting
+    sns.set()
+    fig, axes = plt.subplots(3, 1)
+    col = "stargazers"
+    feature_transform(trans_df, {col: IdentityTransformer()})
+    sns.distplot(trans_df[col], ax=axes[0])
+    trans_df = df.copy()
+    feature_transform(trans_df, {col: Log10Transformer()})
+    sns.distplot(trans_df[col], ax=axes[1])
+    trans_df = df.copy()
+    feature_transform(trans_df, {col: MinMaxScaler()})
+    sns.distplot(trans_df[col], ax=axes[2])
+    # sns.jointplot(x="openissues", y="stargazers", data=df, alpha=0.4)
+    # multi_scatter = sns.pairplot(
+    #    data=trans_df,
+    #    vars=(
+    #        "stargazers",
+    #        "closedissues",
+    #        "watchers",
+    #        "forkCount",
+    #        "commitnum",
+    #        "pullRequests",
+    #        "updated",
+    #        "created",
+    #    ),
+    #    kind="reg",
+    #    diag_kind="kde",
+    #    diag_kws=dict(shade=True),
+    #    plot_kws={
+    #        "scatter_kws": {"alpha": 0.5},
+    #        "line_kws": {"color": "orange"},
+    #    },
+    # )
+    plt.tight_layout()
+    plt.show()
+    # multi_scatter.fig.savefig(
+    #     str(IMG_PATH / "full_seaborn/stars_log.png"),
+    #     transparent=False,
+    #     dpi=300,
+    #     bbox_inches="tight",
+    # )
 
 
 if __name__ == "__main__":

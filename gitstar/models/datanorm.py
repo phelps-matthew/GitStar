@@ -4,6 +4,7 @@ function for inverse target transformation.
 """
 from pathlib import Path
 import pandas as pd
+import numpy as np
 
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import QuantileTransformer
@@ -12,26 +13,51 @@ from sklearn.preprocessing import PowerTransformer
 # from gitstar.models.dataload import GitStarDataset
 
 
-FEATURE_SCALERS = {
-    "repositoryTopics": MinMaxScaler(),
-    "openissues": PowerTransformer(method="yeo-johnson"),
-    "closedissues": PowerTransformer(method="yeo-johnson"),
-    "forkCount": PowerTransformer(method="yeo-johnson"),
-    "pullRequests": PowerTransformer(method="yeo-johnson"),
-    "commitnum": PowerTransformer(method="yeo-johnson"),
-    "watchers": PowerTransformer(method="yeo-johnson"),
-    "readme_bytes": PowerTransformer(method="yeo-johnson"),
-    "deployments": PowerTransformer(method="yeo-johnson"),
-    "descr_len": PowerTransformer(method="yeo-johnson"),
-    "diskUsage_kb": QuantileTransformer(output_distribution="normal"),
-    "projects": QuantileTransformer(output_distribution="normal"),
-    "milestones": QuantileTransformer(output_distribution="normal"),
-    "issuelabels": QuantileTransformer(output_distribution="normal"),
-    "created": QuantileTransformer(output_distribution="normal"),
-    "updated": QuantileTransformer(output_distribution="normal"),
-}
-TARGET_SCALER = {"stargazers": PowerTransformer(method="box-cox")}
 
+class Log10Transformer():
+    def __init__(self):
+        pass
+
+    def fit_transform(self, array):
+        # Set lower bound
+        array = np.clip(array, 1e-1, None)
+        return np.log10(array)
+
+    def inverse_transform(self, array):
+        array = 10**array
+        array[array <= 0.1] = 0
+        return array
+
+class IdentityTransformer():
+    def __init__(self):
+        pass
+
+    def fit_transform(self, array):
+        return array
+
+    def inverse_transform(self, array):
+        return array
+
+
+FEATURE_SCALERS = {
+    "repositoryTopics": Log10Transformer(),
+    "openissues": Log10Transformer(),
+    "closedissues": Log10Transformer(),
+    "forkCount": Log10Transformer(),
+    "pullRequests": Log10Transformer(),
+    "commitnum": Log10Transformer(),
+    "watchers": Log10Transformer(),
+    "readme_bytes": Log10Transformer(),
+    "deployments": Log10Transformer(),
+    "descr_len": Log10Transformer(),
+    "diskUsage_kb": Log10Transformer(),
+    "projects": Log10Transformer(),
+    "milestones": Log10Transformer(),
+    "issuelabels": MinMaxScaler(),
+    "created": MinMaxScaler(),
+    "updated": MinMaxScaler(),
+}
+TARGET_SCALER = {"stargazers": Log10Transformer()}
 
 def col_transform(df, col, scaler):
     """
@@ -117,8 +143,12 @@ def module_test():
     FILE = "gs_table_v2.csv"
     SAMPLE_FILE = "10ksample.csv"
 
-    data = pd.read_csv(DATA_PATH / SAMPLE_FILE)
-    feature_transform(data)
+    df = pd.read_csv(DATA_PATH / SAMPLE_FILE)
+    dfa = df.copy()
+    target_transform(dfa)
+    # fmt: off
+    import ipdb,os; ipdb.set_trace(context=5)  # noqa
+    # fmt: on
 
     # tdata = data.copy()
     # tdata, scaler = target_transform(tdata)

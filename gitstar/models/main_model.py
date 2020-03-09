@@ -54,7 +54,7 @@ def main():
     # Load data. Apply scaler transformations to training data. Get DataLoader.
     batch_size = 64
     df = pd.read_csv(DATA_PATH / FILE).astype("float64")
-    df = df.loc[df["stargazers"] >= 100]
+    df = df.loc[df["stargazers"] >= 1]
     train_df, valid_df = split_df(df, sample_frac=1)
     train_ds = GitStarDataset(train_df)
     valid_ds = GitStarDataset(
@@ -72,7 +72,7 @@ def main():
     # Hyperparameters
     lr = 10 ** (-5)
     h_layers = [64, 32]
-    epochs = 100
+    epochs = 1000
     a_fn = F.relu
 
     # Intialize model (w/ GPU support), optimization method, and loss function

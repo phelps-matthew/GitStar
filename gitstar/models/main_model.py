@@ -65,7 +65,7 @@ def main():
     train_dl = WrappedDataLoader(train_dl, preprocess)
     valid_dl = WrappedDataLoader(valid_dl, preprocess)
 
-    # Gather inverse target scaler
+    # Gather target inverse scaler fn
     target_inv_scaler = train_ds.target_scaler['stargazers']
 
     # Hyperparameters

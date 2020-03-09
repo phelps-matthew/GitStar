@@ -16,13 +16,6 @@ import re
 import matplotlib.pyplot as plt
 import arrow
 
-# from gitstar.models.dataload import (
-#     GitStarDataset,
-#     WrappedDataLoader,
-#     split_csv,
-#     get_data,
-# )
-
 
 class DFF(nn.Module):
     """
@@ -237,7 +230,25 @@ def loss_batch(model, loss_func, xb, yb, opt=None):
     return loss.item(), len(xb)
 
 
-def loss_un_batch(model, loss_func, xb, yb, t_scaler):
+def inv_loss_batch(model, loss_func, xb, yb, t_scaler):
+    """
+    Computes unscaled batch loss from validation set.
+    If inverse fn not provided, passes dummy returns. See fit().
+        
+    Parameters
+    ----------
+    model : DFF
+    loss_func : torch.nn.functional
+    xb, yb : torch.tensor
+    t_scaler : tsklearn.preprocessing.scaler()
+
+    Returns
+    -------
+    float
+        Loss of batch.
+    int
+        Batch size.
+    """
     # Determine unscaled MSE
     if t_scaler is not None:
         # numpy -> inverse transformation -> torch.tensor
@@ -262,12 +273,6 @@ def loss_un_batch(model, loss_func, xb, yb, t_scaler):
     return unorm_loss, size
 
 
-def loss_inv_fn(y_pred, y, loss_fn, t_scaler):
-    y_pred_inv = torch.from_numpy(t_scaler.inverse_transform(y_pred.numpy()))
-    y_inv = torch.from_numpy(t_scaler.inverse_transform(y.numpy()))
-    return loss_fn(y_pred_inv, y_inv)
-
-
 def fit(
     epochs,
     model,
@@ -289,13 +294,14 @@ def fit(
     loss_func : torch.nn.functional
     opt : torch.optim
     train_dl, valid_dl : torch.utils.data.DataLoader
+    t_scaler : tsklearn.preprocessing.scaler(), optional
 
     Returns
     _______
-    batch_loss : list of float
+    batch_loss, valid_loss, valid_inv_loss : tuple of float
         One dimensional.
     """
-    batch_loss, valid_loss, valid_unorm_loss, valid_rs, valid_un_rs = (
+    batch_loss, valid_loss, valid_inv_loss, valid_rs, valid_inv_rs = (
         [],
         [],
         [],
@@ -316,12 +322,13 @@ def fit(
             losses, nums = zip(
                 *[loss_batch(model, loss_func, xb, yb) for xb, yb in valid_dl]
             )
-            unorm_losses, un_nums = zip(
+            inv_losses, inv_nums = zip(
                 *[
-                    loss_un_batch(model, loss_func, xb, yb, t_scaler)
+                    inv_loss_batch(model, loss_func, xb, yb, t_scaler)
                     for xb, yb in valid_dl
                 ]
             )
+
         # Weighted sum of mean loss per batch. Batches may not be identical.
         val_loss = np.sum(np.multiply(losses, nums)) / np.sum(nums)
         valid_loss.append(val_loss)
@@ -331,36 +338,36 @@ def fit(
         val_rs = 1 - (val_loss / val_var)
         valid_rs.append(val_rs)
 
-        # Unscaled validation loss
-        val_un_loss = np.sum(np.multiply(unorm_losses, un_nums)) / np.sum(
-            un_nums
+        # Weighted sum of mean unscaled loss per batch.
+        # Batches may not be identical.
+        val_inv_loss = np.sum(np.multiply(inv_losses, inv_nums)) / np.sum(
+            inv_nums
         )
-        valid_unorm_loss.append(val_un_loss)
+        valid_inv_loss.append(val_inv_loss)
 
-        # Unormalized R^2
+        # Unscaled R^2
         if t_scaler is not None:
             to_inv = lambda x: torch.from_numpy(
                 t_scaler.inverse_transform(x.numpy())
             )
-            val_un_var = (
+            val_inv_var = (
                 torch.cat([to_inv(yb) for xb, yb in valid_dl]).var().item()
             )
-            val_un_rs = 1 - (val_un_loss / val_un_var)
-            valid_un_rs.append(val_un_rs)
+            val_inv_rs = 1 - (val_inv_loss / val_inv_var)
+            valid_inv_rs.append(val_inv_rs)
         else:
-            val_un_rs = 0
+            val_inv_rs = 0
 
         print(
-            "[{}]\n Epoch: {:02d}  MSE: {:8.7f}  R^2: {: 8.7f} uMSE: {:2.7f}  uR^2: {: 2.7f}".format(
-                arrow.now(), epoch, val_loss, val_rs, val_un_loss, val_un_rs
+            "[{}]\n Epoch: {:02d}  MSE: {:8.7f}  R^2: {: 8.7f}\
+                    uMSE: {:2.7f}  uR^2: {: 2.7f}".format(
+                arrow.now(), epoch, val_loss, val_rs, val_inv_loss, val_inv_rs
             )
         )
     # Log losses
     np.savetxt(path / ("train_bloss_" + hyper_str + ".csv"), batch_loss)
     np.savetxt(path / ("valid_loss_" + hyper_str + ".csv"), valid_loss)
     np.savetxt(path / ("valid_rs_" + hyper_str + ".csv"), valid_rs)
-    return (
-        batch_loss,
-        valid_loss,
-        valid_rs,
-    )
+    np.savetxt(path / ("valid_inv_loss_" + hyper_str + ".csv"), valid_inv_loss)
+    np.savetxt(path / ("valid_inv_rs_" + hyper_str + ".csv"), valid_inv_rs)
+    return (batch_loss, valid_loss, valid_inv_loss)

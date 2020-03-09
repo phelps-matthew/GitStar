@@ -82,7 +82,7 @@ def main():
 
     # Generate descriptive parameter string (for pngs and csvs)
     model_str = dff.hyper_str(
-        h_layers, lr, opt, a_fn, batch_size, epochs, prefix="stars_ge_100_"
+        h_layers, lr, opt, a_fn, batch_size, epochs, prefix="log_stars_ge_100_"
     )
     print(model_str)
 

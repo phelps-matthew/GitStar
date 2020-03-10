@@ -279,7 +279,7 @@ def main():
     # g = sns.jointplot("stargazers", "forkCount", trans_df, kind="reg")
     g = sns.PairGrid(trans_df, vars=("stargazers", "commitnum"))
     g = g.map_diag(sns.distplot)
-    g = g.map_offdiag(sns.kde, shade=True)
+    g = g.map_offdiag(sns.kdeplot, shade=True)
 
     xlabels, ylabels = [], []
     for ax in g.axes[-1, :]:

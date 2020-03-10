@@ -14,6 +14,7 @@ setup(
         "matplotlib",
         "arrow",
         "pyodbc",
+        "seaborn",
         "ipython",
         "ipdb",
     ],

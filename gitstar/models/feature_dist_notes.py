@@ -274,12 +274,13 @@ def main():
     ]
     trans_df = df.copy()
     trans_df = GitStarDataset(trans_df).df
+    print(len(trans_df))
     # Plotting
     sns.set()
     # g = sns.jointplot("stargazers", "forkCount", trans_df, kind="reg")
-    g = sns.PairGrid(trans_df, vars=['stargazers','commitnum'])
+    g = sns.PairGrid(trans_df, vars=plotvars)
     g = g.map_diag(sns.distplot)
-    g = g.map_offdiag(sns.kdeplot, shade=True)
+    g = g.map_offdiag(sns.scatterplot, alpha=0.5)
 
     xlabels, ylabels = [], []
     for ax in g.axes[-1, :]:
@@ -297,7 +298,7 @@ def main():
     plt.tight_layout()
     #plt.show()
     g.fig.savefig(
-        str(IMG_PATH / "full_seaborn/log_canonical_scatter.pdf"),
+        str(IMG_PATH / "full_seaborn/log_canonical_kde.pdf"),
         transparent=False,
         dpi=300,
         bbox_inches="tight",

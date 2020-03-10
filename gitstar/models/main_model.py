@@ -71,8 +71,8 @@ def main():
 
     # Hyperparameters
     lr = 10 ** (-5)
-    h_layers = [64, 32]
-    epochs = 1000
+    h_layers = [32, 16]
+    epochs = 100
     a_fn = F.relu
 
     # Intialize model (w/ GPU support), optimization method, and loss function
@@ -83,7 +83,7 @@ def main():
 
     # Generate descriptive parameter string (for pngs and csvs)
     model_str = dff.hyper_str(
-        h_layers, lr, opt, a_fn, batch_size, epochs, prefix="log_stars_ge_100_"
+        h_layers, lr, opt, a_fn, batch_size, epochs, prefix="log_"
     )
     print(model_str)
 

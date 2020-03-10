@@ -249,50 +249,49 @@ def main():
         "updated": MinMaxScaler(),
     }
     t_logs = {"stargazers": Log10Transformer()}
+
     df = pd.read_csv(DATA_PATH / FILE).astype("float64")
     df = df.loc[df["stargazers"] >= 5000]
     trans_df = df.copy()
+    trans_df = GitStarDataset(trans_df).df
     # Plotting
     sns.set()
-    fig, axes = plt.subplots(3, 1)
-    col = "stargazers"
-    feature_transform(trans_df, {col: IdentityTransformer()})
-    sns.distplot(trans_df[col], ax=axes[0])
-    trans_df = df.copy()
-    feature_transform(trans_df, {col: Log10Transformer()})
-    sns.distplot(trans_df[col], ax=axes[1])
-    trans_df = df.copy()
-    feature_transform(trans_df, {col: MinMaxScaler()})
-    sns.distplot(trans_df[col], ax=axes[2])
-    # sns.jointplot(x="openissues", y="stargazers", data=df, alpha=0.4)
-    # multi_scatter = sns.pairplot(
-    #    data=trans_df,
-    #    vars=(
-    #        "stargazers",
-    #        "closedissues",
-    #        "watchers",
-    #        "forkCount",
-    #        "commitnum",
-    #        "pullRequests",
-    #        "updated",
-    #        "created",
-    #    ),
-    #    kind="reg",
-    #    diag_kind="kde",
-    #    diag_kws=dict(shade=True),
-    #    plot_kws={
-    #        "scatter_kws": {"alpha": 0.5},
-    #        "line_kws": {"color": "orange"},
-    #    },
+    g = sns.PairGrid(trans_df)
+    g = g.map_diag(sns.distplot)
+    g = g.map_offdiag(sns.scatterplot, alpha=0.5)
+
+    xlabels, ylabels = [], []
+    for ax in g.axes[-1, :]:
+        xlabel = ax.xaxis.get_label_text()
+        xlabels.append(xlabel)
+    for ax in g.axes[:, 0]:
+        ylabel = ax.yaxis.get_label_text()
+        ylabels.append(ylabel)
+    ylabels = [a if a else " " for a in ylabels]
+
+    for j in range(len(xlabels)):
+        for i in range(len(ylabels)):
+            g.axes[j, i].set(xlabel=xlabels[i], ylabel=ylabels[j])
+
+    # multi_scatter = sns.pairplot
+    #     data=trans_df,
+    #     vars=("stargazers", "closedissues", "updated", "created",),
+    #     kind="reg",
+    #     diag_kind="kde",
+    #     diag_kws=dict(shade=True),
+    #     plot_kws={
+    #         "scatter_kws": {"alpha": 0.5},
+    #         "line_kws": {"color": "orange"},
+    #     },
     # )
+    #plt.show()
     plt.tight_layout()
-    plt.show()
-    # multi_scatter.fig.savefig(
-    #     str(IMG_PATH / "full_seaborn/stars_log.png"),
-    #     transparent=False,
-    #     dpi=300,
-    #     bbox_inches="tight",
-    # )
+    g.fig.savefig(
+        str(IMG_PATH / "full_seaborn/stars_ge_50001_log.pdf"),
+        transparent=False,
+        dpi=300,
+        bbox_inches="tight",
+    )
 
 
 if __name__ == "__main__":

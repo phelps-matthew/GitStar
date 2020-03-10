@@ -277,9 +277,9 @@ def main():
     # Plotting
     sns.set()
     # g = sns.jointplot("stargazers", "forkCount", trans_df, kind="reg")
-    g = sns.PairGrid(trans_df, vars=("stargazers", "commitnum"))
+    g = sns.PairGrid(trans_df, vars=['stargazers','commitnum'])
     g = g.map_diag(sns.distplot)
-    g = g.map_offdiag(sns.scatterplot, alpha=0.5)
+    g = g.map_offdiag(sns.kdeplot, shade=True)
 
     xlabels, ylabels = [], []
     for ax in g.axes[-1, :]:
@@ -294,6 +294,15 @@ def main():
         for i in range(len(ylabels)):
             g.axes[j, i].set(xlabel=xlabels[i], ylabel=ylabels[j])
 
+    plt.tight_layout()
+    #plt.show()
+    g.fig.savefig(
+        str(IMG_PATH / "full_seaborn/log_canonical_scatter.pdf"),
+        transparent=False,
+        dpi=300,
+        bbox_inches="tight",
+    )
+
     # multi_scatter = sns.pairplot
     #    data=trans_df,
     #    vars=("stargazers", "closedissues", "updated", "created",),
@@ -305,15 +314,6 @@ def main():
     #        "line_kws": {"color": "orange"},
     #    },
     # )
-    plt.tight_layout()
-    #plt.show()
-    g.fig.savefig(
-        str(IMG_PATH / "full_seaborn/log_canonical_scatter.pdf"),
-        transparent=False,
-        dpi=300,
-        bbox_inches="tight",
-    )
-
 
 if __name__ == "__main__":
     try:

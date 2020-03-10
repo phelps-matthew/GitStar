@@ -267,7 +267,7 @@ def main():
 
     df = pd.read_csv(DATA_PATH / FILE).astype("float64")
     df = df.loc[
-        (df["stargazers"] >= 10)
+        (df["stargazers"] >= 10000)
         & (df["closedissues"] > 0)
         & (df["commitnum"] > 1)
         & (df["readme_bytes"] > 0)
@@ -277,9 +277,9 @@ def main():
     # Plotting
     sns.set()
     # g = sns.jointplot("stargazers", "forkCount", trans_df, kind="reg")
-    g = sns.PairGrid(trans_df, vars=plotvars)
+    g = sns.PairGrid(trans_df, vars=("stargazers", "commitnum"))
     g = g.map_diag(sns.distplot)
-    g = g.map_offdiag(sns.scatterplot, shade=True)
+    g = g.map_offdiag(sns.kde, shade=True)
 
     xlabels, ylabels = [], []
     for ax in g.axes[-1, :]:
@@ -306,9 +306,9 @@ def main():
     #    },
     # )
     plt.tight_layout()
-    plt.show()
+    #plt.show()
     g.fig.savefig(
-        str(IMG_PATH / "full_seaborn/log_canonical_scatter.pdf"),
+        str(IMG_PATH / "full_seaborn/log_canonical_kde.pdf"),
         transparent=False,
         dpi=300,
         bbox_inches="tight",

@@ -244,21 +244,42 @@ def main():
         "diskUsage_kb": Log10Transformer(),
         "projects": Log10Transformer(),
         "milestones": Log10Transformer(),
+        "releases": Log10Transformer(),
         "issuelabels": MinMaxScaler(),
         "created": MinMaxScaler(),
         "updated": MinMaxScaler(),
     }
     t_logs = {"stargazers": Log10Transformer()}
 
+    plotvars = (
+        "stargazers",
+        "openissues",
+        "closedissues",
+        "forkCount",
+        "pullRequests",
+        "commitnum",
+        "watchers",
+        "readme_bytes",
+        "diskUsage_kb",
+        "created",
+        "updated",
+    )
+
     df = pd.read_csv(DATA_PATH / FILE).astype("float64")
-    df = df.loc[df["stargazers"] >= 5000]
+    df = df.loc[
+        (df["stargazers"] >= 10)
+        & (df["closedissues"] > 0)
+        & (df["commitnum"] > 1)
+        & (df["readme_bytes"] > 0)
+    ]
     trans_df = df.copy()
     trans_df = GitStarDataset(trans_df).df
     # Plotting
     sns.set()
-    g = sns.PairGrid(trans_df)
+    # g = sns.jointplot("stargazers", "forkCount", trans_df, kind="reg")
+    g = sns.PairGrid(trans_df, vars=plotvars)
     g = g.map_diag(sns.distplot)
-    g = g.map_offdiag(sns.scatterplot, alpha=0.5)
+    g = g.map_offdiag(sns.scatterplot, shade=True)
 
     xlabels, ylabels = [], []
     for ax in g.axes[-1, :]:
@@ -274,20 +295,20 @@ def main():
             g.axes[j, i].set(xlabel=xlabels[i], ylabel=ylabels[j])
 
     # multi_scatter = sns.pairplot
-    #     data=trans_df,
-    #     vars=("stargazers", "closedissues", "updated", "created",),
-    #     kind="reg",
-    #     diag_kind="kde",
-    #     diag_kws=dict(shade=True),
-    #     plot_kws={
-    #         "scatter_kws": {"alpha": 0.5},
-    #         "line_kws": {"color": "orange"},
-    #     },
+    #    data=trans_df,
+    #    vars=("stargazers", "closedissues", "updated", "created",),
+    #    kind="reg",
+    #    diag_kind="kde",
+    #    diag_kws=dict(shade=True),
+    #    plot_kws={
+    #        "scatter_kws": {"alpha": 0.5},
+    #        "line_kws": {"color": "orange"},
+    #    },
     # )
-    #plt.show()
     plt.tight_layout()
+    plt.show()
     g.fig.savefig(
-        str(IMG_PATH / "full_seaborn/stars_ge_50001_log.pdf"),
+        str(IMG_PATH / "full_seaborn/log_canonical_scatter.pdf"),
         transparent=False,
         dpi=300,
         bbox_inches="tight",

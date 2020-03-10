@@ -54,7 +54,12 @@ def main():
     # Load data. Apply scaler transformations to training data. Get DataLoader.
     batch_size = 64
     df = pd.read_csv(DATA_PATH / FILE).astype("float64")
-    df = df.loc[df["stargazers"] >= 1]
+    df = df.loc[
+        (df["stargazers"] >= 10)
+        & (df["closedissues"] > 0)
+        & (df["commitnum"] > 1)
+        & (df["readme_bytes"] > 0)
+    ]
     train_df, valid_df = split_df(df, sample_frac=1)
     train_ds = GitStarDataset(train_df)
     valid_ds = GitStarDataset(
@@ -83,7 +88,7 @@ def main():
 
     # Generate descriptive parameter string (for pngs and csvs)
     model_str = dff.hyper_str(
-        h_layers, lr, opt, a_fn, batch_size, epochs, prefix="log_"
+        h_layers, lr, opt, a_fn, batch_size, epochs, prefix="log_canonical_"
     )
     print(model_str)
 

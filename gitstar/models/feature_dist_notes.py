@@ -78,12 +78,8 @@ def main():
     # g = sns.regplot(x, y, data=data, ax=g.ax_joint, scatter=False)
     plt.tight_layout()
     plt.show()
-    # g.fig.savefig(
-    #     str(IMG_PATH / "log_canonical_scatter2.pdf"),
-    #     transparent=False,
-    #     dpi=300,
-    #     bbox_inches="tight",
-    # )
+
+    save_fig(g.fig, IMG_PATH/"log_canonical_scatter2.pdf")
 
     # multi_scatter = sns.pairplot
     #    kind="reg",
@@ -96,9 +92,30 @@ def main():
     # )
 
 
+def save_fig(fig, path):
+    """
+    Generate figure.
+
+    Parameters
+    ----------
+    fig : matplotlib.plt.fig
+    path : str or Path
+    
+    Returns
+    -------
+    None
+    """
+    fig.savefig(
+        str(path),
+        transparent=False,
+        dpi=300,
+        bbox_inches="tight",
+    )
+
+
 def linreg_print(x, y, data):
     """
-    Prints relevant stats.
+    Print linear regression stats.
 
     Parameters
     ----------

@@ -77,7 +77,7 @@ def main():
     # Hyperparameters
     lr = 10 ** (-5)
     h_layers = [32, 16]
-    epochs = 100
+    epochs = 1000
     a_fn = F.relu
 
     # Intialize model (w/ GPU support), optimization method, and loss function

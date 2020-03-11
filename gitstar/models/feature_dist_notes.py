@@ -298,7 +298,7 @@ def main():
     plt.tight_layout()
     #plt.show()
     g.fig.savefig(
-        str(IMG_PATH / "full_seaborn/log_canonical_kde.pdf"),
+        str(IMG_PATH / "full_seaborn/log_canonical_scatter2.pdf"),
         transparent=False,
         dpi=300,
         bbox_inches="tight",

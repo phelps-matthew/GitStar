@@ -52,6 +52,7 @@ FEATURE_SCALERS = {
     "descr_len": Log10Transformer(),
     "diskUsage_kb": Log10Transformer(),
     "projects": Log10Transformer(),
+    "releases": Log10Transformer(),
     "milestones": Log10Transformer(),
     "issuelabels": MinMaxScaler(),
     "created": MinMaxScaler(),

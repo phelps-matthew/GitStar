@@ -48,12 +48,12 @@ def main():
     df = pd.read_csv(DATA_PATH / FILE).astype("float64")
     data = canonical_data(df)
     data_time = data.copy()
-    data_time.loc[:,'updated'] = 10**(-6)*(data.loc[:,'updated'].values)
-    data_time.loc[:,'created'] = 10**(-12)*(data.loc[:,'created'].values)
+    data_time.loc[:, "updated"] = 10 ** (-6) * (data.loc[:, "updated"].values)
+    data_time.loc[:, "created"] = 10 ** (-12) * (data.loc[:, "created"].values)
 
     # Pair wise plotting columns
-    x = "updated"
-    y = "stargazers"
+    x = "openissues"
+    y = "closedissues"
     linreg_print(x, y, data)
 
     # Initialize plot setup
@@ -62,10 +62,8 @@ def main():
     # sns.set_context("talk")
 
     # Plots
-    p = sns.JointGrid(x, y, data_time)
-    p = p.plot_joint(
-        plt.hexbin, mincnt=1, cmap=cmap, gridsize=60, edgecolors="white",
-    )
+    p = sns.JointGrid(x, y, data)
+    p = p.plot_joint(plt.hexbin, mincnt=1, cmap=cmap, gridsize=65)
     p.plot_marginals(sns.distplot)
 
     # Scale to be square, plot regression
@@ -78,27 +76,27 @@ def main():
     p.ax_joint.set_ylim(reg_ylim[0], y2max)
 
     # Retitle if desired
-    p.set_axis_labels(xlabel="Last Pushed", ylabel="Stars")
+    p.set_axis_labels(xlabel="Open Issues (0 -> 10^(-1))", ylabel="Closed Issues")
 
     # For timelike data
-    xticks = p.ax_joint.get_xticks()
-    p.ax_joint.set_xticklabels(
-        [
-            pd.to_datetime(10**6*tm, unit="s").strftime("%Y-%m-%d")
-            for tm in xticks
-        ],
-        rotation=50,
-    )
+    #xticks = p.ax_joint.get_xticks()
+    #p.ax_joint.set_xticklabels(
+    #   [
+    #       pd.to_datetime(10**12*tm, unit="s").strftime("%Y-%m")
+    #       for tm in xticks
+    #   ],
+    #   rotation=50,
+    #)
 
     # Format log style axes. Annotate stats.
-    # p.ax_joint.xaxis.set_major_formatter(formatter)
+    p.ax_joint.xaxis.set_major_formatter(formatter)
     p.ax_joint.yaxis.set_major_formatter(formatter)
     p.annotate(stats.pearsonr)
     plt.tight_layout()
     #plt.show()
 
     # Save figure
-    save_fig(p.fig, IMG_PATH / "stars_updated_hex_reg.png")
+    save_fig(p.fig, IMG_PATH / "canonical_closed_openissues.png")
 
 
 def get_xylims(axes1_x, axes1_y, axes2_x, axes2_y):

@@ -5,7 +5,7 @@ GitStar is a trained neural network that analyzes a given public GitHub reposito
 
 Here is a representation of the general methodology
 
-![Flowchart](mermaid-diagram-20200316182624.png)
+![Flowchart](/presentation/mermaid-diagram-20200316183058.png)
 
 ## Table of Contents
   * [Installation](#installation)

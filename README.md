@@ -3,12 +3,10 @@
 ## What is GitStar?
 GitStar is a trained neural network that analyzes a given public GitHub repository and attempts to predict its star number. Implemented in pytroch, GitStar uses a large variety of GitHub heuristics to make star number estimates.
 
-Here is a representation of the general methodology
-
-![Flowchart](/presentation/mermaid-diagram-20200316183058.png)
 
 ## Table of Contents
   * [Installation](#installation)
+  * [Process Overview](#process-overview)
   * [Usage](#usage)
     + [ETL (Extract, Transform, Load)](#etl--extract--transform--load-)
       - [GraphQL](#graphql)
@@ -44,6 +42,11 @@ pip install <my_dir>
 # Or, to make package editable
 pip install -e <my_dir>
 ```
+## Process Overview
+Here is a representation of the general methodology, from generating data to training the network. 
+
+![Flowchart](/presentation/mermaid-diagram-20200316183058.png)
+
 ## Usage
 The package is divided into two stages: data collection (extract, transfrom, load - ETL) and model training/optimization (models). The file tree below contains the public modules
 ```

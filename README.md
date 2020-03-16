@@ -6,7 +6,7 @@ GitStar is a trained neural network that analyzes a given public GitHub reposito
 
 ## Table of Contents
   * [Installation](#installation)
-  * [End-to-end Overview](#end--to--end-overview)
+  * [End-to-end Overview](#end-to-end-overview)
   * [Usage](#usage)
     + [ETL (Extract, Transform, Load)](#etl)
       - [GraphQL](#graphql)
@@ -44,6 +44,7 @@ pip install -e <my_dir>
 ```
 ## End-to-end Overview
 Here is a representation of the general methodology, from generating data to training the network. 
+
 ![Flowchart](/presentation/mermaid-diagram-svg.svg)
 
 ## Usage

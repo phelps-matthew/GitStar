@@ -44,8 +44,6 @@ pip install -e <my_dir>
 ```
 ## Process Overview
 Here is a representation of the general methodology, from generating data to training the network. 
-
-![Flowchart](/presentation/mermaid-diagram-20200316183058.png)
 ![Flowchart](/presentation/mermaid-diagram-svg.svg)
 
 ## Usage

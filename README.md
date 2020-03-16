@@ -46,6 +46,7 @@ pip install -e <my_dir>
 Here is a representation of the general methodology, from generating data to training the network. 
 
 ![Flowchart](/presentation/mermaid-diagram-20200316183058.png)
+![Flowchart](/presentation/mermaid-diagram-svg.svg)
 
 ## Usage
 The package is divided into two stages: data collection (extract, transfrom, load - ETL) and model training/optimization (models). The file tree below contains the public modules

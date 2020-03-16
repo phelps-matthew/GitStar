@@ -11,21 +11,21 @@ GitStar is a trained neural network that analyzes a given public GitHub reposito
 
 ## Installation
 
-* Clone into desired directory (denoted as `.`)
+* Clone into directory `<my_dir>`
 ```
 git clone https://github.com/phelps-matthew/GitStar.git
 ```
 * Enable virtual environment (optional)
 ```
 python -m venv myvenv
-. venv/bin/activate
+<my_dir> venv/bin/activate
 ```
 * Install package
 ``` 
-pip install .
+pip install <my_dir>
 
 # Or, to make package editable
-pip install -e .
+pip install -e <my_dir>
 ```
 ## Usage
 The package is divided into two stages: data collection (extract, transfrom, load - ETL) and model training/optimization (models). The file tree below contains the public modules
@@ -87,3 +87,29 @@ query searchmp($myq: String!, $maxItems: Int, $cursor: String) {
    "maxItems" : 5
 }
 ```
+#### gqlquery
+adsf
+#### gstransform
+asdf
+#### main_etl
+asdf
+#### config_sample
+asdf
+### models
+asdf
+#### datanorm
+asdf
+#### dataload
+asdf
+#### deepfeedforward
+asdf
+#### main_model
+asdf
+
+## Results
+### Model Performance
+asdf
+### Feature Correlations
+asdf
+### Considerations
+asdf

@@ -8,7 +8,7 @@ GitStar is a trained neural network that analyzes a given public GitHub reposito
   * [Installation](#installation)
   * [Process Overview](#process-overview)
   * [Usage](#usage)
-    + [ETL (Extract, Transform, Load)](#etl--extract--transform--load-)
+    + [ETL (Extract, Transform, Load)](#etl)
       - [GraphQL](#graphql)
       - [gqlquery](#gqlquery)
       - [gstransform](#gstransform)
@@ -46,6 +46,7 @@ pip install -e <my_dir>
 Here is a representation of the general methodology, from generating data to training the network. 
 
 ![Flowchart](/presentation/mermaid-diagram-20200316183058.png)
+![Flowchart](/presentation/mermaid-diagram-svg.svg)
 
 ## Usage
 The package is divided into two stages: data collection (extract, transfrom, load - ETL) and model training/optimization (models). The file tree below contains the public modules
@@ -64,8 +65,10 @@ The package is divided into two stages: data collection (extract, transfrom, loa
 ├── README.md
 └── setup.py
 ```
-### ETL (Extract, Transform, Load)
+
+### ETL
 The GitHub heuristics that are to serve as inputs for the NN are obtained by querying GitHub's [API](https://developer.github.com/v4/), which is based on the GraphQL query language. 
+
 #### GraphQL
 Here is a subsample of a graphQL query that uses specific criteria (stored in `myq`) to search through public repositories and returns, among other things, nameWithOwner, readme_size, and stargazers. The use of inline fragments, variables, and aliases prove to helpful and even necessary for some features (see [graphql.org/learn](https://graphql.org/learn/)). The full query used to train the NN is located in `gitstar/ETL/GQL_QUERIES/QUERY`.
 ```graphql

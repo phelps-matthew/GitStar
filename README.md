@@ -71,7 +71,7 @@ The GitHub heuristics that are to serve as inputs for the NN are obtained by que
 #### GraphQL
 Here is a subsample of a graphQL query that uses specific criteria (stored in `myq`) to search through public repositories and returns, among other things, nameWithOwner, readme_size, and stargazers. The use of inline fragments, variables, and aliases prove to helpful and even necessary for some features (see [graphql.org/learn](https://graphql.org/learn/)). The full query used to train the NN is located in `gitstar/ETL/GQL_QUERIES/QUERY`.
 ```graphql
-query searchmp($myq: String!, $maxItems: Int, $cursor: String) {
+query GitStarSearch($myq: String!, $maxItems: Int, $cursor: String) {
   rateLimit {
     limit
     cost

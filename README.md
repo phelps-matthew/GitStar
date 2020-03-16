@@ -8,7 +8,7 @@ GitStar is a trained neural network that analyzes a given public GitHub reposito
   * [Installation](#installation)
   * [Process Overview](#process-overview)
   * [Usage](#usage)
-    + [ETL (Extract, Transform, Load)](#etl--extract--transform--load-)
+    + [ETL (Extract, Transform, Load)](#etl)
       - [GraphQL](#graphql)
       - [gqlquery](#gqlquery)
       - [gstransform](#gstransform)
@@ -65,7 +65,7 @@ The package is divided into two stages: data collection (extract, transfrom, loa
 └── setup.py
 ```
 
-### ETL (Extract, Transform, Load)
+### ETL
 The GitHub heuristics that are to serve as inputs for the NN are obtained by querying GitHub's [API](https://developer.github.com/v4/), which is based on the GraphQL query language. 
 
 #### GraphQL

@@ -69,7 +69,7 @@ The package is divided into two stages: data collection (extract, transfrom, loa
 The GitHub heuristics that are to serve as inputs for the NN are obtained by querying GitHub's [API](https://developer.github.com/v4/), which is based on the GraphQL query language. 
 
 #### GraphQL
-Here is a subsample of a graphQL query that uses specific criteria (stored in `myq`) to search through public repositories. It returns, among other things, nameWithOwner, readme_size, and stargazers. The use of inline fragments, variables, and aliases prove to helpful and even necessary for some features (see [graphql.org/learn](https://graphql.org/learn/)). The full query used to train the NN is located in `gitstar/ETL/GQL_QUERIES/QUERY`.
+Here is a subsample of a graphQL query that uses specific criteria (stored in `myq`) to search through public repositories. This simple example returns, among other things, nameWithOwner, readme_size, and stargazers. The use of GraphQL features such as inline fragments, variables, and aliases prove to helpful (and at times are necessary, see [graphql.org/learn](https://graphql.org/learn/)). The full query with all features used to train the NN is located in `gitstar/ETL/GQL_QUERIES/QUERY`.
 ```graphql
 query GitStarSearch($myq: String!, $maxItems: Int, $cursor: String) {
   rateLimit {

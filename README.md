@@ -9,6 +9,7 @@ Here is a representation of the elements contained in GitStar.
 graph LR
    a --> b & c--> d
 ```
+
 ```mermaid
 graph LR
 A[Hard edge] -->B(Round edge)

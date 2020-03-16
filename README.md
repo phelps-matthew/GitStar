@@ -22,9 +22,9 @@ pip install .
 # Or, to make package editable
 pip install -e .
 ```
-### Usage
+## Usage
+The package is divided into two stages: data collection (extract, transfrom, load - ETL) and model training/optimization (models). Confer the file tree below.
 ```
-.
 ├── gitstar
 │   ├── ETL
 │   │   ├── gqlquery.py
@@ -38,8 +38,6 @@ pip install -e .
 │   └── config_sample.py
 ├── README.md
 └── setup.py
-
-20 directories, 739 files
 ```
-#### ETL (Extract, Transform, Load)
-asdf
+###ETL (Extract, Transform, Load)
+The features that the NN uses are obtained by querying GitHubs API. Specifically, 

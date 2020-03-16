@@ -43,12 +43,12 @@ pip install <my_dir>
 pip install -e <my_dir>
 ```
 ## End-to-end Overview
-Here is a representation of the general methodology, from generating data to training the network. 
+Here is a representation of the processes executed in Gitstar, as we go from collecting the data to training the final network.
 
 ![Flowchart](/presentation/mermaid-diagram-svg.svg)
 
 ## Usage
-The package is divided into two stages: data collection (extract, transfrom, load - ETL) and model training/optimization (models). The file tree below contains the public modules
+The package is divided into two stages: data collection (extract, transfrom, load - ETL) and model training/optimization (models). The file tree below highlights the location of the the public modules.
 ```
 ├── gitstar
 │   ├── ETL

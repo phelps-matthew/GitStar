@@ -3,6 +3,20 @@
 ## What is GitStar?
 GitStar is a trained neural network that analyzes a given public GitHub repository and attempts to predict its star number. Implemented in pytroch, GitStar uses a large variety of GitHub heuristics to make star number estimates.
 
+Here is a representation of the elements contained in GitStar.
+
+```mermaid
+graph LR
+   a --> b & c--> d
+```
+```mermaid
+graph LR
+A[Hard edge] -->B(Round edge)
+    B --> C{Decision}
+    C -->|One| D[Result one]
+    C -->|Two| E[Result two]
+```
+
 ## Table of Contents
   * [Installation](#installation)
   * [Usage](#usage)

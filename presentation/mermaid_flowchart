@@ -1,0 +1,20 @@
+graph TB
+f1(feature 1) --> A
+f2(feature 2) --> A
+f3(feature ..) --> A
+f4(feautre n) --> A
+A(GraphQL Query) --> B(GraphQL Response)
+B --> C(clean, transform)
+C --> D(Azure MSSQL DB)
+D --> |Streaming ETL|A
+D --> |SQL transformations|D
+D --> E(Scaling Transforms)
+G3(Plot Feature-Target Relationships)
+E --> F(Dataset Loaders)
+F --> G(Azure VM)
+G --> G2(Correlation Matrix)
+G2 --> G3
+G --> H(Neural Net)
+I(Training, Optimization, Validation) --> H
+H --> I
+H --> J(Application)

@@ -111,7 +111,46 @@ query searchmp($myq: String!, $maxItems: Int, $cursor: String) {
 }
 ```
 #### gqlquery
-adsf
+
+Once a GraphQL query is formed, we must send it to the GitHub API enpoint and capture the response. This is implemented through HTTP POST queries from the `requests` package. The class `GraphQLQuery` serves as a constructor for implementingGraphQL specific requests through the `gql_response` method. It is simply a wrapper around `requests.post` to accept `query` and `variable` arguments.  For example,
+```python
+QUERY = """\
+query {
+  viewer {
+    login
+    name
+  }
+}
+"""
+ENDPOINT_URL = "https://api.github.com/graphql"
+PAT = "<A PERSONAL ACCESS TOKEN>"
+headers={"Authorization": "token {}".format(PAT)},
+
+my_request = GraphQLQuery(headers, ENDPOINT_URL, QUERY)
+my_response = my_request.gql_response()
+```
+Worth noting is that `gql_response` also handles GraphQL based response errors.
+
+The class `GitHubGraphQLQuery` simply intializes `GraphQLQuery` with the GitHub API endpoint and passes a supplied OAuthtoken into the header.
+
+```python
+QUERY = """\
+query {
+  viewer {
+    login
+    name
+  }
+}
+"""
+PAT = "<A PERSONAL ACCESS TOKEN>"
+
+my_request = GraphQLQuery(PAT, QUERY)
+my_response = my_request.gql_response()
+```
+
+
+
+
 #### gstransform
 asdf
 #### main_etl

@@ -91,7 +91,7 @@ def gql_generator(c_start, pushed_start, pushed_end=None):
     """Construct graphql query response generator based on repo creation date.
         Date range {}..{} is inclusive.
     """
-    gql_gen = gqlquery.GitHubSearchQuery(
+    gql_gen = gqlquery.GitStarSearchQuery(
         PAT,
         created_start=c_start,
         created_end=c_start,

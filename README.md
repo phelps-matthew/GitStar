@@ -128,7 +128,7 @@ headers={"Authorization": "token {}".format(PAT)},
 my_request = GraphQLQuery(headers, ENDPOINT_URL, QUERY)
 my_response = my_request.gql_response()
 ```
-Worth noting is that `gql_response` also handles GraphQL based response errors.
+Also of importance, `gql_response` handles GraphQL based response errors. If a timeout from GitHub's API is detected, the function will wait 60 seconds before reattempting. Based on the current state of GitHub's API, timeouts are inevitable.
 
 The class `GitHubGraphQLQuery` simply intializes `GraphQLQuery` with the GitHub API endpoint and passes a supplied OAuthtoken into the header.
 
@@ -146,6 +146,34 @@ PAT = "<A PERSONAL ACCESS TOKEN>"
 my_request = GraphQLQuery(PAT, QUERY)
 my_response = my_request.gql_response()
 ```
+
+Class `GitStarSearchQuery` now gets very specific and implements a GitStar specific query stored in `gistar/ETL/GQL_QUERIES/QUERY`. In addition, it imposes search criteria `["archived:false", "mirror:false", "fork:true"]`. In future versions, it may make sense to present a `GitHubSearchQuery` class for more flexibility in the query and query variables.
+`GitStarSearchQuery` is initialized with dates in the form of `arrow` objects, which serve as an alternative to datetime.
+The search query is designed around ranges of stars, push dates, and created dates.
+```python
+PAT = "<A PERSONAL ACCESS TOKEN>"
+CREATED_START = arrow.get("2018-09-21")
+CREATED_END = arrow.get("2019-12-31")
+PUSH_START = arrow.get("2020-01-01")
+MAXITEMS = 50
+MINSTARS = 1
+MAXSTARS = None
+
+gql_gen = gqlquery.GitStarSearchQuery(
+    PAT,
+    created_start=c_start,
+    created_end=c_start,
+    pushed_start=pushed_start,
+    pushed_end=pushed_end,
+    maxitems=MAXITEMS,
+    minstars=MINSTARS,
+    maxstars=MAXSTARS,
+)
+```
+Within GraphQL, the entire response corresponding to a query is partitioned into pages that must be accessed by iterating over multiple sub-queries until an end condition is met. This process, called pagination, is accomplished through the `gql_generator` method which returns a generator function. When iterated, the generator calls `self.gql_response()` and obtains the relevant pagination variables from the response. Based on the pagination variables, API rate limit conditions are checked. If the limits are exceeded, an appropriate sleep time is calculated and executed. 
+
+
+In order to collect the entire response corres, the graphQL query must be properly paginated. 
 
 
 

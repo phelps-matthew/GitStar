@@ -69,7 +69,7 @@ class GitHubGraphQLQuery(GraphQLQuery):
         )
 
 
-class GitHubSearchQuery(GitHubGraphQLQuery):
+class GitStarSearchQuery(GitHubGraphQLQuery):
     """Implements graphql search query to fetch fields from GitHub. Pagination
         field 'pageInfo' is specific to GitHub's 'search' connection, hence
         this subclass is made for searches only.
@@ -95,13 +95,13 @@ class GitHubSearchQuery(GitHubGraphQLQuery):
         maxstars=None,
     ):
         super().__init__(
-            PAT=PAT, query=GitHubSearchQuery.QUERY, variables=None,
+            PAT=PAT, query=GitStarSearchQuery.QUERY, variables=None,
         )
         # Form gql API variables to be passed with query
         self.variables["maxitems"] = maxitems
         self.variables["cursor"] = None
         # Copy class attribute list
-        searchq = GitHubSearchQuery.SEARCH_QUERY[:]
+        searchq = GitStarSearchQuery.SEARCH_QUERY[:]
         # Form search query string (gql variable)
         pushend = pushed_end.format("YYYY-MM-DD") if pushed_end else None
         searchq.extend(

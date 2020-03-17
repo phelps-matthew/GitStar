@@ -160,10 +160,9 @@ MAXSTARS = None
 
 gitstar_response = gqlquery.GitStarSearchQuery(
     PAT,
-    created_start=c_start,
-    created_end=c_start,
-    pushed_start=pushed_start,
-    pushed_end=pushed_end,
+    created_start=CREATED_START,
+    created_end=CREATED_END,
+    pushed_start=PUSH_START,
     maxitems=MAXITEMS,
     minstars=MINSTARS,
     maxstars=MAXSTARS,

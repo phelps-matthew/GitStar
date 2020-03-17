@@ -1,8 +1,7 @@
 # &#10031; GitStar 
 
 ## What is GitStar?
-GitStar is a trained neural network that analyzes a given public GitHub repository and attempts to predict its star number. Implemented in pytroch, GitStar uses a large variety of GitHub heuristics to make star number estimates.
-
+GitStar is a pipeline used to construct a neural network that analyzes a given public GitHub repository and attempts to predict its star number. Implemented in pytorch, GitStar uses a large variety of GitHub heuristics to make star number estimates.
 
 ## Table of Contents
   * [Installation](#installation)
@@ -159,7 +158,7 @@ MAXITEMS = 50
 MINSTARS = 1
 MAXSTARS = None
 
-gql_gen = gqlquery.GitStarSearchQuery(
+gitstar_response = gqlquery.GitStarSearchQuery(
     PAT,
     created_start=c_start,
     created_end=c_start,
@@ -170,10 +169,25 @@ gql_gen = gqlquery.GitStarSearchQuery(
     maxstars=MAXSTARS,
 )
 ```
-Within GraphQL, the entire response corresponding to a query is partitioned into pages that must be accessed by iterating over multiple sub-queries until an end condition is met. This process, called pagination, is accomplished through the `gql_generator` method which returns a generator function. When iterated, the generator calls `self.gql_response()` and obtains the relevant pagination variables from the response. Based on the pagination variables, API rate limit conditions are checked. If the limits are exceeded, an appropriate sleep time is calculated and executed. 
+Within GraphQL, the entire response corresponding to a query is partitioned into pages that must be accessed by iterating over multiple sub-queries until an end condition is met. This process, called pagination, is accomplished through the `gql_generator` method which returns a generator function. When iterated, the generator calls `self.gql_response()` and obtains the relevant pagination variables from the response.
+Based on the pagination variables, API rate limit conditions are checked. If the limits are exceeded, an appropriate sleep time is calculated and executed.
 
+You might be wondering, why a generator function? The answer is twofold. First, we need to pause the pagination in order to take the response and store it in a database. Secondly, the generator allows the user at the public level to control the execution flow based on any conditions involving the query response. 
 
-In order to collect the entire response corres, the graphQL query must be properly paginated. 
+There is one more important limitation of GitHubs API that is handled in the `gql_generator`. Though not stated anywhere in the GitHub API, for any search query that returns more than 1000 matching repositories, the pagination process will only return the first 1000. Such an event will throw an error belonging to class `RepoCountError`.
+Handling this error is left up to the end-user. For example, in `main_etl` this error is used to slice the search space into smaller parititions based on push date.
+
+Continuing the above example, we may utilize the generator as
+```python
+gitstar_gen = gitstar_response.gql_generator()
+
+try:
+    print(next(gitstar_gen))
+except StopIteration:
+    print("End of pagination")
+except gqlquery.RepoCountError:
+    print("Exceeded repo count")
+```
 
 
 

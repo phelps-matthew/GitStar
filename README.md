@@ -6,7 +6,7 @@ GitStar is a trained neural network that analyzes a given public GitHub reposito
 
 ## Table of Contents
   * [Installation](#installation)
-  * [Process Overview](#process-overview)
+  * [End-to-end Overview](#end-to-end-overview)
   * [Usage](#usage)
     + [ETL (Extract, Transform, Load)](#etl)
       - [GraphQL](#graphql)
@@ -42,14 +42,13 @@ pip install <my_dir>
 # Or, to make package editable
 pip install -e <my_dir>
 ```
-## Process Overview
-Here is a representation of the general methodology, from generating data to training the network. 
+## End-to-end Overview
+Here is a representation of the processes executed in Gitstar, as we go from collecting the data to training the final network.
 
-![Flowchart](/presentation/mermaid-diagram-20200316183058.png)
 ![Flowchart](/presentation/mermaid-diagram-svg.svg)
 
 ## Usage
-The package is divided into two stages: data collection (extract, transfrom, load - ETL) and model training/optimization (models). The file tree below contains the public modules
+The package is divided into two stages: data collection (extract, transfrom, load - ETL) and model training/optimization (models). The file tree below highlights the location of the the public modules.
 ```
 ├── gitstar
 │   ├── ETL
@@ -70,9 +69,9 @@ The package is divided into two stages: data collection (extract, transfrom, loa
 The GitHub heuristics that are to serve as inputs for the NN are obtained by querying GitHub's [API](https://developer.github.com/v4/), which is based on the GraphQL query language. 
 
 #### GraphQL
-Here is a subsample of a graphQL query that uses specific criteria (stored in `myq`) to search through public repositories and returns, among other things, nameWithOwner, readme_size, and stargazers. The use of inline fragments, variables, and aliases prove to helpful and even necessary for some features (see [graphql.org/learn](https://graphql.org/learn/)). The full query used to train the NN is located in `gitstar/ETL/GQL_QUERIES/QUERY`.
+Here is a subsample of a graphQL query that uses specific criteria (stored in `myq`) to search through public repositories. This simple example returns, among other things, nameWithOwner, readme_size, and stargazers. The use of GraphQL features such as inline fragments, variables, and aliases prove to helpful (and at times are necessary, see [graphql.org/learn](https://graphql.org/learn/)). The full query with all features used to train the NN is located in `gitstar/ETL/GQL_QUERIES/QUERY`.
 ```graphql
-query searchmp($myq: String!, $maxItems: Int, $cursor: String) {
+query GitStarSearch($myq: String!, $maxItems: Int, $cursor: String) {
   rateLimit {
     limit
     cost

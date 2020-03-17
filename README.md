@@ -181,13 +181,14 @@ Continuing the above example, we may utilize the generator as
 import json
 gitstar_gen = gitstar_response.gql_generator()
 
-try:
-    json_response = next(gistar_gen)
-    print(json.dumps(json_response, indent=4))
-except StopIteration:
-    print("End of pagination")
-except gqlquery.RepoCountError:
-    print("Exceeded repo count")
+while True:
+    try:
+        json_response = next(gistar_gen)
+        print(json.dumps(json_response, indent=4)) # pretty printing
+    except StopIteration:
+        print("End of pagination")
+    except gqlquery.RepoCountError:
+        print("Exceeded repo count")
 ```
 
 

@@ -44,7 +44,7 @@ pip install -e <my_dir>
 ## End-to-end Overview
 Here is a representation of the processes executed in Gitstar, as we go from collecting the data to training the final network.
 
-![Flowchart](/presentation/mermaid-diagram-svg2.svg)
+![Flowchart](/presentation/mermaid-diagram-svg.svg)
 
 ## Usage
 The package is divided into two stages: data `ETL` (extract, transfrom, load) and model training/optimization (`models`). The file tree below highlights the location of the the public modules.
@@ -68,7 +68,7 @@ The package is divided into two stages: data `ETL` (extract, transfrom, load) an
 The GitHub heuristics that are to serve as inputs for the NN are obtained by querying GitHub's [API](https://developer.github.com/v4/), which is based on the GraphQL query language. 
 
 #### GraphQL
-Here is a sample of a graphQL query that uses specific criteria (stored in `myq`) to search through public repositories. This simple example returns, among other things, nameWithOwner, readme_size, and stargazers. The use of GraphQL features such as inline fragments, variables, and aliases prove to helpful (and at times are necessary, see [graphql.org/learn](https://graphql.org/learn/)). The full query with all features used to train the NN is located in `gitstar/ETL/GQL_QUERIES/QUERY`.
+Here is a sample of a graphQL query that uses specific criteria (stored in `myq`) to search through public repositories. This simple example returns, among other things, nameWithOwner, readme_size, and stargazers. The use of GraphQL features such as inline fragments, variables, and aliases prove to helpful (and at times are necessary, see [graphql.org/learn](https://graphql.org/learn/)). The full query of 20+ features used to train the NN is located in `gitstar/ETL/GQL_QUERIES/QUERY`.
 ```graphql
 query GitStarSearch($myq: String!, $maxItems: Int, $cursor: String) {
   rateLimit {
@@ -178,10 +178,12 @@ Handling this error is left up to the end-user. For example, in `main_etl` this 
 
 Continuing the above example, we may utilize the generator as
 ```python
+import json
 gitstar_gen = gitstar_response.gql_generator()
 
 try:
-    print(next(gitstar_gen))
+    json_response = next(gistar_gen)
+    print(json.dumps(json_response, indent=4))
 except StopIteration:
     print("End of pagination")
 except gqlquery.RepoCountError:

@@ -12,6 +12,7 @@ import numpy as np
 import seaborn as sns
 from scipy import stats
 from matplotlib.colors import LinearSegmentedColormap
+from sklearn import linear_model
 
 from gitstar.models.dataload import GitStarDataset
 
@@ -24,9 +25,7 @@ FILE = "gs_table_v2.csv"
 SAMPLE_FILE = "10ksample.csv"
 
 # Custom color map for hex bin plot
-cmap = LinearSegmentedColormap.from_list(
-    "mycmap", ["#718ccc", "#3a4869", "#2e3a54", "#1f2638"]
-)
+cmap = LinearSegmentedColormap.from_list("mycmap", ["#6585cc", "#1d2438"])
 plotvars = (
     "stargazers",
     "openissues",
@@ -56,14 +55,14 @@ def main():
     y = "closedissues"
     linreg_print(x, y, data)
 
-    # Initialize plot setup
+    # Initializeplot setup
     formatter = FuncFormatter(log_label)
     sns.set()
     # sns.set_context("talk")
 
-    # Plots
+    # Plot scatter and histograms
     p = sns.JointGrid(x, y, data)
-    p = p.plot_joint(plt.hexbin, mincnt=1, cmap=cmap, gridsize=65)
+    ax1 = p.plot_joint(plt.hexbin, mincnt=1, cmap=cmap, gridsize=65)
     p.plot_marginals(sns.distplot)
 
     # Scale to be square, plot regression
@@ -75,28 +74,54 @@ def main():
     y2max = get_xylims(hex_xlim, hex_ylim, reg_xlim, reg_ylim)
     p.ax_joint.set_ylim(reg_ylim[0], y2max)
 
-    # Retitle if desired
-    p.set_axis_labels(xlabel="Open Issues (0 -> 10^(-1))", ylabel="Closed Issues")
+    # Label axes
+    p.set_axis_labels(xlabel="Open Issues*", ylabel="Closed Issues")
+
+    # Add colorbar
+    plt.subplots_adjust(left=0.2, right=0.8, top=0.8, bottom=0.2)  # shrink fig
+    cbar_ax = p.fig.add_axes([0.85, 0.25, 0.02, 0.4])  # new cbar ax obj
+    plt.colorbar(cax=cbar_ax)
+    cbar_ax.locator_params(nbins=3)  # 3 tick labels
 
     # For timelike data
-    #xticks = p.ax_joint.get_xticks()
-    #p.ax_joint.set_xticklabels(
+    # xticks = p.ax_joint.get_xticks()
+    # p.ax_joint.set_xticklabels(
     #   [
     #       pd.to_datetime(10**12*tm, unit="s").strftime("%Y-%m")
     #       for tm in xticks
     #   ],
     #   rotation=50,
-    #)
+    # )
 
     # Format log style axes. Annotate stats.
     p.ax_joint.xaxis.set_major_formatter(formatter)
     p.ax_joint.yaxis.set_major_formatter(formatter)
     p.annotate(stats.pearsonr)
-    plt.tight_layout()
-    #plt.show()
+    # plt.tight_layout()
+    # plt.show()
 
     # Save figure
-    save_fig(p.fig, IMG_PATH / "canonical_closed_openissues.png")
+    default_size = p.fig.get_size_inches()
+    p.fig.set_size_inches((default_size[0] * 1.2, default_size[1] * 1.2))
+    png_str = "canonical_{}_{}.png".format(y, x)
+    save_fig(p.fig, IMG_PATH / "improved" / png_str)
+
+    # Bayesian Linear Regression
+    # xdata = data[x].values.reshape(-1, 1)
+    # bayes = linear_model.BayesianRidge()
+    # bayes.fit(xdata, data[y])
+    # ymean, ystd = bayes.predict(xdata, return_std=True)
+    # fig, ax = plt.subplots()
+    # ax.plot(data[x].values, ymean)
+    # ax.fill_between(
+    #    data[x].values,
+    #    ymean - ystd,
+    #    ymean + ystd,
+    #    color="pink",
+    #    alpha=0.5,
+    #    label="predict std",
+    # )
+    # plt.show()
 
 
 def get_xylims(axes1_x, axes1_y, axes2_x, axes2_y):

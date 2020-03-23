@@ -55,8 +55,8 @@ FEATURE_SCALERS = {
     "releases": Log10Transformer(),
     "milestones": Log10Transformer(),
     "issuelabels": MinMaxScaler(),
-    "created": IdentityTransformer(),
-    "updated": IdentityTransformer(),
+    "created": MinMaxScaler(),
+    "updated": MinMaxScaler(),
 }
 TARGET_SCALER = {"stargazers": Log10Transformer()}
 

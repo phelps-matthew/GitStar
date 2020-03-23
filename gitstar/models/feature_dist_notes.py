@@ -26,19 +26,6 @@ SAMPLE_FILE = "10ksample.csv"
 
 # Custom color map for hex bin plot
 cmap = LinearSegmentedColormap.from_list("mycmap", ["#6585cc", "#1d2438"])
-plotvars = (
-    "stargazers",
-    "openissues",
-    "closedissues",
-    "forkCount",
-    "pullRequests",
-    "commitnum",
-    "watchers",
-    "readme_bytes",
-    "diskUsage_kb",
-    "created",
-    "updated",
-)
 
 
 def main():
@@ -51,6 +38,7 @@ def main():
     data_time.loc[:, "updated"] = 10 ** (-6) * (data.loc[:, "updated"].values)
     data_time.loc[:, "created"] = 10 ** (-12) * (data.loc[:, "created"].values)
 
+
     # Pair wise plotting columns
     x = "created"
     y = "stargazers"
@@ -58,7 +46,7 @@ def main():
 
     # Initialize tick formatter and seaborn
     formatter = FuncFormatter(log_label)
-    sns.set() # sns.set_context("talk")
+    sns.set()  # sns.set_context("talk")
 
     # Plot scatter and histograms
     p = sns.JointGrid(x, y, data_time)
@@ -87,33 +75,33 @@ def main():
     xticks = p.ax_joint.get_xticks()
     if x == "created":
         p.ax_joint.set_xticklabels(
-          [
-              pd.to_datetime(10**12*tm, unit="s").strftime("%Y-%m")
-              for tm in xticks
-          ],
-          rotation=50,
+            [
+                pd.to_datetime(10 ** 12 * tm, unit="s").strftime("%Y-%m")
+                for tm in xticks
+            ],
+            rotation=50,
         )
     elif x == "updated":
         p.ax_joint.set_xticklabels(
-          [
-              pd.to_datetime(10**6*tm, unit="s").strftime("%Y-%m-%d")
-              for tm in xticks
-          ],
-          rotation=50,
+            [
+                pd.to_datetime(10 ** 6 * tm, unit="s").strftime("%Y-%m-%d")
+                for tm in xticks
+            ],
+            rotation=50,
         )
 
     # Format log style axes. Annotate stats.
-    #p.ax_joint.xaxis.set_major_formatter(formatter)
+    # p.ax_joint.xaxis.set_major_formatter(formatter)
     p.ax_joint.yaxis.set_major_formatter(formatter)
     p.annotate(stats.pearsonr)
     # plt.tight_layout()
-    #plt.show()
+    # plt.show()
 
     # Save figure
     default_size = p.fig.get_size_inches()
     p.fig.set_size_inches((default_size[0] * 1.2, default_size[1] * 1.2))
     png_str = "canonical_{}_{}.png".format(y, x)
-    #save_fig(p.fig, IMG_PATH / "improved" / png_str)
+    # save_fig(p.fig, IMG_PATH / "improved" / png_str)
 
     # Bayesian Linear Regression
     # xdata = data[x].values.reshape(-1, 1)
@@ -232,6 +220,32 @@ def canonical_data(data, transform=True):
     ].copy()
     trans_df = GitStarDataset(c_data, transform=transform).df
     return trans_df
+
+
+def correlation_matrix_plot(df):
+    plotvars = (
+        "stargazers",
+        "openissues",
+        "closedissues",
+        "forkCount",
+        "pullRequests",
+        "commitnum",
+        "watchers",
+        "readme_bytes",
+        "diskUsage_kb",
+        "created",
+        "updated",
+        "releases",
+        "projects",
+        "milestones",
+        "deployments",
+    )
+    data = df.loc[:, plotvars]
+    correlations = np.round(data.corr(), 3)
+    fig, ax = plt.subplots()
+    ax = sns.heatmap(correlations, annot=True)
+    ax.set_title("Correlation Matrix")
+    plt.show()
 
 
 if __name__ == "__main__":

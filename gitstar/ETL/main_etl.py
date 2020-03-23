@@ -9,12 +9,11 @@ Notes:
     nodes per search query.
 
     Repo data is iterated based on creation date, incremented daily
-    through a range (c.f. created_start, created_end).
+    through a range (c.f. created_start, created_end). If necessary, range
+    is further sliced by push date.
 
     50 items/(http request) was reasonable fetching param. Approx. 1KB
     data/repo to be held in RAM.
-
-TODO:
 """
 import json
 import logging
@@ -45,20 +44,40 @@ MAXSTARS = None
 
 def main():
     """Execute ETL process"""
+
+    # Initialize logger
     set_logger("logs/ETL_special.log")
 
     # Primary ETL
     etl_loop(CREATED_START, CREATED_END, PUSH_START)
 
-    # Follow up ETL
+    # Follow up ETL (for queries w/ >1000 repos)
     special_etl()
 
     logging.info("Exit main()")
 
 
 def etl_loop(created_start, created_end, pushed_start, pushed_end=None):
-    """Iterate through gql_generator (which handles pagination) while looping
-        through provided date range. Raise repo count exception as needed.
+    """
+    Execute main ETL by interating through GitHubSearchQuery generator and
+    looping through provided date range.
+
+    Handles StopIteration and RepoCountError errors.
+
+    Parameters
+    ----------
+    created_start : arrow.arrow.Arrow
+        Repo creation date search begin point
+    created_end : arrow.arrow.Arrow
+        Repo creation date search end point
+    pushed_start : arrow.arrow.Arrow
+        Repo last pushed date search begin point
+    pushed_end : arrow.arrow.Arrow, default None
+        Repo last pushed date search end point
+
+    Returns
+    -------
+    None
     """
     # Intialize db connection and gql response
     dbcnxn = dbconnection()
@@ -97,10 +116,20 @@ def etl_loop(created_start, created_end, pushed_start, pushed_end=None):
 
 
 def special_etl():
-    """Dates that exceeded 1000 repo count must be treated specially
-        Last pushed date range is sliced to fetch < 1000 repos/query
     """
-    # Determined by logs of primary ETL
+    Execute ETL on exception repos; use push dates for query slicing
+
+    Last pushed date range is sliced to fetch < 1000 repos/query
+
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    None
+    """
+    # These dates were determined by logs of primary ETL
     special_dates = [
         ("2019-11-18", "2019-11-21"),
         ("2019-11-25", "2019-11-27"),
@@ -109,10 +138,14 @@ def special_etl():
         ("2019-12-16", "2019-12-24"),
         ("2019-12-26", "2019-12-31"),
     ]
-    # This range of push dates was verfied to return < 1k repos
+
+    # This range of push dates was verified to return < 1k repos
+    # Second push end date not needed; implied as current date
     push_start1 = arrow.get("2020-01-01")
     push_end1 = arrow.get("2020-01-20")
-    push_start2 = arrow.get("2020-01-21")
+    push_start2 = arrow.get("2020-01-21") 
+
+    # Execute ETL; slices query into two push date ranges
     for c_start, c_end in special_dates:
         # First push slice
         etl_loop(
@@ -130,8 +163,24 @@ def special_etl():
 
 
 def gql_generator(c_start, pushed_start, pushed_end=None):
-    """Construct graphql query response generator based on repo creation date.
-        Date range {}..{} is inclusive.
+    """
+    Construct GraphQL response generator based on creation or pushed dates
+
+    These initialization params are ideal variables to use to slice queries
+
+    Parameters
+    ----------
+    c_start : arrow.arrow.Arrow
+        Repo creation date search begin point
+    pushed_start : arrow.arrow.Arrow
+        Repo last pushed date search begin point
+    pushed_end : arrow.arrow.Arrow, default None
+        Repo last pushed date search end point
+
+    Returns
+    -------
+    gql_gen : generator
+        Elements are raw GraphQL response
     """
     gql_gen = gqlquery.GitStarSearchQuery(
         PAT,
@@ -147,15 +196,41 @@ def gql_generator(c_start, pushed_start, pushed_end=None):
 
 
 def dbload(odbc_cnxn, value_list):
-    """Load columns into sql db"""
+    """
+    Load rows into sql db
+
+    Parameters
+    ----------
+    odbc_cnxn : pyodbc.connect().cursor
+        pyodbc connection object for db insertion
+    value_list : iterable
+        Generator representing rows of values to be inserted
+
+    Returns
+    -------
+    None
+    """
+    # Load sql insertion query
     odbc_cnxn.executemany(INSERT_QUERY, value_list)
+    # Log connection response from insertion
     logging.info(STATUS_MSG.format(odbc_cnxn.rowcount))
-    # Send SQL query to db
+    # Execute query to db
     odbc_cnxn.commit()
 
 
 def dbconnection():
-    """Intialize sql db connection"""
+    """Intialize sql db connection
+
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    cursor : pyodbc.connect().cursor
+        pyodbc connection object for db insertion
+    """
+    # Configure database params from config.py
     cnxn = pyodbc.connect(
         "DRIVER="
         + DRIVER
@@ -169,13 +244,23 @@ def dbconnection():
         + PASSWORD
     )
     cursor = cnxn.cursor()
-    # Combine INSERT's into single query
+    # Combine many INSERT's into single query
     cursor.fast_executemany = True
     return cursor
 
 
 def set_logger(filename):
-    """Intialize root logger here."""
+    """
+    Intialize root logger
+
+    Parameters
+    ----------
+    filename : str or Path
+
+    Returns
+    -------
+    None
+    """
     logging.basicConfig(
         filename=filename,
         filemode="w",  # will rewrite on each run
@@ -185,7 +270,18 @@ def set_logger(filename):
 
 
 def print_json(obj):
-    """Serialize python object to json formatted str and print"""
+    """
+    Serialize python dict to json formatted str and print
+
+    Parameters
+    ----------
+    obj : dict
+        json decoded dict
+
+    Returns
+    -------
+    None
+    """
     print(json.dumps(obj, indent=4))
 
 

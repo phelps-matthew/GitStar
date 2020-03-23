@@ -198,7 +198,7 @@ Here we perform a round of data cleaning and transformation from the direct outp
 
 Next, two key:value pairs are added to each node dictionary that represent the repository creation and last pushed to date in UTC integer timestamp (secs) format.
 
-Application of `transform` is simple. Taking the last example, we could apply the transform as
+Application of `transform` is simple. Taking the last example, we may apply the transform as
 ```python
 ...
 

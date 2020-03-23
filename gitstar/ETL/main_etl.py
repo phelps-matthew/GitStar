@@ -43,65 +43,17 @@ MINSTARS = 1
 MAXSTARS = None
 
 
-# For debugging
-def print_json(obj):
-    """Serialize python object to json formatted str and print"""
-    print(json.dumps(obj, indent=4))
+def main():
+    """Execute ETL process"""
+    set_logger("logs/ETL_special.log")
 
+    # Primary ETL
+    etl_loop(CREATED_START, CREATED_END, PUSH_START)
 
-def set_logger(filename):
-    """Intialize root logger here."""
-    logging.basicConfig(
-        filename=filename,
-        filemode="w",  # will rewrite on each run
-        level=logging.DEBUG,
-        format="[%(asctime)s] %(levelname)s - %(name)s - %(message)s",
-    )
+    # Follow up ETL
+    special_etl()
 
-
-def dbconnection():
-    """Intialize sql db connection"""
-    cnxn = pyodbc.connect(
-        "DRIVER="
-        + DRIVER
-        + ";SERVER="
-        + SERVER
-        + ";PORT=1433;DATABASE="
-        + DATABASE
-        + ";UID="
-        + USERNAME
-        + ";PWD="
-        + PASSWORD
-    )
-    cursor = cnxn.cursor()
-    # Combine INSERT's into single query
-    cursor.fast_executemany = True
-    return cursor
-
-
-def dbload(odbc_cnxn, value_list):
-    """Load columns into sql db"""
-    odbc_cnxn.executemany(INSERT_QUERY, value_list)
-    logging.info(STATUS_MSG.format(odbc_cnxn.rowcount))
-    # Send SQL query to db
-    odbc_cnxn.commit()
-
-
-def gql_generator(c_start, pushed_start, pushed_end=None):
-    """Construct graphql query response generator based on repo creation date.
-        Date range {}..{} is inclusive.
-    """
-    gql_gen = gqlquery.GitStarSearchQuery(
-        PAT,
-        created_start=c_start,
-        created_end=c_start,
-        pushed_start=pushed_start,
-        pushed_end=pushed_end,
-        maxitems=MAXITEMS,
-        minstars=MINSTARS,
-        maxstars=MAXSTARS,
-    ).generator()
-    return gql_gen
+    logging.info("Exit main()")
 
 
 def etl_loop(created_start, created_end, pushed_start, pushed_end=None):
@@ -177,17 +129,64 @@ def special_etl():
         )
 
 
-def main():
-    """Execute ETL process"""
-    set_logger("logs/ETL_special.log")
+def gql_generator(c_start, pushed_start, pushed_end=None):
+    """Construct graphql query response generator based on repo creation date.
+        Date range {}..{} is inclusive.
+    """
+    gql_gen = gqlquery.GitStarSearchQuery(
+        PAT,
+        created_start=c_start,
+        created_end=c_start,
+        pushed_start=pushed_start,
+        pushed_end=pushed_end,
+        maxitems=MAXITEMS,
+        minstars=MINSTARS,
+        maxstars=MAXSTARS,
+    ).generator()
+    return gql_gen
 
-    # Primary ETL
-    etl_loop(CREATED_START, CREATED_END, PUSH_START)
 
-    # Follow up ETL
-    special_etl()
+def dbload(odbc_cnxn, value_list):
+    """Load columns into sql db"""
+    odbc_cnxn.executemany(INSERT_QUERY, value_list)
+    logging.info(STATUS_MSG.format(odbc_cnxn.rowcount))
+    # Send SQL query to db
+    odbc_cnxn.commit()
 
-    logging.info("Exit main()")
+
+def dbconnection():
+    """Intialize sql db connection"""
+    cnxn = pyodbc.connect(
+        "DRIVER="
+        + DRIVER
+        + ";SERVER="
+        + SERVER
+        + ";PORT=1433;DATABASE="
+        + DATABASE
+        + ";UID="
+        + USERNAME
+        + ";PWD="
+        + PASSWORD
+    )
+    cursor = cnxn.cursor()
+    # Combine INSERT's into single query
+    cursor.fast_executemany = True
+    return cursor
+
+
+def set_logger(filename):
+    """Intialize root logger here."""
+    logging.basicConfig(
+        filename=filename,
+        filemode="w",  # will rewrite on each run
+        level=logging.DEBUG,
+        format="[%(asctime)s] %(levelname)s - %(name)s - %(message)s",
+    )
+
+
+def print_json(obj):
+    """Serialize python object to json formatted str and print"""
+    print(json.dumps(obj, indent=4))
 
 
 if __name__ == "__main__":

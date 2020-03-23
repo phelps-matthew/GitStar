@@ -51,17 +51,17 @@ def main():
     data_time.loc[:, "created"] = 10 ** (-12) * (data.loc[:, "created"].values)
 
     # Pair wise plotting columns
-    x = "openissues"
-    y = "closedissues"
+    x = "created"
+    y = "stargazers"
     linreg_print(x, y, data)
 
-    # Initializeplot setup
+    # Initialize tick formatter and seaborn
     formatter = FuncFormatter(log_label)
     sns.set()
     # sns.set_context("talk")
 
     # Plot scatter and histograms
-    p = sns.JointGrid(x, y, data)
+    p = sns.JointGrid(x, y, data_time)
     ax1 = p.plot_joint(plt.hexbin, mincnt=1, cmap=cmap, gridsize=65)
     p.plot_marginals(sns.distplot)
 
@@ -75,7 +75,7 @@ def main():
     p.ax_joint.set_ylim(reg_ylim[0], y2max)
 
     # Label axes
-    p.set_axis_labels(xlabel="Open Issues*", ylabel="Closed Issues")
+    p.set_axis_labels(xlabel="Created", ylabel="Stars")
 
     # Add colorbar
     plt.subplots_adjust(left=0.2, right=0.8, top=0.8, bottom=0.2)  # shrink fig
@@ -84,27 +84,36 @@ def main():
     cbar_ax.locator_params(nbins=3)  # 3 tick labels
 
     # For timelike data
-    # xticks = p.ax_joint.get_xticks()
-    # p.ax_joint.set_xticklabels(
-    #   [
-    #       pd.to_datetime(10**12*tm, unit="s").strftime("%Y-%m")
-    #       for tm in xticks
-    #   ],
-    #   rotation=50,
-    # )
+    xticks = p.ax_joint.get_xticks()
+    if x == "created":
+        p.ax_joint.set_xticklabels(
+          [
+              pd.to_datetime(10**12*tm, unit="s").strftime("%Y-%m")
+              for tm in xticks
+          ],
+          rotation=50,
+        )
+    elif x == "updated":
+        p.ax_joint.set_xticklabels(
+          [
+              pd.to_datetime(10**6*tm, unit="s").strftime("%Y-%m-%d")
+              for tm in xticks
+          ],
+          rotation=50,
+        )
 
     # Format log style axes. Annotate stats.
-    p.ax_joint.xaxis.set_major_formatter(formatter)
+    #p.ax_joint.xaxis.set_major_formatter(formatter)
     p.ax_joint.yaxis.set_major_formatter(formatter)
     p.annotate(stats.pearsonr)
     # plt.tight_layout()
-    # plt.show()
+    #plt.show()
 
     # Save figure
     default_size = p.fig.get_size_inches()
     p.fig.set_size_inches((default_size[0] * 1.2, default_size[1] * 1.2))
     png_str = "canonical_{}_{}.png".format(y, x)
-    save_fig(p.fig, IMG_PATH / "improved" / png_str)
+    #save_fig(p.fig, IMG_PATH / "improved" / png_str)
 
     # Bayesian Linear Regression
     # xdata = data[x].values.reshape(-1, 1)

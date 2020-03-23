@@ -1,5 +1,5 @@
 """ 
-Sends and receives GraphQL  queries based on 'streaming' generator
+Sends and receives GraphQL queries based on 'streaming' generator
 approach. Includes pagination handling and GitHub API search query methods.
 
 ToDo:

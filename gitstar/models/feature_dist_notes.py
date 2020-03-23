@@ -7,13 +7,12 @@ hex bin scatter plot, and accompanying colorbar.
 """
 from pathlib import Path
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter
-import os
-import numpy as np
+from matplotlib.colors import LinearSegmentedColormap
 import seaborn as sns
 from scipy import stats
-from matplotlib.colors import LinearSegmentedColormap
 from sklearn import linear_model
 
 from gitstar.models.dataload import GitStarDataset

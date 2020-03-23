@@ -44,6 +44,7 @@ plotvars = (
 def main():
     """Workspace for generating plots."""
 
+    # Load data. Adjust date order of magnitudes for proper histograms
     df = pd.read_csv(DATA_PATH / FILE).astype("float64")
     data = canonical_data(df)
     data_time = data.copy()
@@ -57,8 +58,7 @@ def main():
 
     # Initialize tick formatter and seaborn
     formatter = FuncFormatter(log_label)
-    sns.set()
-    # sns.set_context("talk")
+    sns.set() # sns.set_context("talk")
 
     # Plot scatter and histograms
     p = sns.JointGrid(x, y, data_time)
@@ -83,7 +83,7 @@ def main():
     plt.colorbar(cax=cbar_ax)
     cbar_ax.locator_params(nbins=3)  # 3 tick labels
 
-    # For timelike data
+    # For timelike data. Make sure dates are not transformed in datanorm
     xticks = p.ax_joint.get_xticks()
     if x == "created":
         p.ax_joint.set_xticklabels(

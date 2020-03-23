@@ -253,7 +253,6 @@ class GitStarSearchQuery(GitHubGraphQLQuery):
                             self.created_start, rep_count
                         )
                     )
-
                     # If nodes exceed limit, log and raise error
                     if rep_count > 1000:
                         logging.warning(
@@ -284,7 +283,8 @@ class GitStarSearchQuery(GitHubGraphQLQuery):
                 print(index, end=" ")
                 index += 1
 
-                # --- Handle rate limiting from GQL score system ---
+                # --- Handle rate limiting from GQL score system
+                # then yield GQL response ---
                 # If out of points, sleep for extrapolated duration
                 if fuel <= 1:
                     # returns datetime.timedelta obj

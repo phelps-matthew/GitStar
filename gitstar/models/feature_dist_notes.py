@@ -38,7 +38,6 @@ def main():
     data_time.loc[:, "updated"] = 10 ** (-6) * (data.loc[:, "updated"].values)
     data_time.loc[:, "created"] = 10 ** (-12) * (data.loc[:, "created"].values)
 
-
     # Pair wise plotting columns
     x = "created"
     y = "stargazers"

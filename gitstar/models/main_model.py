@@ -17,6 +17,8 @@ from gitstar.models.dataload import (
 )
 import gitstar.models.deepfeedforward as dff
 import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 # Path Globals
 BASE_DIR = Path(__file__).resolve().parent
@@ -28,7 +30,7 @@ SAMPLE_FILE = "10ksample.csv"
 
 # Enable GPU support
 dev = torch.device("cpu")
-#dev = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+# dev = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 dff.print_gpu()
 print(dev)
 

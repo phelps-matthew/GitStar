@@ -287,7 +287,7 @@ class GitStarSearchQuery(GitHubGraphQLQuery):
                 # then yield GQL response ---
                 # If out of points, sleep for extrapolated duration
                 if fuel <= 1:
-                    # returns datetime.timedelta obj
+                    # delta returns datetime.timedelta obj
                     delta = arrow.get(refuel_time) - arrow.utcnow()
                     extra = 10  # add safety delay
                     logging.warning(

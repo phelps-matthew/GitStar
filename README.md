@@ -194,7 +194,24 @@ while True:
 ```
 
 #### gstransform
-In Progress...
+Here we perform a round of data cleaning and transformation from the direct output of the GitStarSearchQuery generator (i.e. the GraphQL response). The `transform` function discards extraneous headers and utilizes uses `normalize` to flatten nested dictionaries corresponding to a single node (repo) into dictionaries of depth=1. 
+
+Next, two key:value pairs are added to each node dictionary that represent the repository creation and last pushed to date in UTC integer timestamp (secs) format.
+
+Application of `transform` is simple. Taking the last example, we could apply the transform as
+```python
+....
+
+while True:
+    try:
+    	# Now we transform the response
+        response = transform(next(gistar_gen))
+        print(json.dumps(response, indent=4)) # pretty printing
+    except StopIteration:
+    	....
+    ....
+```
+Additionally, the function `repocount` allows one to collect the total number of repositories returned from the raw GraphQL response.
 #### main_etl
 In Progress...
 #### config_sample

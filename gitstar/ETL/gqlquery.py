@@ -1,15 +1,11 @@
-""" Implementation of graphQL HTTP POST queries based on 'streaming' generator
-    approach. Includes pagination handling and GitHub API search query methods.
+""" 
+Sends and receives GraphQL  queries based on 'streaming' generator
+approach. Includes pagination handling and GitHub API search query methods.
 
-    TODO:
-        Input QUERY file directory should be class init. parameter
-
-        Construct GitHubSearchQuery parent class for generalized queries.
-
-        Put generator in parent class, initialized with query specific
-        connection parameters
-
-        Improve docstrings
+ToDo:
+    Construct GitHubSearchQuery parent class for generalized queries
+    Input QUERY file directory should be init. parameter of GitHubSearchQuery
+    Consider including KeyError warning message (in addition to logging)
 """
 import json
 from time import sleep
@@ -219,7 +215,7 @@ class GitStarSearchQuery(GitHubGraphQLQuery):
         )
         self.variables["search_query"] = " ".join(searchq)
 
-        # Helpful for date tracking in generator()
+        # Helpful for date tracking at application level
         self.created_start = created_start
 
     def generator(self):

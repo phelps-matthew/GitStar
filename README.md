@@ -176,15 +176,15 @@ You might be wondering, why a generator function? The answer is twofold. First, 
 There is one more important limitation of GitHubs API that is handled in the `gql_generator`. Though not stated anywhere in the GitHub API, for any search query that returns more than 1000 matching repositories, the pagination process will only return the first 1000. Such an event will throw an error belonging to class `RepoCountError`.
 Handling this error is left up to the end-user. For example, in `main_etl` this error is used to slice the search space into smaller parititions based on push date.
 
-Continuing the above example, we may utilize the generator as
+Continuing the above example, the generator may be utilized as follows. 
 ```python
 import json
 gitstar_gen = gitstar_response.gql_generator()
 
 while True:
     try:
-        json_response = next(gistar_gen)
-        print(json.dumps(json_response, indent=4)) # pretty printing
+        response = next(gistar_gen)
+        print(json.dumps(response, indent=4)) # pretty printing
     except StopIteration:
         print("End of pagination")
 	break

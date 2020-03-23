@@ -1,5 +1,5 @@
 """
-This script explores the distributions and properties of input features, as
+Explores the distributions and properties of input features, as
 well as the output. Most importantly, the plots generated here help
 determine the desired normalization/standardization transforms
 (some from sklearn.preprocessing) of the features and target. The main

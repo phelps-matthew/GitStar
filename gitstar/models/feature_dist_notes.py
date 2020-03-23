@@ -1,9 +1,8 @@
 """
-Explores the distributions and properties of input features, as
-well as the output. Most importantly, the plots generated here help
-determine the desired normalization/standardization transforms
-(some from sklearn.preprocessing) of the features and target. The main
-function generates pair-wise cross correlation plots, with histograms,
+Explores the distributions and properties of input features, as well as the
+output. Most importantly, the plots generated here help determine the desired
+normalization/standardization transforms (some from sklearn.preprocessing).
+The main function generates pair-wise cross correlation plots, with histograms,
 hex bin scatter plot, and accompanying colorbar.
 """
 from pathlib import Path
@@ -34,24 +33,24 @@ cmap = LinearSegmentedColormap.from_list("mycmap", ["#6585cc", "#1d2438"])
 def main():
     """Workspace for generating plots."""
 
-    # Load data. Adjust date order of magnitudes for proper histogram display.
+    # Load data, adjust date order of magnitudes for proper histogram display.
     df = pd.read_csv(DATA_PATH / FILE).astype("float64")
     data = canonical_data(df)
-    data_time = data.copy()
-    data_time.loc[:, "updated"] = 10 ** (-6) * (data.loc[:, "updated"].values)
-    data_time.loc[:, "created"] = 10 ** (-12) * (data.loc[:, "created"].values)
+    data.loc[:, "updated"] = 10 ** (-6) * (data.loc[:, "updated"].values)
+    data.loc[:, "created"] = 10 ** (-12) * (data.loc[:, "created"].values)
 
-    # Pair wise plotting columns
+    # Pair wise plotting columns. Print statistics
     x = "created"
     y = "stargazers"
     linreg_print(x, y, data)
 
-    # Initialize tick formatter and seaborn
+    # Initialize tick formatter, seaborn, and display output
     formatter = FuncFormatter(log_label)
     sns.set()  # sns.set_context("talk")
+    show_plot = True  # save as png if false
 
     # Plot scatter and histograms
-    p = sns.JointGrid(x, y, data_time)
+    p = sns.JointGrid(x, y, data)
     p.plot_joint(plt.hexbin, mincnt=1, cmap=cmap, gridsize=65)
     p.plot_marginals(sns.distplot)
 
@@ -97,13 +96,15 @@ def main():
     # Format log style axes. Annotate stats.
     p.ax_joint.yaxis.set_major_formatter(formatter)
     p.annotate(stats.pearsonr)
-    plt.show()
 
-    # Save figure
-    # default_size = p.fig.get_size_inches()
-    # p.fig.set_size_inches((default_size[0] * 1.2, default_size[1] * 1.2))
-    # png_str = "canonical_{}_{}.png".format(y, x)
-    # save_fig(p.fig, IMG_PATH / "improved" / png_str)
+    # Show plot UI or save as fig
+    if show_plot:
+        plt.show()
+    else:
+        default_size = p.fig.get_size_inches()
+        p.fig.set_size_inches((default_size[0] * 1.2, default_size[1] * 1.2))
+        png_str = "canonical_{}_{}.png".format(y, x)
+        save_fig(p.fig, IMG_PATH / "improved" / png_str)
 
 
 def get_xylims(axes1_x, axes1_y, axes2_x, axes2_y):
@@ -299,8 +300,10 @@ def plot_valid_loss(vloss, vr2, xlim):
     None
     """
     sns.set()
+    # Legend use col names
     vloss.columns = ["MSE"]
     vr2.columns = ["R^2"]
+    # Combine for legend
     data = pd.concat([vloss, vr2])
     ax = sns.lineplot(data=data, dashes=False)
     ax.set_ylim(0, 1)
@@ -325,6 +328,7 @@ def bayes_reg_plot(x, y, data):
     -------
     None
     """
+    # sklearn.linear_model requires columned data
     xdata = data[x].values.reshape(-1, 1)
     bayes = linear_model.BayesianRidge()
     bayes.fit(xdata, data[y])

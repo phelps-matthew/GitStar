@@ -52,27 +52,6 @@ def preprocess(x, y):
 
 def main():
     """Train, validate, optimize model."""
-    #sns.set_context("talk")
-    sns.set()
-    vloss = pd.read_csv(
-        LOG_PATH
-        / "valid_loss_log_canonical_32x16_lr_1e-05_Adam_rel_bs_64_epochs_1000.csv"
-    )
-    vr2 = pd.read_csv(
-        LOG_PATH
-        / "valid_rs_log_canonical_32x16_lr_1e-05_Adam_rel_bs_64_epochs_1000.csv"
-    )
-    win = 0
-    vloss.columns = ["MSE"]
-    vr2.columns = ["R^2"]
-    data = pd.concat([vloss, vr2])
-    ax = sns.lineplot(data=data, dashes=False)
-    ax.set_ylim(0, 1)
-    ax.set_xlim(0, 100)
-    ax.set(xlabel="Epoch", title="Validation")
-    plt.tight_layout()
-    plt.show()
-    exit()
 
     # Load data. Apply scaler transformations to training data. Get DataLoader.
     batch_size = 64

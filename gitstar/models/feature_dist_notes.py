@@ -1,7 +1,10 @@
 """
 This script explores the distributions and properties of input features, as
-well as the output. Most importantly, we explore various
-normalization/standardization transforms from sklearn.preprocessing.
+well as the output. Most importantly, the plots generated here help
+determine the desired normalization/standardization transforms
+(some from sklearn.preprocessing) of the features and target. The main
+function generates pair-wise cross correlation plots, with histograms,
+hex bin scatter plot, and accompanying colorbar.
 """
 from pathlib import Path
 import pandas as pd
@@ -88,70 +91,91 @@ def main():
             ],
             rotation=50,
         )
+    else:
+        p.ax_joint.xaxis.set_major_formatter(formatter)
 
     # Format log style axes. Annotate stats.
-    # p.ax_joint.xaxis.set_major_formatter(formatter)
     p.ax_joint.yaxis.set_major_formatter(formatter)
     p.annotate(stats.pearsonr)
-    # plt.tight_layout()
-    # plt.show()
+    plt.show()
 
     # Save figure
-    default_size = p.fig.get_size_inches()
-    p.fig.set_size_inches((default_size[0] * 1.2, default_size[1] * 1.2))
-    png_str = "canonical_{}_{}.png".format(y, x)
+    # default_size = p.fig.get_size_inches()
+    # p.fig.set_size_inches((default_size[0] * 1.2, default_size[1] * 1.2))
+    # png_str = "canonical_{}_{}.png".format(y, x)
     # save_fig(p.fig, IMG_PATH / "improved" / png_str)
-
-    # Bayesian Linear Regression
-    # xdata = data[x].values.reshape(-1, 1)
-    # bayes = linear_model.BayesianRidge()
-    # bayes.fit(xdata, data[y])
-    # ymean, ystd = bayes.predict(xdata, return_std=True)
-    # fig, ax = plt.subplots()
-    # ax.plot(data[x].values, ymean)
-    # ax.fill_between(
-    #    data[x].values,
-    #    ymean - ystd,
-    #    ymean + ystd,
-    #    color="pink",
-    #    alpha=0.5,
-    #    label="predict std",
-    # )
-    # plt.show()
 
 
 def get_xylims(axes1_x, axes1_y, axes2_x, axes2_y):
+    """
+    Attempts to make axes aspect ratio more square by adjusting ylims.
+    Warning: assumes positive slope.
+
+    Parameters
+    ----------
+    axes1_x, axes1_y, axes2_x, axes2_y : tuple of two floats
+        Corresponds to endpoints from reg. line
+
+    Returns
+    -------
+    y2_max : float
+        To be set as max(ylim)
+    """
     w1 = abs(axes1_x[1] - axes1_x[0])
     h1 = abs(axes1_y[1] - axes1_y[0])
     w2 = abs(axes2_x[1] - axes2_x[0])
     h2 = abs(axes2_y[1] - axes2_y[0])
-    y2_max = axes2_y[1]
     aspect1 = h1 / w1
     aspect2 = h2 / w2
-    # scale x2
+
+    # If width > height, scale height
     if aspect2 < aspect1:
         h2 = aspect1 * w2
         y2_max = axes2_y[0] + h2
+    # No scaling necessary
+    else:
+        y2_max = axes2_y[1]
     return y2_max
 
 
 def r2(x, y):
+    """
+    Coefficient of determination.
+
+    Parameters
+    ----------
+    x, y : numpy.array
+
+    Returns
+    -------
+    float
+    """
     return stats.pearsonr(x, y)[0] ** 2
 
 
 def log_label(x, pos):
-    """Formats axis labels to power of 10.
-        Follows matplotlib example.
     """
+    Formats axis labels to power of 10, from matplotlib default example.
+
+    Parameters
+    ----------
+    x : float or int
+
+    Returns
+    -------
+    str
+    """
+    # Raise to power of 10 if int
     if x.is_integer():
         return r"$10^{%d}$" % (x)
+    # Skip non-integer labels
     else:
         return ""
 
 
 def save_fig(fig, path):
     """
-    Generate figure.
+    Wrapper around fig.savefig, with good defaults.
 
     Parameters
     ----------
@@ -222,6 +246,19 @@ def canonical_data(data, transform=True):
 
 
 def correlation_matrix_plot(df):
+    """
+    Produce correlation matrix plot of pertinant Gitstar features.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        E.g. canonical_data(data)
+
+    Returns
+    -------
+    None
+    """
+    # Desired features + target
     plotvars = (
         "stargazers",
         "openissues",
@@ -244,6 +281,64 @@ def correlation_matrix_plot(df):
     fig, ax = plt.subplots()
     ax = sns.heatmap(correlations, annot=True)
     ax.set_title("Correlation Matrix")
+    plt.show()
+
+
+def plot_valid_loss(vloss, vr2, xlim):
+    """
+    Lineplot of validation loss and R^2 per epoch.
+
+    Parameters
+    ----------
+    vloss, vr2 : pandas.DataFrame
+        Use pd.read_csv to load dataframes from logs.
+        Dataframe should have single column.
+
+    Returns
+    -------
+    None
+    """
+    sns.set()
+    vloss.columns = ["MSE"]
+    vr2.columns = ["R^2"]
+    data = pd.concat([vloss, vr2])
+    ax = sns.lineplot(data=data, dashes=False)
+    ax.set_ylim(0, 1)
+    if xlim:
+        ax.set_xlim(0, xlim)
+    ax.set(xlabel="Epoch", title="Validation")
+    plt.tight_layout()
+    plt.show()
+
+
+def bayes_reg_plot(x, y, data):
+    """
+    Bayesian linear regression plot with 1 std.
+
+    Parameters
+    ----------
+    x, y : str
+        Column names in dataframe
+    data : pandas.Dataframe
+
+    Returns
+    -------
+    None
+    """
+    xdata = data[x].values.reshape(-1, 1)
+    bayes = linear_model.BayesianRidge()
+    bayes.fit(xdata, data[y])
+    ymean, ystd = bayes.predict(xdata, return_std=True)
+    fig, ax = plt.subplots()
+    ax.plot(data[x].values, ymean)
+    ax.fill_between(
+       data[x].values,
+       ymean - ystd,
+       ymean + ystd,
+       color="pink",
+       alpha=0.5,
+       label="predict std",
+    )
     plt.show()
 
 

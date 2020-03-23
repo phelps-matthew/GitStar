@@ -200,7 +200,7 @@ Next, two key:value pairs are added to each node dictionary that represent the r
 
 Application of `transform` is simple. Taking the last example, we could apply the transform as
 ```python
-....
+...
 
 while True:
     try:
@@ -208,8 +208,8 @@ while True:
         response = transform(next(gistar_gen))
         print(json.dumps(response, indent=4)) # pretty printing
     except StopIteration:
-    	....
-    ....
+    	...
+    ...
 ```
 Additionally, the function `repocount` allows one to collect the total number of repositories returned from the raw GraphQL response.
 #### main_etl

@@ -34,7 +34,7 @@ cmap = LinearSegmentedColormap.from_list("mycmap", ["#6585cc", "#1d2438"])
 def main():
     """Workspace for generating plots."""
 
-    # Load data. Adjust date order of magnitudes for proper histograms
+    # Load data. Adjust date order of magnitudes for proper histogram display.
     df = pd.read_csv(DATA_PATH / FILE).astype("float64")
     data = canonical_data(df)
     data_time = data.copy()
@@ -52,7 +52,7 @@ def main():
 
     # Plot scatter and histograms
     p = sns.JointGrid(x, y, data_time)
-    ax1 = p.plot_joint(plt.hexbin, mincnt=1, cmap=cmap, gridsize=65)
+    p.plot_joint(plt.hexbin, mincnt=1, cmap=cmap, gridsize=65)
     p.plot_marginals(sns.distplot)
 
     # Scale to be square, plot regression
@@ -332,12 +332,12 @@ def bayes_reg_plot(x, y, data):
     fig, ax = plt.subplots()
     ax.plot(data[x].values, ymean)
     ax.fill_between(
-       data[x].values,
-       ymean - ystd,
-       ymean + ystd,
-       color="pink",
-       alpha=0.5,
-       label="predict std",
+        data[x].values,
+        ymean - ystd,
+        ymean + ystd,
+        color="pink",
+        alpha=0.5,
+        label="predict std",
     )
     plt.show()
 

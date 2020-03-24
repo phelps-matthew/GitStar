@@ -262,7 +262,7 @@ while delta >= 0:
 ```
 The result is a pipeline that inserts 50 rows of respository features at a time, executing until search query reaches end condition.
 #### config_sample
-Referenced here for completeness. Online SQL transformation operations highly recommended.
+Here is a sub-sample of `config_sample.py` to illustrate an example of pyodbc config and query insertion. Online SQL transformation operations highly recommended. (the '?' represent slots to pass variables from `value_list` above).
 ```python
 # GitHub PERSONAL ACCESS TOKEN
 PAT = "<PERSONAL ACCESS TOKEN>"
@@ -278,34 +278,13 @@ PASSWORD = "pass"
 INSERT_QUERY = """\
 INSERT INTO my_table_v1
 (
-nameWithOwner,
-stargazers,
 createdAt,
 updatedAt,
-openissues,
-closedissues,
-forkCount,
-pullRequests,
-commitnum,
 watchers,
 diskUsage_kb,
 readme_bytes,
-releases,
-projects,
-milestones,
-deployments,
-primaryLanguage,
-issuelabels,
-repositoryTopics,
-licenseInfo,
-homepageUrl,
-description,
-hasIssuesEnabled,
-hasWikiEnabled,
+...
 isLocked,
-isDisabled,
-id,
-databaseId,
 createdAt_sec,
 updatedAt_sec
 )
@@ -313,33 +292,10 @@ VALUES
 (
 LEFT(CAST(? AS NVARCHAR(200)), 200),
 ?,
-?,
-?,
-?,
-?,
-?,
-?,
-?,
-?,
-?,
-?,
-?,
-?,
-?,
+...
 ?,
 LEFT(CAST(? AS NVARCHAR(200)), 200),
-?,
-?,
 LEFT(CAST(? AS NVARCHAR(2000)), 2000),
-LEFT(CAST(? AS NVARCHAR(1000)), 1000),
-LEFT(CAST(? AS NVARCHAR(2000)), 2000),
-?,
-?,
-?,
-?,
-?,
-?,
-?,
 ?
 );
 """

@@ -11,7 +11,7 @@ GitStar is a pipeline used to construct a neural network that analyzes a given p
       - [GraphQL](#graphql)
       - [gqlquery](#gqlquery)
       - [gstransform](#gstransform)
-      - [main_etl](#main-etl)
+      - [main_etl](#main_etl)
       - [config_sample](#config-sample)
     + [models](#models)
       - [datanorm](#datanorm)

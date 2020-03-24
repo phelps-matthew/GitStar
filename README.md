@@ -300,7 +300,6 @@ LEFT(CAST(? AS NVARCHAR(2000)), 2000),
 );
 """
 ```
-In Progress...
 ### models
 In Progress
 #### datanorm

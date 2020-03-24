@@ -260,7 +260,7 @@ while delta >= 0:
         # Update delta date range
         delta = (created_end - day).total_seconds()
 ```
-The result is a pipeline that inserts 50 rows of respository features at a time, executing until search query reaches end condition
+The result is a pipeline that inserts 50 rows of respository features at a time, executing until search query reaches end condition.
 #### config_sample
 Referenced here for completeness.
 ```python

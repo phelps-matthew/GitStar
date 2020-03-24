@@ -262,7 +262,7 @@ while delta >= 0:
 ```
 The result is a pipeline that inserts 50 rows of respository features at a time, executing until search query reaches end condition.
 #### config_sample
-Referenced here for completeness. Online SQL transformation operations high recommended.
+Referenced here for completeness. Online SQL transformation operations highly recommended.
 ```python
 # GitHub PERSONAL ACCESS TOKEN
 PAT = "<PERSONAL ACCESS TOKEN>"

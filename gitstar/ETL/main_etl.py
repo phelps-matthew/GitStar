@@ -79,7 +79,7 @@ def etl_loop(created_start, created_end, pushed_start, pushed_end=None):
     -------
     None
     """
-    # Intialize db connection and gql response
+    # Intialize db connection and GraphQL response generator
     dbcnxn = dbconnection()
     gql_gen = gql_generator(created_start, pushed_start, pushed_end=pushed_end)
     logging.info(
@@ -93,21 +93,34 @@ def etl_loop(created_start, created_end, pushed_start, pushed_end=None):
     day = created_start
     while delta >= 0:
         try:
-            # Iterate generator. Normalize nested fields.
+            # Iterate generator, transform response
             clean_data = transform(next(gql_gen))
-            # Construct generator of dict values
+
+            # Construct generator of dict values (db rows)
             value_list = (list(node.values()) for node in clean_data)
-            # repos = [node["nameWithOwner"] for node in clean_data]
-            # logging.info('\n'+'\n'.join(repos))
+
+            # log repo names; useful for tracking/debugging
+            repos = [node["nameWithOwner"] for node in clean_data]
+            logging.info("\n" + "\n".join(repos))
+
             # Load into db
             dbload(dbcnxn, value_list)
             print("[{}] {} rows inserted into db".format(arrow.now(), MAXITEMS))
+
+        # Catch pagination end condition or repo count overflow
         except (StopIteration, gqlquery.RepoCountError):
+            # Increment over date range
             day = day.shift(days=+1)
+
+            # Initialize new generator
             gql_gen = gql_generator(
                 day, pushed_start=pushed_start, pushed_end=pushed_end
             )
+
+            # Update delta date range
             delta = (created_end - day).total_seconds()
+
+            # Log the start of new iteration
             logging.info(
                 "Reached end of gql pagination or exceeded repo count. "
                 "New created start date:{}\n".format(day.format("YYYY-MM-DD"))
@@ -143,7 +156,7 @@ def special_etl():
     # Second push end date not needed; implied as current date
     push_start1 = arrow.get("2020-01-01")
     push_end1 = arrow.get("2020-01-20")
-    push_start2 = arrow.get("2020-01-21") 
+    push_start2 = arrow.get("2020-01-21")
 
     # Execute ETL; slices query into two push date ranges
     for c_start, c_end in special_dates:

@@ -218,9 +218,8 @@ Putting the `gqlquery` and `gstransform` modules together, we finally construct 
 Some important notes:
 * The Azure MSSQL database chosen is accessed through the `pyodbc` module; different db connections may be necessary if database type differs; for pyodbc usage see [pyodbc](https://github.com/mkleehammer/pyodbc)
 * The database configurations, GitHub PAT, and SQL insertion query are convienently grouped and stored within the module `config.py`. An example `config_sample.py` has been provided as a template; again, db connection implementation may vary
-* Consider using online SQL transformation operation to further clean and process data. See `config_sample.py` for examples of this.
+* Consider using online SQL transformation operations to further clean and process data. See `config_sample.py` for examples of this
 * Consider use of `gqlquery.RepoCountError` to log GQL queries that yield repo counts exceeding 1000; alternatively, use conditional statement to redirect loop over push date slices (see function `special_etl()`)
-* GitHub limits had to be probed experimentally - did not adhere to rate limits as suggested in documentation. May only return 1000 repo nodes per search query.
 * 50 items/(http request) was reasonable fetching param; higher items/request yields more http timeouts
 
 Omitting detail on logging and pyodbc specifics, the main ETL process can be implemented as

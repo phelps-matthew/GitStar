@@ -11,7 +11,11 @@ from torch.utils.data import Dataset, DataLoader, random_split
 import pandas as pd
 import torch
 from sklearn.model_selection import train_test_split
-from gitstar.models.datanorm import feature_transform, target_transform
+from gitstar.models.datanorm import (
+    scale_cols,
+    FEATURE_SCALERS,
+    TARGET_SCALER,
+)
 
 
 class GitStarDataset(Dataset):
@@ -21,41 +25,35 @@ class GitStarDataset(Dataset):
 
     Parameters
     ----------
-    df : pd.DataFrame
-    transform : boolean, optional
-        Apply scale transformations according to datanorm module.
-    f_scale, t_scale : dict, optional
-        Feature or target scalers, e.g.
-        {"openissues": PowerTransformer(method="yeo-johnson")}
+    df : pandas.DataFrame
+    transform : boolean, default True
+        Apply scale transformations according to datanorm module
+    f_scale, t_scale : dict of sklearn.preprocessing.scaler(), default None
+        Follows {"col_name" : MyScaler(), ...}
 
     Attributes
     ----------
-    df : pd.DataFrame
+    df : pandas.DataFrame
     transform : boolean
-        Apply scale transformations according to datanorm module.
-    f_scale, t_scale : dict
-        Feature or target scalers, e.g.
-        {"openissues": PowerTransformer(method="yeo-johnson")}
+        Apply scale transformations according to datanorm module
+    f_scale, t_scale : dict of sklearn.preprocessing.scaler()
+        Scalers contain inverse function, accessible via
+        scaler().inverse_transform(ndarray)
     """
 
     def __init__(self, df, transform=True, f_scale=None, t_scale=None):
-        # Intialize transform related attributes
         self.df = df
         self.transform = transform
 
-        # Apply data scaling. If scalers are provided, use them.
+        # If scalers are provided, use them; otherwise use datanorm defaults
         if self.transform:
-            if f_scale is not None:
-                self.feature_scalers = feature_transform(self.df, f_scale)
-                self.target_scaler = target_transform(self.df, t_scale)
-            else:
-                self.feature_scalers = feature_transform(self.df)
-                self.target_scaler = target_transform(self.df)
+            self.feature_scalers = scale_cols(self.df, FEATURE_SCALERS)
+            self.target_scaler = scale_cols(self.df, TARGET_SCALER)
         else:
-            self.target_scaler = f_scale
-            self.feature_scalers = t_scale
+            self.feature_scalers = scale_cols(self.df, f_scale)
+            self.target_scaler = scale_cols(self.df, t_scale)
 
-        # Separate features and target. Drop method returns deep copy of df
+        # Separate features and target; drop method returns deep copy of df
         self.features = self.df.drop("stargazers", axis=1)
         self.target = self.df["stargazers"].to_frame()
 
@@ -66,7 +64,7 @@ class GitStarDataset(Dataset):
         # pd.df -> np.ndarray with dtype float64
         x_sample = self.features.iloc[idx].values
         y_sample = self.target.iloc[idx].values
-        # np.ndarry -> torch.tensor.float() to match weights datatype
+        # np.ndarry -> torch.tensor.float() to match weight params datatype
         x_sample = torch.from_numpy(x_sample).float()
         y_sample = torch.tensor(y_sample).float()
         return x_sample, y_sample

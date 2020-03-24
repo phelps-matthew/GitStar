@@ -5,140 +5,146 @@ function for inverse target transformation.
 from pathlib import Path
 import pandas as pd
 import numpy as np
-
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.preprocessing import QuantileTransformer
-from sklearn.preprocessing import PowerTransformer
-
-# from gitstar.models.dataload import GitStarDataset
+from sklearn.preprocessing import MinMaxScaler, FunctionTransformer
 
 
+def scale_cols(df, scaler_dict=None):
+    """
+    Scale multiple pandas DataFrame columns
 
-class Log10Transformer():
-    def __init__(self):
-        pass
+    Warning: Transforms in-place
 
-    def fit_transform(self, array):
-        # Set lower bound
-        array = np.clip(array, 1e-1, None)
-        return np.log10(array)
+    Parameters
+    ----------
+    data : pandas DataFrame
+    scaler_dict : dict of sklearn.preprocessing.scaler(), default None
+        Follows {"col_name" : MyScaler(), ...}
 
-    def inverse_transform(self, array):
-        array = 10**array
-        array[array <= 0.1] = 0
-        return array
+    Returns
+    -------
+    fitted_dict : dict of sklearn.preprocessing.scaler()
+        Scalers contain inverse function, accessible via
+        scaler().inverse_transform(ndarray)
+    """
+    fitted_dict = {}
 
-class IdentityTransformer():
-    def __init__(self):
-        pass
+    # If supplied scalers, apply them; otherwise apply identity transformation
 
-    def fit_transform(self, array):
-        return array
+    if scaler_dict is not None:
+        for col in scaler_dict:
+            # Apply scaling; transforms in place
+            _, scaler = scale_col(df, col, scaler_dict[col])
+            # Construct dict of fitted scalers; useful for inv. params
+            fitted_dict[col] = scaler
+    else:
+        for col in scaler_dict:
+            fitted_dict[col] = FunctionTransformer()
 
-    def inverse_transform(self, array):
-        return array
+    return fitted_dict
 
 
-FEATURE_SCALERS = {
-    "repositoryTopics": Log10Transformer(),
-    "openissues": Log10Transformer(),
-    "closedissues": Log10Transformer(),
-    "forkCount": Log10Transformer(),
-    "pullRequests": Log10Transformer(),
-    "commitnum": Log10Transformer(),
-    "watchers": Log10Transformer(),
-    "readme_bytes": Log10Transformer(),
-    "deployments": Log10Transformer(),
-    "descr_len": Log10Transformer(),
-    "diskUsage_kb": Log10Transformer(),
-    "projects": Log10Transformer(),
-    "releases": Log10Transformer(),
-    "milestones": Log10Transformer(),
-    "issuelabels": MinMaxScaler(),
-    "created": MinMaxScaler(),
-    "updated": MinMaxScaler(),
-}
-TARGET_SCALER = {"stargazers": Log10Transformer()}
-
-def col_transform(df, col, scaler):
+def scale_col(df, col, scaler):
     """
     Scale single pandas dataframe column based on sklearn scaler.
     Warning: Transforms in-place.
 
     Parameters
     ----------
-    data : pd.DataFrame
+    data : pandas DataFrame
         Must have one or more named columns
     col : str
         Column name within DataFrame
     scaler : sklearn.preprocessing.scaler
-        E.g. MinMaxScaler(), PowerTransformer(method="box-cox"),
+        E.g. MinMaxScaler(), FunctionTransformer(log10_map, log10_inv_map),
+        QuantileTransformer(output_distribution="normal"),
         PowerTransformer(method="yeo-johnson"),
-        QuantileTransformer(output_distribution="normal")
 
     Returns
     -------
-    data : pd.DataFrame
-        Transformed dataframe.
+    data : pandas DataFrame
+        Scale transformed dataframe
     scaler : sklearn.preprocessing.scaler
-        Object holds fit attributes, e.g. lambdas_ for PowerTransformer()
+        Object may hold fit attributes, e.g. lambdas_ for PowerTransformer()
     """
-    # Extract column data
+    # Extract column data, reshape
     col_data = df.loc[:, col].values.reshape(-1, 1)
-    # Apply transformation. Returns nd.array
+    # Apply scale transformation; returns ndarray
     newdata = scaler.fit_transform(col_data)
     # Transform new column in place
     df.loc[:, col] = newdata
     return df, scaler
 
 
-def feature_transform(df, col_scaler=FEATURE_SCALERS):
+# Define custom log scaler to be passed to FunctionTransformer()
+# This allows user to switch generically between custom and sklearn scalers
+
+def log10_map(array):
     """
-    Scale pandas DataFrame according to FEATURE_SCALERS.
-    Warning: Transforms in-place.
+    Apply scale transformation log10(max(x, 0.1))
 
     Parameters
     ----------
-    data : pd.DataFrame
-    col_scaler : dict {"col_name" : sklearn.preprocessing.scaler()}, optional
+    array : ndarray
 
     Returns
     -------
-    scaler_dict : dict of sklearn.preprocessing.scaler()
-        Holds inverse function, accessible via
-        scaler().inverse_transform(X), X : nd.array.
+    ndarray
     """
-    scaler_dict = {}
-    for key in col_scaler:
-        _, scaler = col_transform(df, key, col_scaler[key])
-        scaler_dict[key] = scaler
-    return scaler_dict
+    # Apply max(x, 0.1)
+    array = np.clip(array, 1e-1, None)
+    # Apply log10
+    return np.log10(array)
 
 
-def target_transform(df, col_scaler=TARGET_SCALER):
+def log10_inv_map(array):
     """
-    Scale pandas DataFrame according to TARGET_SCALER.
-    Warning: Transforms in-place.
+    Apply inverse scale transformation
+
+    y=10^x; for y in [0,0.1], min(y,0)
 
     Parameters
     ----------
-    data : pd.DataFrame
-    col_scaler : dict {"col_name" : sklearn.preprocessing.scaler()}, optional
+    array : ndarray
 
     Returns
     -------
-    scaler_dict : dict of sklearn.preprocessing.scaler()
-        Holds inverse function, accessible via
-        scaler().inverse_transform(X), X : nd.array.
+    array : ndarray
     """
-    scaler_dict = {}
-    for key in col_scaler:
-        _, scaler = col_transform(df, key, col_scaler[key])
-        scaler_dict[key] = scaler
-    return scaler_dict
+    # Invert log10
+    array = 10**array
+    # For x in [0,0.1], apply min(x, 0)
+    array[array <= 0.1] = 0
+    return array
+
+
+# Compose useful defaults for feature and target scalers
+
+FEATURE_SCALERS = {
+    "repositoryTopics": FunctionTransformer(log10_map, log10_inv_map),
+    "openissues": FunctionTransformer(log10_map, log10_inv_map),
+    "closedissues": FunctionTransformer(log10_map, log10_inv_map),
+    "forkCount": FunctionTransformer(log10_map, log10_inv_map),
+    "pullRequests": FunctionTransformer(log10_map, log10_inv_map),
+    "commitnum": FunctionTransformer(log10_map, log10_inv_map),
+    "watchers": FunctionTransformer(log10_map, log10_inv_map),
+    "readme_bytes": FunctionTransformer(log10_map, log10_inv_map),
+    "deployments": FunctionTransformer(log10_map, log10_inv_map),
+    "descr_len": FunctionTransformer(log10_map, log10_inv_map),
+    "diskUsage_kb": FunctionTransformer(log10_map, log10_inv_map),
+    "projects": FunctionTransformer(log10_map, log10_inv_map),
+    "releases": FunctionTransformer(log10_map, log10_inv_map),
+    "milestones": FunctionTransformer(log10_map, log10_inv_map),
+    "issuelabels": MinMaxScaler(),
+    "created": MinMaxScaler(),
+    "updated": MinMaxScaler(),
+}
+
+TARGET_SCALER = {"stargazers": FunctionTransformer(log10_map, log10_inv_map)}
 
 
 def module_test():
+    """Test the transformer functions"""
+
     BASE_DIR = Path(__file__).resolve().parent
     DATA_PATH = BASE_DIR / "dataset"
     FILE = "gs_table_v2.csv"
@@ -146,14 +152,7 @@ def module_test():
 
     df = pd.read_csv(DATA_PATH / SAMPLE_FILE)
     dfa = df.copy()
-    target_transform(dfa)
-    # fmt: off
-    import ipdb,os; ipdb.set_trace(context=5)  # noqa
-    # fmt: on
-
-    # tdata = data.copy()
-    # tdata, scaler = target_transform(tdata)
-    # ndata = tdata.copy()
+    scale_cols(dfa, FEATURE_SCALERS)
 
 
 if __name__ == "__main__":

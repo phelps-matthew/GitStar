@@ -232,7 +232,8 @@ def dbload(odbc_cnxn, value_list):
 
 
 def dbconnection():
-    """Intialize sql db connection
+    """
+    Intialize sql db connection
 
     Parameters
     ----------

@@ -213,8 +213,138 @@ while True:
 ```
 Additionally, the function `repocount` allows one to collect the total number of repositories returned from the raw GraphQL response.
 #### main_etl
-In Progress...
+Putting the `gqlquery` and `gstransform` modules together, we finally construct an application to execute the ETL process. Within `main_etl`, this is achieved through looping over date ranges and iterating the `GitStarSearchQuery` generator.
+
+Some important notes:
+* The Azure MSSQL database chosen is accessed through the `pyodbc` module; different db connections may be necessary if database type differs; to see pyodbc usage see [pyodbc](https://github.com/mkleehammer/pyodbc)
+* The database configurations, GitHub PAT, and SQL insertion query are convienently grouped and stored within the module `config.py`. An example `config_sample.py` has been provided as a template; again, db connection implementation may vary
+* Consider using online SQL transformation operation to further clean and process data. See `config_sample.py` for examples of this.
+* Consider use of `gqlquery.RepoCountError` to log GQL queries that yield repo counts exceeding 1000; alternatively, use conditional statement to redirect loop over push date slices (see function `special_etl()`)
+* GitHub limits had to be probed experimentally - did not adhere to rate limits as suggested in documentation. May only return 1000 repo nodes per search query.
+* 50 items/(http request) was reasonable fetching param; higher items/request yields more http timeouts
+
+Omitting detail on logging and pyodbc specifics, the main ETL process can be implemented as
+```python
+CREATED_START = arrow.get("2018-09-21")
+CREATED_END = arrow.get("2019-12-31")
+PUSH_START = arrow.get("2020-01-01")
+MAXITEMS = 50
+MINSTARS = 1
+MAXSTARS = None
+
+# Intialize db connection and GraphQL response generator
+dbcnxn = dbconnection()
+gql_gen = gql_generator(CREATED_START, PUSH_START)
+
+# Loop until end date
+delta = (CREATED_END - CREATED_START).total_seconds()
+day = CREATED_START
+while delta >= 0:
+    try:
+        # Iterate generator, transform response
+        clean_data = transform(next(gql_gen))
+
+        # Construct generator of dict values (db rows)
+        value_list = (list(node.values()) for node in clean_data)
+
+        # Load into db
+        dbload(dbcnxn, value_list)
+
+    # Catch pagination end condition or repo count overflow
+    except (StopIteration, gqlquery.RepoCountError):
+        # Increment over date range
+        day = day.shift(days=+1)
+
+        # Initialize new generator
+        gql_gen = gql_generator(day, PUSH_START)
+
+        # Update delta date range
+        delta = (created_end - day).total_seconds()
+```
+The result is a pipeline that inserts 50 rows of respository features at a time, executing until search query reaches end condition
 #### config_sample
+Referenced here for completeness.
+```python
+# GitHub PERSONAL ACCESS TOKEN
+PAT = "<PERSONAL ACCESS TOKEN>"
+
+# Azure SQL database config
+SERVER = "mydb.database.windows.net"
+DATABASE = "my_db"
+USERNAME = "username"
+PASSWORD = "pass"
+
+# INSERT SQL pyodbc query. When using LEFT, NVARCHARS are interpreted as ntext.
+# Must cast to NVARCHAR for truncation
+INSERT_QUERY = """\
+INSERT INTO my_table_v1
+(
+nameWithOwner,
+stargazers,
+createdAt,
+updatedAt,
+openissues,
+closedissues,
+forkCount,
+pullRequests,
+commitnum,
+watchers,
+diskUsage_kb,
+readme_bytes,
+releases,
+projects,
+milestones,
+deployments,
+primaryLanguage,
+issuelabels,
+repositoryTopics,
+licenseInfo,
+homepageUrl,
+description,
+hasIssuesEnabled,
+hasWikiEnabled,
+isLocked,
+isDisabled,
+id,
+databaseId,
+createdAt_sec,
+updatedAt_sec
+)
+VALUES
+(
+LEFT(CAST(? AS NVARCHAR(200)), 200),
+?,
+?,
+?,
+?,
+?,
+?,
+?,
+?,
+?,
+?,
+?,
+?,
+?,
+?,
+?,
+LEFT(CAST(? AS NVARCHAR(200)), 200),
+?,
+?,
+LEFT(CAST(? AS NVARCHAR(2000)), 2000),
+LEFT(CAST(? AS NVARCHAR(1000)), 1000),
+LEFT(CAST(? AS NVARCHAR(2000)), 2000),
+?,
+?,
+?,
+?,
+?,
+?,
+?,
+?
+);
+"""
+```
 In Progress...
 ### models
 In Progress

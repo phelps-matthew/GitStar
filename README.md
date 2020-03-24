@@ -47,7 +47,7 @@ Here is a representation of the processes executed in Gitstar, as we go from col
 ![Flowchart](/presentation/mermaid-diagram-svg2.svg)
 
 ## Usage
-The package is divided into two stages: data `ETL` (extract, transfrom, load) and model training/optimization (`models`). The file tree below highlights the location of the the public modules as well as applications of the modules (`main_etl` and `main_model`).
+The package is divided into two stages: data extract, transform, load (`ETL`) and model training/optimization (`models`). The file tree below highlights the location of the the public API as well as suggested application of the modules (i.e., `main_etl` and `main_model`).
 ```
 ├── gitstar
 │   ├── ETL

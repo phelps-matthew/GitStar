@@ -216,7 +216,7 @@ Additionally, the function `repocount` allows one to collect the total number of
 Putting the `gqlquery` and `gstransform` modules together, we finally construct an application to execute the ETL process. Within `main_etl`, this is achieved through looping over date ranges and iterating the `GitStarSearchQuery` generator.
 
 Some important notes:
-* The Azure MSSQL database chosen is accessed through the `pyodbc` module; different db connections may be necessary if database type differs; to see pyodbc usage see [pyodbc](https://github.com/mkleehammer/pyodbc)
+* The Azure MSSQL database chosen is accessed through the `pyodbc` module; different db connections may be necessary if database type differs; for pyodbc usage see [pyodbc](https://github.com/mkleehammer/pyodbc)
 * The database configurations, GitHub PAT, and SQL insertion query are convienently grouped and stored within the module `config.py`. An example `config_sample.py` has been provided as a template; again, db connection implementation may vary
 * Consider using online SQL transformation operation to further clean and process data. See `config_sample.py` for examples of this.
 * Consider use of `gqlquery.RepoCountError` to log GQL queries that yield repo counts exceeding 1000; alternatively, use conditional statement to redirect loop over push date slices (see function `special_etl()`)

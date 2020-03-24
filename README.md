@@ -262,7 +262,7 @@ while delta >= 0:
 ```
 The result is a pipeline that inserts 50 rows of respository features at a time, executing until search query reaches end condition.
 #### config_sample
-Here is a sub-sample of `config_sample.py` to illustrate an example of pyodbc config and query insertion. Online SQL transformation operations highly recommended. (the '?' represent slots to pass variables from `value_list` above).
+Here is a sub-sample of `config_sample.py` to illustrate an example of pyodbc config and query insertion. Online SQL transformation operations highly recommended. (the '?'s represent slots to pass variables from `value_list` above).
 ```python
 # GitHub PERSONAL ACCESS TOKEN
 PAT = "<PERSONAL ACCESS TOKEN>"

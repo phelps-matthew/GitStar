@@ -1,6 +1,7 @@
 """
-Normalizes/Transforms/Scales GitStar features and target. Provides necessary
-function for inverse target transformation.
+Scales GitStar features and target variables.
+* Implements sklearn.preprocessing scaling functions
+* Capable of storing fit parameters for allow inverse transformations
 """
 from pathlib import Path
 import pandas as pd
@@ -27,19 +28,16 @@ def scale_cols(df, scaler_dict=None):
         scaler().inverse_transform(ndarray)
     """
     fitted_dict = {}
-
-    # If supplied scalers, apply them; otherwise apply identity transformation
-
-    if scaler_dict is not None:
-        for col in scaler_dict:
-            # Apply scaling; transforms in place
+    for col in scaler_dict:
+        # If supplied scalers, apply them
+        if scaler_dict is not None:
+            # transform in place
             _, scaler = scale_col(df, col, scaler_dict[col])
             # Construct dict of fitted scalers; useful for inv. params
             fitted_dict[col] = scaler
-    else:
-        for col in scaler_dict:
+        # Otherwise apply identity transformation
+        else:
             fitted_dict[col] = FunctionTransformer()
-
     return fitted_dict
 
 

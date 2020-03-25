@@ -85,7 +85,7 @@ class DFF(nn.Module):
         return self.out(x)
 
 
-def print_gpu():
+def print_gpu_status():
     """Print GPU torch cuda status"""
     try:
         print("torch.cuda.device(0): {}".format(torch.cuda.device(0)))

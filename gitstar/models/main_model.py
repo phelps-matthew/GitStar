@@ -8,17 +8,10 @@ from pathlib import Path
 import torch
 import torch.nn.functional as F
 from torch import optim
-import pandas as pd
-from gitstar.models.dataload import (
-    GitStarDataset,
-    WrappedDataLoader,
-    split_df,
-    get_data,
-)
+from gitstar.models.dataload import form_dataloaders, form_datasets
+import matplotlib.pyplot as plt
 import gitstar.models.deepfeedforward as dff
 import numpy as np
-import seaborn as sns
-import matplotlib.pyplot as plt
 
 # Path Globals
 BASE_DIR = Path(__file__).resolve().parent
@@ -29,68 +22,35 @@ FILE = "gs_table_v2.csv"
 SAMPLE_FILE = "10ksample.csv"
 
 # Enable GPU support
-dev = torch.device("cpu")
-# dev = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-dff.print_gpu()
-print(dev)
-
-
-def preprocess(x, y):
-    """
-    Cast tensors into GPU/CPU device type.
-
-    Parameters
-    ----------
-    x,y : torch.tensor.
-
-    Returns
-    -------
-    x.to(dev), y.to(dev) : torch.tensor
-    """
-    return x.to(dev), y.to(dev)
+DEV = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+dff.print_gpu_status()
 
 
 def main():
-    """Train, validate, optimize model."""
+    """Train, validate, and optimize model"""
+    # Set hyperparameters: batch size, learning rate, hidden layers, activ. fn
+    bs = 64
+    epochs = 1000
+    lr = 10 ** (-5)
+    h_layers = [32, 16]
+    a_fn = F.relu
 
-    # Load data. Apply scaler transformations to training data. Get DataLoader.
-    batch_size = 64
-    df = pd.read_csv(DATA_PATH / FILE).astype("float64")
-    df = df.loc[
-        (df["stargazers"] >= 10)
-        & (df["closedissues"] > 0)
-        & (df["commitnum"] > 1)
-        & (df["readme_bytes"] > 0)
-    ]
-    train_df, valid_df = split_df(df, sample_frac=1)
-    train_ds = GitStarDataset(train_df)
-    valid_ds = GitStarDataset(
-        valid_df,
-        f_scale=train_ds.feature_scalers,
-        t_scale=train_ds.target_scaler,
-    )
-    train_dl, valid_dl = get_data(train_ds, valid_ds, bs=batch_size)
-    train_dl = WrappedDataLoader(train_dl, preprocess)
-    valid_dl = WrappedDataLoader(valid_dl, preprocess)
+    # Construct Dataset from file; form DataLoaders
+    train_ds, valid_ds = form_datasets(DATA_PATH / FILE)
+    train_dl, valid_dl = form_dataloaders(train_ds, valid_ds, bs, preprocess)
 
     # Gather target inverse scaler fn
     target_inv_scaler = train_ds.target_scaler["stargazers"]
 
-    # Hyperparameters
-    lr = 10 ** (-5)
-    h_layers = [32, 16]
-    epochs = 1000
-    a_fn = F.relu
-
     # Intialize model (w/ GPU support), optimization method, and loss function
     model = dff.DFF(D_in=21, D_hid=h_layers, D_out=1, a_fn=a_fn)
-    model.to(dev)
+    model.to(DEV)
     opt = optim.Adam(model.parameters(), lr=lr)
     loss_func = F.mse_loss
 
     # Generate descriptive parameter string (for pngs and csvs)
     model_str = dff.hyper_str(
-        h_layers, lr, opt, a_fn, batch_size, epochs, prefix="log_canonical_"
+        h_layers, lr, opt, a_fn, bs, epochs, prefix="log_canonical_"
     )
     print(model_str)
 
@@ -109,6 +69,21 @@ def main():
     dff.plot_loss(
         train_loss, path=IMG_PATH / (model_str + ".png"), title=model_str
     )
+
+
+def preprocess(x, y):
+    """
+    Cast tensors into GPU/CPU device type.
+
+    Parameters
+    ----------
+    x,y : torch.tensor.
+
+    Returns
+    -------
+    x.to(dev), y.to(dev) : torch.tensor
+    """
+    return x.to(DEV), y.to(DEV)
 
 
 if __name__ == "__main__":

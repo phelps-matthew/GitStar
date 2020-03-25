@@ -1,7 +1,7 @@
 # &#10031; GitStar 
 
 ## What is GitStar?
-GitStar is a pipeline used to construct a neural network that analyzes a given public GitHub repository and attempts to predict its star number. Implemented in pytorch, GitStar uses a large variety of GitHub heuristics to make star number estimates.
+GitStar is a pipeline used to construct a neural network that analyzes a given public GitHub repository and attempts to predict its star number. Implemented in PyTorch, GitStar uses a large variety of GitHub heuristics to make star number estimates.
 
 ## Table of Contents
   * [Installation](#installation)

@@ -149,6 +149,7 @@ def form_datasets(path, sample_frac=1):
     Parameters
     ----------
     path : str or Path
+        Filepath to csv data
     sample_frac : float or int, default 1
         sample_size/total_data_size
 
@@ -162,7 +163,7 @@ def form_datasets(path, sample_frac=1):
     """
     # Load the file into DataFrame
     df = pd.read_csv(path).astype("float64")
-    # Filter data based on criteria
+    # Filter data based on canonical GitStar criteria
     df = df.loc[
         (df["stargazers"] >= 10)
         & (df["closedissues"] > 0)

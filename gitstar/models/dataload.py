@@ -1,20 +1,18 @@
 """
-Data handling for DFF model.
-
-ToDo:
-    Comment + Docstrings
-    Possible wrappers for csv -> ds -> dataloader
+Constructs scaled datasets and dataloaders from GitStar database entries
+* Loads csv to DataFrame, filters according to canonical GitStar criteria
+* Inherits batching and loading methods from torch.utils.data Dataset
+* Permits use of preprocessing functions (e.g. GPU device support)
+* Splits into training/validation sets, applying scaling transforms
+* Applies scaling params from training set to validation scaling
+* Accessible inverse scale transformer for target data
 """
 from pathlib import Path
 import torch
 from torch.utils.data import Dataset, DataLoader
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from gitstar.models.datanorm import (
-    scale_cols,
-    FEATURE_SCALERS,
-    TARGET_SCALER,
-)
+from gitstar.models.datanorm import scale_cols, FEATURE_SCALERS, TARGET_SCALER
 
 
 class GitStarDataset(Dataset):

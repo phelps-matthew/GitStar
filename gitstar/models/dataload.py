@@ -191,9 +191,9 @@ def split_df(df, split_frac=0.8, sample_frac=1):
     ----------
     df : pd.DataFrame
     split_frac : float or int
-        (train)/(train+validation)
+        (train_len)/(train_len + validation_len)
     sample_frac : float or int, optional
-        sample_len/df_len
+        (sample_len)/(df_len)
 
     Returns
     -------

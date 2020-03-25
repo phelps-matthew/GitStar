@@ -235,10 +235,7 @@ def module_test():
 
     df = pd.read_csv(DATA_PATH / FILE).astype("float64")
     cd = canonical_data(df)
-    # fmt: off
-    import ipdb,os; ipdb.set_trace(context=5)  # noqa
-    # fmt: on
-    train_df, valid_df = split_df(df)
+    train_df, valid_df = split_df(cd)
     train_ds = GitStarDataset(train_df)
     valid_ds = GitStarDataset(
         valid_df,
@@ -248,7 +245,7 @@ def module_test():
     train_dl, valid_dl = form_dataloaders(train_ds, valid_ds, bs=64)
     for xb, yb in train_dl:
         print(xb, yb)
-        input("Press any key to continue, ctrl+z to exit")
+        input("Press return to continue, ctrl+z to exit")
 
 
 if __name__ == "__main__":

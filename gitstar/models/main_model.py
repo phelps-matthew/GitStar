@@ -1,7 +1,7 @@
 """
-Implements deep feedforward model for consuming the GitStar dataset. Loads
-training and validation datasets, optimizes hyperparameters, and generates
-loss plots/data. Cuda GPU ready.
+Implements deep feedforward model for consuming the GitStar dataset. Forms
+training and validation dataloaders, optimizes hyperparameters, logs loss data,
+and generates loss plots. Cuda GPU ready.
 """
 
 from pathlib import Path
@@ -41,7 +41,7 @@ def main():
 
     # Gather target inverse scaler fn
     target_inv_scaler = train_ds.target_scaler["stargazers"]
-
+    #-------------------------------------------------------------------------
     # Intialize model (w/ GPU support), optimization method, and loss function
     model = dff.DFF(D_in=21, D_hid=h_layers, D_out=1, a_fn=a_fn)
     model.to(DEV)
@@ -81,7 +81,7 @@ def preprocess(x, y):
 
     Returns
     -------
-    x.to(dev), y.to(dev) : torch.tensor
+    torch.tensor
     """
     return x.to(DEV), y.to(DEV)
 

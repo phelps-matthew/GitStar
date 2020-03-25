@@ -19,29 +19,29 @@ import arrow
 
 class DFF(nn.Module):
     """
-    Construct basic deep FF net with len(D_hid) hidden layers.
+    Construct deep feedfoward net with backprop and arbitrary hidden layers
 
     Parameters
     ----------
     D_in, D_out : int
-        Input, output dimension.
+        input, output dimension of net
     D_hid : list or int
-        List of hidden layer dimensions, sequential.
-    a_fn : torch.nn.functional, optional
-        Activation function on hidden layers.
+        list of hidden layer dimensions, sequential
+    a_fn : torch.nn.functional, default F.relu
+        activation function on hidden layers
 
     Attributes
     ----------
     a_fn : torch.nn.functional
     layers : list of nn.Module
-        Does not include ouput layer.
+        does not include ouput layer
     out : nn.Module
-        Output layer.
+        output layer
     """
 
     def __init__(self, D_in, D_hid, D_out, a_fn=F.relu):
 
-        # Module must be initialized, many hidden attributes
+        # nn.Module must be initialized, many class attributes
         super().__init__()
         self.a_fn = a_fn
 
@@ -56,19 +56,19 @@ class DFF(nn.Module):
 
         self.layers = []
 
-        # Construct interlaced dims for self.layers ModuleList
+        # Construct interlaced dims for nn.ModuleList
         for dim in range(len(dim_list) - 1):
             self.layers.append(nn.Linear(dim_list[dim], dim_list[dim + 1]))
 
         # Separate output layer for different activation
         self.out = self.layers.pop()
 
-        # Modules w/i ModuleList are properly inherited
+        # ModuleList allows optimizer to properly handle Module weights
         self.layers = nn.ModuleList(self.layers)
 
     def forward(self, x):
         """
-        Execute feedforward from input.
+        Execute feedforward from input
 
         Parameters
         ----------
@@ -88,26 +88,25 @@ class DFF(nn.Module):
 def print_gpu_status():
     """Print GPU torch cuda status"""
     try:
-        print("torch.cuda.device(0): {}".format(torch.cuda.device(0)))
-        print("torch.cuda.device_count(): {}".format(torch.cuda.device_count()))
-        print(
+        cuda_status = [
+            "torch.cuda.device(0): {}".format(torch.cuda.device(0)),
+            "torch.cuda.device_count(): {}".format(torch.cuda.device_count()),
             "torch.cuda.get_device_name(0): {}".format(
                 torch.cuda.get_device_name(0)
-            )
-        )
-        print("torch.cuda_is_available: {}".format(torch.cuda.is_available()))
-        print(
-            "torch.cuda.current_device(): {}".format(
+            ),
+            "torch.cuda_is_available: {}".format(torch.cuda.is_available()),
+            "torch.cuda.current_device: {}".format(
                 torch.cuda.current_device()
-            )
-        )
+            ),
+        ]
+        print(cuda_status, sep="\n")
     except:
         print("Some torch.cuda functionality unavailable")
 
 
 def set_logger(filepath):
     """
-    Intialize basic root logger.
+    Intialize basic root logger
 
     Parameters
     ----------
@@ -127,22 +126,22 @@ def set_logger(filepath):
 
 def hyper_str(h_layers, lr, opt, a_fn, bs, epochs, prefix=None, suffix=None):
     """
-    Generate str for DFF model for path names.
+    Generate DFF model string for path and plot naming
 
     Parameters
     ----------
     h_layers : int or list of int
-        Hidden layer dimensions, e.g. \[16,16].
+        hidden layer dimensions, e.g. [16,16]
     lr : float
-        Learning rate.
+        learning rate.
     opt : torch.optim
-        Optimizer, e.g. torch.optim.SGD(..).
+        optimizer, e.g. torch.optim.SGD(..)
     a_fn : F.functional
-        Activation function applied to hidden layers.
+        activation function applied to hidden layers
     bs, epochs : int
-        Batch size.
+        batch size.
     prefix, suffix : str, optional
-        Consider appending with '_'
+        consider appending with '_'
 
     Returns
     -------
@@ -160,9 +159,12 @@ def hyper_str(h_layers, lr, opt, a_fn, bs, epochs, prefix=None, suffix=None):
     opt_sub = re.search("^(\w+)\s.*", str(opt))
     opt_str = opt_sub.group(1)
 
+    # form the model string
     param_str = "{}_lr_{}_{}_{}_bs_{}_epochs_{}".format(
         h_layers_str, lr, opt_str, a_fn_str, bs, epochs
     )
+
+    # insert any prefixes or suffixes
     full_str = prefix + param_str + suffix
     return full_str
 
@@ -171,12 +173,12 @@ def plot_loss(
     loss_array, path=None, title="Loss", ylabel="MSE Loss", ylim=(0, 2)
 ):
     """
-    Simple plot of 1d array.
+    Simple plot of 1d array, defaulted for MSE Loss
 
     Parameters
     ----------
-    loss_array : list or nd.array
-    path : str or Path, optional
+    loss_array : list or ndarray
+    path : str or Path, default None
         Path to store image.
     ylabel : str
     ylim : tuple of int or float
@@ -185,12 +187,13 @@ def plot_loss(
     -------
     None
     """
-    plt.close()
+    # Plot the array; add labels, limits, grid
     fig, ax = plt.subplots()
     ax.plot(loss_array)
     ax.set_ylim(ylim)
     ax.set(xlabel="batch number", ylabel=ylabel, title=title)
     ax.grid()
+    # Store as png if path given, otherwise show plot UI
     if path:
         fig.savefig(
             str(path), transparent=False, dpi=300, bbox_inches="tight",
@@ -202,11 +205,12 @@ def plot_loss(
 
 def loss_batch(model, loss_func, xb, yb, opt=None):
     """
-    Computes batch loss for training (with opt) and validation.
-        
+    Computes batch loss for training and validation
+
     Parameters
     ----------
-    model : DFF
+    model : nn.Module
+        E.g. DFF
     loss_func : torch.nn.functional
     xb, yb : torch.tensor
     opt : torch.optim
@@ -214,27 +218,32 @@ def loss_batch(model, loss_func, xb, yb, opt=None):
     Returns
     -------
     float
-        Loss of batch.
+        loss of batch
     int
-        Batch size.
-    """
-    loss = loss_func(model(xb), yb)
+        latch size
 
+    Notes
+    -----
+    Does not update weights if optimizer not provided
+    """
+    # Compute batch loss
+    loss = loss_func(model(xb), yb)
+    
+    # Peform backprop if training
     if opt is not None:
         loss.backward()
         opt.step()
         opt.zero_grad()
-        # Capture loss
-        # logging.info(loss)
-    # loss returns torch.tensor
+        # Log traning loss only
+        logging.info(loss)
+    # extract loss float from torch.tensor
     return loss.item(), len(xb)
 
 
 def inv_loss_batch(model, loss_func, xb, yb, t_scaler):
     """
-    Computes unscaled batch loss from validation set.
-    If inverse fn not provided, passes dummy returns. See fit().
-        
+    Computes unscaled batch loss from validation set
+
     Parameters
     ----------
     model : DFF
@@ -248,6 +257,10 @@ def inv_loss_batch(model, loss_func, xb, yb, t_scaler):
         Loss of batch.
     int
         Batch size.
+
+    Notes
+    -----
+    If inverse fn not provided, passes dummy returns. See fit().
     """
     # Determine unscaled MSE
     if t_scaler is not None:

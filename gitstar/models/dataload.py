@@ -162,14 +162,9 @@ def form_datasets(path, sample_frac=1):
     # Load the file into DataFrame
     df = pd.read_csv(path).astype("float64")
     # Filter data based on canonical GitStar criteria
-    df = df.loc[
-        (df["stargazers"] >= 10)
-        & (df["closedissues"] > 0)
-        & (df["commitnum"] > 1)
-        & (df["readme_bytes"] > 0)
-    ]
+    dfc = canonical_data(df).df
     # Split DataFrame into training/validation
-    train_df, valid_df = split_df(df, sample_frac)
+    train_df, valid_df = split_df(dfc, sample_frac)
     # Form training Dataset object
     train_ds = GitStarDataset(train_df)
     # Form validation Dataset object; use scaling params from training Dataset
@@ -204,13 +199,45 @@ def split_df(df, split_frac=0.8, sample_frac=1):
     return train_df, valid_df
 
 
+def canonical_data(df, transform=True):
+    """
+    Procure canonical transformed dataset from full dataset
+
+    Parameters
+    ----------
+    df : pandas:DataFrame
+
+    Returns
+    -------
+    trans_df : pandas.DataFrame
+    """
+    c_data = df.loc[
+        (df["stargazers"] >= 10)
+        & (df["closedissues"] > 0)
+        & (df["commitnum"] > 1)
+        & (df["readme_bytes"] > 0)
+        & (df["watchers"] > 0)
+        & (df["forkCount"] > 0)
+        & (df["diskUsage_kb"] > 0)
+        & (df["readme_bytes"] > 0)
+        & (df["pullRequests"] > 0)
+    ].copy()
+    trans_df = GitStarDataset(c_data, transform=transform).df
+    return trans_df
+
+
 def module_test():
     """Test functions and class implementations"""
     BASE_DIR = Path(__file__).resolve().parent
     DATA_PATH = BASE_DIR / "dataset"
+    FILE = "gs_table_v2.csv"
     SAMPLE_FILE = "10ksample.csv"
 
-    df = pd.read_csv(DATA_PATH / SAMPLE_FILE).astype("float64")
+    df = pd.read_csv(DATA_PATH / FILE).astype("float64")
+    cd = canonical_data(df)
+    # fmt: off
+    import ipdb,os; ipdb.set_trace(context=5)  # noqa
+    # fmt: on
     train_df, valid_df = split_df(df)
     train_ds = GitStarDataset(train_df)
     valid_ds = GitStarDataset(

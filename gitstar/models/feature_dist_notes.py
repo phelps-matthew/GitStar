@@ -15,7 +15,7 @@ import seaborn as sns
 from scipy import stats
 from sklearn import linear_model
 
-from gitstar.models.dataload import GitStarDataset
+from gitstar.models.dataload import GitStarDataset, canonical_data
 
 # Path Globals
 BASE_DIR = Path(__file__).resolve().parent
@@ -216,33 +216,6 @@ def linreg_print(x, y, data):
             slope, intercept, r_value, p_value, std_err
         )
     )
-
-
-def canonical_data(data, transform=True):
-    """
-    Procure canonical transformed dataset from full dataset.
-
-    Parameters
-    ----------
-    data : pandas:DataFrame
-
-    Returns
-    -------
-    trans_df : pandas.DataFrame
-    """
-    c_data = data.loc[
-        (data["stargazers"] >= 10)
-        & (data["closedissues"] > 0)
-        & (data["commitnum"] > 1)
-        & (data["readme_bytes"] > 0)
-        & (data["watchers"] > 0)
-        & (data["forkCount"] > 0)
-        & (data["diskUsage_kb"] > 0)
-        & (data["readme_bytes"] > 0)
-        & (data["pullRequests"] > 0)
-    ].copy()
-    trans_df = GitStarDataset(c_data, transform=transform).df
-    return trans_df
 
 
 def correlation_matrix_plot(df):

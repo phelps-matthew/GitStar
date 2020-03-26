@@ -45,7 +45,7 @@ def main():
     data.loc[:, "created"] = 10 ** (-12) * (data.loc[:, "created"].values)
 
     # Pair wise plotting columns. Print statistics
-    x = "forkCount"
+    x = "closedissues"
     y = "stargazers"
     linreg_print(x, y, data)
 
@@ -69,7 +69,7 @@ def main():
     p.ax_joint.set_ylim(reg_ylim[0], y2max)
 
     # Label axes
-    p.set_axis_labels(xlabel="Fork Count", ylabel="Stars")
+    p.set_axis_labels(xlabel="Closed Issues", ylabel="Stars")
 
     # Add colorbar
     plt.subplots_adjust(left=0.2, right=0.8, top=0.8, bottom=0.2)  # shrink fig

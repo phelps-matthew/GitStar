@@ -32,7 +32,7 @@ git clone https://github.com/phelps-matthew/GitStar.git
 * Enable virtual environment (optional)
 ```
 python -m venv myvenv
-<my_dir> venv/bin/activate
+<my_dir> myvenv/bin/activate
 ```
 * Install package
 ``` 

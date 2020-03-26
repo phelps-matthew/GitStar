@@ -507,6 +507,8 @@ To assess model performance, the mean squared error (MSE) and coefficient of det
 <img src="/presentation/unscaled_validation_err_50_FINAL.png"  width="450"><img src="/presentation/unscaled_validation_err_full_FINAL.png"  width="450">
 
 ### Feature Correlations
-adsf
+One method to gain insight into how features might affect the star number (like readme size or commit number), is to form a correlation matrix. Here the numbers represent linear correlation coefficients (pearson's). A value of 0 suggests the relationship between x and y is linearly uncorrelated, whereas as +/- 1 implies that the data is perfectly described by a linear relationship.
+
+To capture the essence of the actual dataset, and to further explore interesting correlations, here we plot the data directly. We perform a lienar regression on inter-feature and feature-target variables, plot frequency distributions, and illustrate density with the hexbin plot. Pearson's correlation coefficient and p value statistics are overlayed. (Two sided p-value from [scipy.stats.pearsonr](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.pearsonr.html) - roughly indicates probability of uncorrelated data producing the actual dataset (or one that is even more correlated). Assumes normal distributions of features and or target).
 ### Considerations
 In Progress...

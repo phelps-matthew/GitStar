@@ -9,15 +9,13 @@ Constructs deep feedforward NN model with backprop
 """
 
 from pathlib import Path
-import torch
-from torch import nn
-import torch.nn.functional as F
-from torch import optim
-import pandas as pd
-import numpy as np
 import logging
 import re
 import matplotlib.pyplot as plt
+from torch import nn
+import torch
+import torch.nn.functional as F
+import numpy as np
 import arrow
 
 # Path Globals

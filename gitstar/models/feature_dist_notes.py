@@ -20,6 +20,7 @@ from gitstar.models.dataload import GitStarDataset, canonical_data
 # Path Globals
 BASE_DIR = Path(__file__).resolve().parent
 DATA_PATH = BASE_DIR / "dataset"
+LOG_PATH = BASE_DIR / "logs"
 IMG_PATH = BASE_DIR / "features" / "full_seaborn"
 IMG_PATH.mkdir(parents=True, exist_ok=True)
 FILE = "gs_table_v2.csv"
@@ -31,6 +32,11 @@ cmap = LinearSegmentedColormap.from_list("mycmap", ["#6585cc", "#1d2438"])
 
 def main():
     """Workspace for generating plots."""
+
+    # Validation loss plots
+    val = pd.read_csv(LOG_PATH/"valid_inv_loss_FINAL_32x16_lr_1e-05_Adam_rel_bs_64_epochs_1000.csv")
+    val_rs = pd.read_csv(LOG_PATH/"valid_inv_rs_FINAL_32x16_lr_1e-05_Adam_rel_bs_64_epochs_1000.csv")
+    plot_valid_loss(val, val_rs, 50)
 
     # Load data, adjust date order of magnitudes for proper histogram display.
     df = pd.read_csv(DATA_PATH / FILE).astype("float64")
@@ -257,7 +263,7 @@ def correlation_matrix_plot(df):
     plt.show()
 
 
-def plot_valid_loss(vloss, vr2, xlim):
+def plot_valid_loss(vloss, vr2, xlim=None):
     """
     Lineplot of validation loss and R^2 per epoch.
 

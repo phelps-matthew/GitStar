@@ -488,12 +488,12 @@ The model itself is based on a multi-layer feedforward network with backpropogat
 * Activation Function: ReLU
 * Optimizer: Adam
   + Learning Rate: 10^(-5)
-* Scaling transforms
+* Scaling Transforms
   + MinMaxScaler (sklearn.preprocessing)
   + "Quasi" Log10Transformer (see `datanorm`)
-* Batch size: 64
+* Batch Size: 64
 * Epochs: 1000
-* Public repo filter criteria
+* Public Repository Filter Criteria
   + Stars > 1
   + Closed Issues > 0
   + Commits > 0

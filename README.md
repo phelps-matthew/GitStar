@@ -305,7 +305,7 @@ While scaling the data is not strictly necessary, it was found that it immensely
 
 The scaling of the data is enacted by the function `scale_cols` which scales selected columns, e.g. features or target, within the dataset. Specifically, a dictionary of column names and scale transformers is passed to `scale_cols`, allowing one to use different scalers on different features. The dataset should be cast into a DataFrame before passing to `scale_cols`. 
 
-The scalers themselves are taken from the [sklearn preprocessing](https://scikit-learn.org/stable/auto_examples/preprocessing/plot_all_scaling.html#sphx-glr-auto-examples-preprocessing-plot-all-scaling-py) module. The sklearn scalers are capable of storing fit parameters and provide convienent inverse transformation methods.
+The scalers themselves are taken from the [sklearn preprocessing](https://scikit-learn.org/stable/auto_examples/preprocessing/plot_all_scaling.html#sphx-glr-auto-examples-preprocessing-plot-all-scaling-py/) module. The sklearn scalers are capable of storing fit parameters and provide convienent inverse transformation methods.
 
 To demonstrate the use of `scale_cols` and sklearn, we will transform the "created" and "updated" columns within the dataset using `MinMaxScaler()`.
 ```python
@@ -509,7 +509,7 @@ To assess model performance, the mean squared error (MSE) and coefficient of det
 ### Feature Correlations
 One method to gain insight into how features might affect the star number (like readme size or commit number), is to form a correlation matrix. Here the numbers represent linear correlation coefficients (pearson's). A value of 0 suggests the relationship between x and y is linearly uncorrelated, whereas as +/- 1 implies that the data is perfectly described by a linear relationship.
 <p align="center"><img src="/presentation/correlation_matrix.png"  width="2000"></p>
-To capture the essence of the actual dataset, and to further explore interesting correlations, here we plot the data directly. We perform a linear regression on inter-feature and feature-target variables, plot frequency distributions, and illustrate density with a hexbin plot. Pearson's correlation coefficient and p value statistics are overlayed. (Two sided p-value from [scipy-stats-pearsonr](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.pearsonr.html) - roughly indicates probability of uncorrelated data producing the actual dataset (or one that is even more correlated). Assumes normal distributions of features and or target).
+To capture the essence of the actual dataset, and to further explore interesting correlations, here we plot the data directly. We perform a linear regression on inter-feature and feature-target variables, plot frequency distributions, and illustrate density with a hexbin plot. Pearson's correlation coefficient and p value statistics are overlayed. (Two sided p-value from [scipy.stats.pearsonr](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.pearsonr.html) - roughly indicates probability of uncorrelated data producing the actual dataset (or one that is even more correlated). Assumes normal distributions of features and or target).
 <br>
 *Note: The colorbar indicates number of repositories within a single hexbin of specified color*
 

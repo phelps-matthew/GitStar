@@ -392,19 +392,67 @@ a_fn = F.relu
 model = dff.DFF(D_in=21, D_hid=h_layers, D_out=1, a_fn=a_fn)
 opt = optim.Adam(model.parameters(), lr=lr)
 loss_func = F.mse_loss
-fit_args = (model, loss_func, opt, train_dl, valid_dl)
 
 # Generate descriptive filename string for csv logs
 model_str = dff.hyper_str(h_layers, lr, opt, a_fn, bs, epochs)
 
 # Train, validate, and store loss
-dff.fit(epochs, model, loss_func, opt, train_dlfit_args, LOG_PATH, model_str)
+fit_args = (model, loss_func, opt, train_dl, valid_dl)
+dff.fit(epochs, *fit_args, LOG_PATH, model_str)
 ```
-
-
 #### main_model
-In Progress...
+Putting all the modules together, we may form a main application that implemements the deep feedforward model by constructing GitStar datasets dataloaders, executing model training and validation, and logging loss and validation diagnostics. To facilitate hardware acceleration, all torch tensors and model parameters are cast to Cuda device type for GPU computation.
+```python
+import torch
+import torch.nn.functional as F
+from torch import optim
+import gitstar.models.deepfeedforward as dff
+from gitstar.models.dataload import form_dataloaders, form_datasets
 
+# Path Globals
+BASE_DIR = Path(__file__).resolve().parent
+DATA_PATH = BASE_DIR / "dataset"
+LOG_PATH = BASE_DIR / "logs"
+FILE = "gs_table_v2.csv"
+
+# Enable GPU support and initialize logger
+DEV = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+dff.print_gpu_status()
+def preprocess(x, y):
+    return x.to(DEV), y.to(DEV)
+
+# Set hyperparameters: batch size, learning rate, hidden layers, activ. fn
+bs = 64
+epochs = 10
+lr = 10 ** (-5)
+h_layers = [32, 16]
+a_fn = F.relu
+
+# Construct Dataset from file; form DataLoaders
+train_ds, valid_ds = form_datasets(DATA_PATH / FILE)
+train_dl, valid_dl = form_dataloaders(train_ds, valid_ds, bs, preprocess)
+
+# Gather target inverse scaler fn
+t_inv_scaler = train_ds.target_scaler["stargazers"]
+
+# Intialize model (w/ GPU support), optimization method, and loss function
+model = dff.DFF(D_in=21, D_hid=h_layers, D_out=1, a_fn=a_fn)
+model.to(DEV)
+opt = optim.Adam(model.parameters(), lr=lr)
+loss_func = F.mse_loss
+fit_args = (model, loss_func, opt, train_dl, valid_dl, t_inv_scaler)
+
+# Generate descriptive filename string for csv logs
+model_str = dff.hyper_str(h_layers, lr, opt, a_fn, bs, epochs)
+
+# Train, validate, and store loss
+dff.fit(epochs, *fit_args, LOG_PATH, model_str)
+```
+Comments:
+* Default scaling methods are applied; must apply target inverse scaler for proper unscaled batch loss
+* Learning rate, hidden layers, and activation function shown yielded best performance in optimization tests thus far
+* Computing adapative learning rates for each parameter (e.g. Adam) highly suggested due to large feature-target variability
+* Consider methods for parallelizing fit function for faster computation
 ## Results
 ### Model Performance
 In Progress...

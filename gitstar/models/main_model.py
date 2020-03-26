@@ -21,7 +21,7 @@ LOG_PATH = BASE_DIR / "logs"
 FILE = "gs_table_v2.csv"
 SAMPLE_FILE = "10ksample.csv"
 
-# Enable GPU support and initialize logger
+# Enable GPU support
 DEV = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 dff.print_gpu_status()
 

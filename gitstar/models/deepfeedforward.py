@@ -125,7 +125,7 @@ def fit(
 
     Returns
     -------
-    train_losses : list of float
+    train_losses : ndarray
     """
     fit_list = []
     train_losses = []
@@ -140,6 +140,9 @@ def fit(
         train_losses.append(train_loss)
         # Print table of validation status
         print_stats(epoch, *val_list)
+
+    # Flatten the list of lists
+    train_losses = np.array(train_losses).flatten()
     # Save files
     store_losses(path, hyper_str, *zip(*fit_list), train_losses)
     return train_losses
@@ -195,14 +198,16 @@ def fit_epoch(model, loss_func, opt, train_dl, valid_dl, t_scaler=None):
         val_loss, val_rs = compute_stats(losses, nums, valid_dl)
         # Compute unscaled valid. loss and R^2
         val_inv_loss, val_inv_rs = compute_inv_stats(
-            losses, nums, valid_dl, t_scaler
+            inv_losses, inv_nums, valid_dl, t_scaler
         )
     return [val_loss, val_rs, val_inv_loss, val_inv_rs], train_losses
 
 
 def loss_batch(model, loss_func, xb, yb, opt=None):
     """
-    Computes batch loss for training and validation
+    Computes batch loss performs backprop on training data
+
+    Also computes batch loss on validation data
 
     Parameters
     ----------
@@ -231,8 +236,6 @@ def loss_batch(model, loss_func, xb, yb, opt=None):
         loss.backward()
         opt.step()
         opt.zero_grad()
-        # Log traning loss only
-        logging.info(loss)
     # extract loss float from torch.tensor
     return loss.item(), len(xb)
 
@@ -440,7 +443,7 @@ def hyper_str(h_layers, lr, opt, a_fn, bs, epochs, prefix=None, suffix=None):
 
 
 def print_stats(epoch, *args):
-    """Print table validation loss, R^2, and epoch (scaled and unscaled)"""
+    """Print table of validation loss, R^2, and epoch (scaled and unscaled)"""
     table_str = (
         "[{}]\n Epoch: {:02d}  MSE: {:8.7f}  R^2: {: 8.7f} "
         + "uMSE: {:2.7f}  uR^2: {: 2.7f}"

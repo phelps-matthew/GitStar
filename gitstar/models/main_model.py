@@ -1,17 +1,17 @@
 """
-Implements deep feedforward model for consuming the GitStar dataset. Forms
-training and validation dataloaders, optimizes hyperparameters, logs loss data,
-and generates loss plots. Cuda GPU ready.
+Implements deep feedforward model for consuming the GitStar dataset
+* Construct dataset and dataloaders
+* Execute training and validation sequence
+* Log loss and validation statistics; plot training loss
+* Cuda GPU ready
 """
 
 from pathlib import Path
 import torch
 import torch.nn.functional as F
 from torch import optim
-from gitstar.models.dataload import form_dataloaders, form_datasets
-import matplotlib.pyplot as plt
 import gitstar.models.deepfeedforward as dff
-import numpy as np
+from gitstar.models.dataload import form_dataloaders, form_datasets
 
 # Path Globals
 BASE_DIR = Path(__file__).resolve().parent
@@ -21,7 +21,7 @@ LOG_PATH = BASE_DIR / "logs"
 FILE = "gs_table_v2.csv"
 SAMPLE_FILE = "10ksample.csv"
 
-# Enable GPU support
+# Enable GPU support and initialize logger
 DEV = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 dff.print_gpu_status()
 
@@ -30,13 +30,13 @@ def main():
     """Train, validate, and optimize model"""
     # Set hyperparameters: batch size, learning rate, hidden layers, activ. fn
     bs = 64
-    epochs = 1000
+    epochs = 3
     lr = 10 ** (-5)
     h_layers = [32, 16]
     a_fn = F.relu
 
     # Construct Dataset from file; form DataLoaders
-    train_ds, valid_ds = form_datasets(DATA_PATH / FILE)
+    train_ds, valid_ds = form_datasets(DATA_PATH / FILE, sample_frac=0.4)
     train_dl, valid_dl = form_dataloaders(train_ds, valid_ds, bs, preprocess)
 
     # Gather target inverse scaler fn
@@ -49,16 +49,13 @@ def main():
     loss_func = F.mse_loss
     fit_args = (model, loss_func, opt, train_dl, valid_dl, t_inv_scaler)
 
-    # Generate descriptive parameter string (for pngs and csvs)
-    prefix = "log_canonical_"
+    # Generate descriptive filename string for csv logs
+    prefix = "log_canonical_test"
     model_str = dff.hyper_str(h_layers, lr, opt, a_fn, bs, epochs, prefix)
     print(model_str)
 
-    # Train, validate, save and plot loss
-    train_loss = dff.fit(epochs, *fit_args, LOG_PATH, model_str)
-    dff.plot_loss(
-        train_loss, path=IMG_PATH / (model_str + ".png"), title=model_str
-    )
+    # Train, validate, and store loss
+    dff.fit(epochs, *fit_args, LOG_PATH, model_str)
 
 
 def preprocess(x, y):

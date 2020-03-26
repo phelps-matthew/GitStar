@@ -53,7 +53,7 @@ def scale_col(df, col, scaler):
     col : str
         Column name within DataFrame
     scaler : sklearn.preprocessing.scaler
-        E.g. MinMaxScaler(), FunctionTransformer(log10_map, log10_inv_map),
+        E.g. MinMaxScaler(), Log10Transformer,
         QuantileTransformer(output_distribution="normal"),
         PowerTransformer(method="yeo-johnson"),
 
@@ -75,6 +75,7 @@ def scale_col(df, col, scaler):
 
 # Define custom log scaler to be passed to FunctionTransformer()
 # This allows user to switch generically between custom and sklearn scalers
+
 
 def log10_map(array):
     """
@@ -109,35 +110,37 @@ def log10_inv_map(array):
     array : ndarray
     """
     # Invert log10
-    array = 10**array
+    array = 10 ** array
     # For x in [0,0.1], apply min(x, 0)
     array[array <= 0.1] = 0
     return array
 
 
-# Compose useful defaults for feature and target scalers
-
+# Compose custom log-based scale transformer
+Log10Transformer = FunctionTransformer(
+    log10_map, log10_inv_map, check_inverse=False
+)
+# Construct useful defaults for feature and target scalers
 FEATURE_SCALERS = {
-    "repositoryTopics": FunctionTransformer(log10_map, log10_inv_map),
-    "openissues": FunctionTransformer(log10_map, log10_inv_map),
-    "closedissues": FunctionTransformer(log10_map, log10_inv_map),
-    "forkCount": FunctionTransformer(log10_map, log10_inv_map),
-    "pullRequests": FunctionTransformer(log10_map, log10_inv_map),
-    "commitnum": FunctionTransformer(log10_map, log10_inv_map),
-    "watchers": FunctionTransformer(log10_map, log10_inv_map),
-    "readme_bytes": FunctionTransformer(log10_map, log10_inv_map),
-    "deployments": FunctionTransformer(log10_map, log10_inv_map),
-    "descr_len": FunctionTransformer(log10_map, log10_inv_map),
-    "diskUsage_kb": FunctionTransformer(log10_map, log10_inv_map),
-    "projects": FunctionTransformer(log10_map, log10_inv_map),
-    "releases": FunctionTransformer(log10_map, log10_inv_map),
-    "milestones": FunctionTransformer(log10_map, log10_inv_map),
+    "repositoryTopics": Log10Transformer,
+    "openissues": Log10Transformer,
+    "closedissues": Log10Transformer,
+    "forkCount": Log10Transformer,
+    "pullRequests": Log10Transformer,
+    "commitnum": Log10Transformer,
+    "watchers": Log10Transformer,
+    "readme_bytes": Log10Transformer,
+    "deployments": Log10Transformer,
+    "descr_len": Log10Transformer,
+    "diskUsage_kb": Log10Transformer,
+    "projects": Log10Transformer,
+    "releases": Log10Transformer,
+    "milestones": Log10Transformer,
     "issuelabels": MinMaxScaler(),
     "created": MinMaxScaler(),
     "updated": MinMaxScaler(),
 }
-
-TARGET_SCALER = {"stargazers": FunctionTransformer(log10_map, log10_inv_map)}
+TARGET_SCALER = {"stargazers": Log10Transformer}
 
 
 def module_test():

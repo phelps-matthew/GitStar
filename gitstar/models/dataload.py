@@ -162,9 +162,9 @@ def form_datasets(path, sample_frac=1):
     # Load the file into DataFrame
     df = pd.read_csv(path).astype("float64")
     # Filter data based on canonical GitStar criteria
-    dfc = canonical_data(df).df
+    dfc = canonical_data(df)
     # Split DataFrame into training/validation
-    train_df, valid_df = split_df(dfc, sample_frac)
+    train_df, valid_df = split_df(dfc, sample_frac=sample_frac)
     # Form training Dataset object
     train_ds = GitStarDataset(train_df)
     # Form validation Dataset object; use scaling params from training Dataset
@@ -193,7 +193,11 @@ def split_df(df, split_frac=0.8, sample_frac=1):
     train_df, valid_df : tuple of pd.DataFrame
     """
     # Collect subset of dataframe if specified. Must use copy here!
-    new_df = df.sample(sample_frac).copy() if sample_frac < 1 else df.copy()
+    if sample_frac < 1:
+        new_df = df.sample(frac=sample_frac)
+    else:
+        new_df = df.copy()
+    #new_df = df.sample(frac=sample_frac).copy() if sample_frac < 1 else df.copy()
     # Split the df
     train_df, valid_df = train_test_split(new_df, train_size=split_frac)
     return train_df, valid_df

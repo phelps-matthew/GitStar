@@ -494,7 +494,7 @@ The model itself is based on a multi-layer feedforward network with backpropogat
 * Batch Size: 64
 * Epochs: 1000
 * Public Repository Filter Criteria
-  + Stars > 1
+  + Stars > 10
   + Closed Issues > 0
   + Commits > 0
   + Readme Size (bytes) > 0
@@ -556,4 +556,4 @@ To capture the essence of the actual dataset, and to further explore interesting
 
 
 ### Considerations
-In Progress...
+asdf

@@ -518,16 +518,16 @@ To capture the essence of the actual dataset, and to further explore interesting
 *Note: The colorbar indicates number of repositories within a single hexbin of specified color*
 <br>
 
-* **Stars vs Fork Count** : Strong correlation, as we would probably expect. Note skew in star distribution.
+* **Stars vs Fork Count** : While a strong correlation is to be expected, we see that fork count actually serves as the strongest star number indicator among all other features. Note skew in star distribution. Well approximated by linear regression model.
 <p align="center"> <img src="/presentation/features/canonical_stargazers_forkCount.png"  width="600"> </p>
 
-* **Stars vs Watchers** : Strong correlation. Fork counts are better indicator than watchers interestingly. Might think that forkers might forget to star as they are busy going about their business, but not true!
+* **Stars vs Watchers** : Strong correlation. Fork counts are better indicator than watchers interestingly1 Might think that forkers might forget to star as they are busy going about their business as opposed to watchers, but not true!
 <p align="center"> <img src="/presentation/features/canonical_stargazers_watchers.png"  width="600"> </p>
 
 * **Stars vs Readme Size** : My favorite plot. Drift in hexbin plot and Pearson r-value do indeed point at a correlation (though not a strong one). Lends credit to the idea that the importance of documentation shouldn't be underestimated! Note how closely readme sizes follow a normal distrubtion. Size alone is only a first order approximation to quality of documentation. Would be interesting to investigate the depedence with more features, e.g. comment/code line ratio, pictures, etc.
 <p align="center"> <img src="/presentation/features/canonical_stargazers_readme_bytes.png"  width="600"> </p>
 
-* **Stars vs Disk Usage (kb)** : Weak but non-zero correlation. Disk usage follows fairly normal distribution, high density around 1MB. 
+* **Stars vs Disk Usage (kb)** : Weak but non-zero correlation. Disk usage follows fairly normal distribution, high density around 1MB. Larger star numbers do occupy higher disk usage.
 <p align="center"> <img src="/presentation/features/canonical_stargazers_diskUsage_kb.png"  width="600"> </p>
 
 * **Stars vs Created Date** : Looking at frequency distribution of created repos, we see a steady increase until it begins to decay around 2019. This is likely due to the filtering criteria upon the space of repos that need time to gain adoption (e.g., criteria like stars > 10). Relaxing the 'canonical GitStar' criteria, it was found that number of public repos is growingly exponentially with time - over thousands a day! See [here](/gitstar/ETL/data/repo_star_1.png) and [here](/gitstar/ETL/data/repo_star_0.png). 

@@ -511,10 +511,13 @@ One method to gain insight into how features might affect the star number (like 
 <p align="center"><img src="/presentation/correlation_matrix.png"  width="2000"></p>
 To capture the essence of the actual dataset, and to further explore interesting correlations, here we plot the data directly. We perform a linear regression on inter-feature and feature-target variables, plot frequency distributions, and illustrate density with a hexbin plot. Pearson's correlation coefficient and p value statistics are overlayed. (Two sided p-value from [scipy.stats.pearsonr](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.pearsonr.html) - roughly indicates probability of uncorrelated data producing the actuareadme dataset (or one that is even more correlated). Assumes normal distributions of features and or target).
 
+
 *Note: The colorbar indicates number of repositories within a single hexbin of specified color*
 
 First are the strongest correlations.
+* Stars vs Fork Count
 <p align="center"> <img src="/presentation/features/canonical_stargazers_forkCount.png"  width="600"> </p>
+  + Not surprising
 <p align="center"> <img src="/presentation/features/canonical_stargazers_readme_bytes.png"  width="600"> </p>
 <p align="center"> <img src="/presentation/features/canonical_stargazers_watchers.png"  width="600"> </p>
 <p align="center"> <img src="/presentation/features/canonical_stargazers_diskUsage_kb.png"  width="600"> </p>

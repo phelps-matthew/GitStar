@@ -455,6 +455,7 @@ Comments:
 * Consider methods for parallelizing fit function for faster computation
 ## Results
 The neural network was trained from a dataset spanning over 450k public repositories. For each repository, 21 different features were captured in order to predict its star number.
+
 Features:
 * Open Issues 
 * Closed Issues
@@ -480,10 +481,31 @@ Features:
 
 Target:
 * Stars
-
 ### Model Performance
-In Progress...
-### Model Performance and Feature Correlations
-To assess model performance, the mean squared error (MSE) and coefficient of determination were calculated with respect to the unormalized target predictions and output. Here is a plot of the MSE and R^2 for the neural network, trained from a dataset comprising over 450k public repositories. 
+The model itself is based on a multi-layer feedforward network with backpropogation. Here is a description of its architecture:
+
+* Dimensions: 21 (in) x 32 x 16 x 1 (out) 
+* Activation Function: ReLU
+* Optimizer: Adam
+  + Learning Rate: 10^(-5)
+* Scaling transforms
+  + MinMaxScaler (sklearn.preprocessing)
+  + "Quasi" Log10Transformer (see `datanorm`)
+* Batch size: 64
+* Epochs: 1000
+* Public repo filter criteria
+  + Stars > 1
+  + Closed Issues > 0
+  + Commits > 0
+  + Readme Size (bytes) > 0
+  + Watchers > 0
+  + Fork Count > 0
+  + Disk Usage (kb) > 0
+  + Pull Requests > 0
+
+To assess model performance, the mean squared error (MSE) and coefficient of determination were calculated with respect to the unormalized target predictions and output. The maximum R^2 reached is 0.79.
+
+### Feature Correlations
+adsf
 ### Considerations
 In Progress...

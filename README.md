@@ -326,7 +326,7 @@ feature_scalers = {"created":MinMaxScaler(), "updated":MinMaxScaler()}
 # scale_cols transforms the DataFrame in place
 scale_cols(df, feature_scalers)
 ```
-If one would like to use a custom scale transformation, the sklearn preprocessing `FunctionTransformer` readily handles this. To make a $log_10$ scale transformer, for example
+If one would like to use a custom scale transformation, the sklearn preprocessing `FunctionTransformer` readily handles this. To make a log10 scale transformer, for example
 ```python
 my_log10 = lambda x: np.log10(x)
 my_inv_log10 = lambda x: 10 ** x

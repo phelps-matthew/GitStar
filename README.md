@@ -521,10 +521,10 @@ To capture the essence of the actual dataset, and to further explore interesting
 * **Stars vs Fork Count** : While a strong correlation is to be expected, we see that fork count actually serves as the strongest star number indicator among all other features. Note skew in star distribution. Well approximated by linear regression model.
 <p align="center"> <img src="/presentation/features/canonical_stargazers_forkCount.png"  width="600"> </p>
 
-* **Stars vs Watchers** : Strong correlation. Fork counts are better indicator than watchers interestingly1 Might think that forkers might forget to star as they are busy going about their business as opposed to watchers, but not true!
+* **Stars vs Watchers** : Strong correlation. Fork counts are better indicator than watchers interestingly. Might think that forkers might forget to star as they are busy going about their business as opposed to watchers, but not true!
 <p align="center"> <img src="/presentation/features/canonical_stargazers_watchers.png"  width="600"> </p>
 
-* **Stars vs Readme Size** : My favorite plot. Drift in hexbin plot and Pearson r-value do indeed point at a correlation (though not a strong one). Lends credit to the idea that the importance of documentation shouldn't be underestimated! Note how closely readme sizes follow a normal distrubtion. Size alone is only a first order approximation to quality of documentation. Would be interesting to investigate the depedence with more features, e.g. comment/code line ratio, pictures, etc.
+* **Stars vs Readme Size** : My favorite plot. Drift in hexbin plot and Pearson r-value do indeed point at a correlation (though not a exceedingly strong one). Lends credit to the idea that the importance of documentation shouldn't be underestimated! Note how closely readme sizes follow a normal distrubtion. Size alone is only a first order approximation to quality of documentation. Would be interesting to investigate the depedence with more features, e.g. comment/code line ratio, presence of pictures, etc.
 <p align="center"> <img src="/presentation/features/canonical_stargazers_readme_bytes.png"  width="600"> </p>
 
 * **Stars vs Disk Usage (kb)** : Weak but non-zero correlation. Disk usage follows fairly normal distribution, high density around 1MB. Larger star numbers do occupy higher disk usage.
@@ -542,16 +542,16 @@ To capture the essence of the actual dataset, and to further explore interesting
 * **Stars vs Pull Requests** : Reasonable correlation, stronger drift at high star number. If we consider pull requests to be a proxy for number of users contributing to a repo, we see that collaboration pays! Although it is not strictly necessary for a large star number, as evidenced from bimodal pull request distribution.
 <p align="center"> <img src="/presentation/features/canonical_stargazers_pullRequests.png"  width="600"> </p>
 
-* **Stars vs Commits** : Commits nicely follow normal distribution, with reasonable correlation to star number. The most extremal star numbers exhibit larger commit numbers, with these repositories probably being large code-bases serving high counts of users. Average repository in the canonical GitStar category has about 200-300 commits. 
+* **Stars vs Commits** : Commits nicely follow normal distribution, with reasonable correlation to star number. The most extremal star numbers exhibit larger commit numbers, with these repositories possibly being large code-bases serving high counts of users. Average repository in the canonical GitStar category has about 200-300 commits. 
 <p align="center"> <img src="/presentation/features/canonical_stargazers_commitnum.png"  width="600"> </p>
 
 * **Fork Count vs Watchers** : Strong correlation, well approximated by linear model. Nearly 1:1 correspondance, with slope of unity. If you watch it, you are more likely to fork it, makes sense.
 <p align="center"> <img src="/presentation/features/canonical_forkCount_watchers.png"  width="600"> </p>
 
-* **Commits vs Pull Requests** : Strong correlation, decently served by linear regression model. Bimodal pull request distribution. Interesting outliers with large number of commits but few  pull requests - these are likely repos that see little collaboration.
+* **Commits vs Pull Requests** : Strong correlation, decently served by linear regression model. Bimodal pull request distribution. Interesting set of points with large number of commits but few  pull requests - these are likely repos that see little collaboration.
 <p align="center"> <img src="/presentation/features/canonical_commitnum_pullRequests.png"  width="600"> </p>
 
-* **Closed Issues vs Pull Requests** : Strong correlation, bimodal pull request distribution. Again taking pull requests as a proxy for user collaboration, we see that more issues are likely to be solved for repos with more partipant contriubtion.
+* **Closed Issues vs Pull Requests** : Strong correlation, bimodal pull request and closed issues distribution. Again taking pull requests as a proxy for user collaboration, we see that more issues are likely to be solved for repos with more partipant contribution.
 <p align="center"> <img src="/presentation/features/canonical_closedissues_pullRequests.png"  width="600"> </p>
 
 

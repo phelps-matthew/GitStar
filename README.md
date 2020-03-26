@@ -516,8 +516,8 @@ To capture the essence of the actual dataset, and to further explore interesting
 
 First are the strongest correlations.
 * Stars vs Fork Count
-<p align="center"> <img src="/presentation/features/canonical_stargazers_forkCount.png"  width="600"> </p>
   + Not surprising
+<p align="center"> <img src="/presentation/features/canonical_stargazers_forkCount.png"  width="600"> </p>
 <p align="center"> <img src="/presentation/features/canonical_stargazers_readme_bytes.png"  width="600"> </p>
 <p align="center"> <img src="/presentation/features/canonical_stargazers_watchers.png"  width="600"> </p>
 <p align="center"> <img src="/presentation/features/canonical_stargazers_diskUsage_kb.png"  width="600"> </p>

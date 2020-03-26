@@ -536,7 +536,8 @@ To capture the essence of the actual dataset, and to further explore interesting
 * **Stars vs Last Push Date** : While a nonlinear fit would be more appropriate here, we do see the trend of repositories that are more active (i.e. more recent push date) receive larger star number. Note the high skew in the last push distribution as well - the number of active repos dominate the inactive. On its own, not a bad indicator for stars. Should explore nonlinear fits.
 <p align="center"> <img src="/presentation/features/canonical_stargazers_updated.png"  width="600"> </p>
 
-
+* **Stars vs Closed Issues** : Bimodal distribution of closed issues. The correlation between stars vs closed issues is stronger than stars vs open issues (seen [here](/gitstar/models/features/full_seaborn/improved/canonical_stargazers_openissues), suggesting sheer number of issues is not the only factor at play. Repo owners who are attentive to issues may receive more stars.
+<p align="center"> <img src="/presentation/features/canonical_stargazers_closedissues.png"  width="600"> </p>
 <p align="center"> <img src="/presentation/features/canonical_forkCount_watchers.png"  width="600"> </p>
 <p align="center"> <img src="/presentation/features/canonical_closedissues_openissues.png"  width="600"> </p>
 <p align="center"> <img src="/presentation/features/canonical_commitnum_pullRequests.png"  width="600"> </p>

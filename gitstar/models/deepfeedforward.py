@@ -267,8 +267,8 @@ def inv_loss_batch(model, loss_func, xb, yb, t_scaler):
     # If an inverse function is provided, use it
     if t_scaler is not None:
         # numpy -> inverse transformation -> torch.tensor
-        inv_y_pred = t_scaler.inverse_transform(model(xb).numpy())
-        inv_y = t_scaler.inverse_transform(yb.numpy())
+        inv_y_pred = t_scaler.inverse_transform(model(xb).cpu().numpy())
+        inv_y = t_scaler.inverse_transform(yb.cpu().numpy())
 
         # Delete possible NaNs from divergent scaling transforms
         if np.any(np.isnan(inv_y_pred)):
@@ -350,7 +350,7 @@ def compute_inv_stats(losses, batch_sizes, valid_dl, t_scaler):
     if t_scaler is not None:
         # Construct inverse function torch -> np -> torch
         def to_inv(x):
-            return torch.from_numpy(t_scaler.inverse_transform(x.numpy()))
+            return torch.from_numpy(t_scaler.inverse_transform(x.cpu().numpy()))
 
         # Compute variance
         val_var = torch.cat([to_inv(yb) for xb, yb in valid_dl]).var().item()
@@ -461,7 +461,7 @@ def print_gpu_status():
             "torch.cuda_is_available: {}".format(torch.cuda.is_available()),
             "torch.cuda.current_device: {}".format(torch.cuda.current_device()),
         ]
-        print(cuda_status, sep="\n")
+        print(*cuda_status, sep="\n")
     except:
         print("Some torch.cuda functionality unavailable")
 

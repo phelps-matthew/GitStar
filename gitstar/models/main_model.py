@@ -30,7 +30,7 @@ def main():
     """Train, validate, and optimize model"""
     # Set hyperparameters: batch size, learning rate, hidden layers, activ. fn
     bs = 64
-    epochs = 3
+    epochs = 1000
     lr = 10 ** (-5)
     h_layers = [32, 16]
     a_fn = F.relu
@@ -50,7 +50,7 @@ def main():
     fit_args = (model, loss_func, opt, train_dl, valid_dl, t_inv_scaler)
 
     # Generate descriptive filename string for csv logs
-    prefix = "log_canonical_test"
+    prefix = "FINAL_"
     model_str = dff.hyper_str(h_layers, lr, opt, a_fn, bs, epochs, prefix)
     print(model_str)
 

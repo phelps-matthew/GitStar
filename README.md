@@ -309,7 +309,7 @@ After completing ETL process, the data is used to train the neural network. This
 #### datanorm
 While scaling the data is not strictly necessary, it was found that it immensely improved model convergence and stability; in fact, all models tested with unscaled data failed to converge toward any minimal mean square error.
 
-The scaling of the data is enacted by the function `scale_cols` which scales selected columns (e.g. features or target) within the dataset. (Note: the dataset from the finished ETL process should be cast into the form of a DataFrame at this point). Specifically, a dictionary of column names and scale transformers is passed to `scale_cols`, allowing one to use different scalers on different features.
+The scaling of the data is enacted by the function `scale_cols` which scales selected columns, e.g. features or target, within the dataset. Specifically, a dictionary of column names and scale transformers is passed to `scale_cols`, allowing one to use different scalers on different features. The dataset should be cast into a DataFrame before passing to `scale_cols`. 
 
 The scalers themselves are taken from the [sklearn preprocessing](https://scikit-learn.org/stable/auto_examples/preprocessing/plot_all_scaling.html#sphx-glr-auto-examples-preprocessing-plot-all-scaling-py) module. The sklearn scalers are capable of storing fit parameters and provide convienent inverse transformation methods.
 
@@ -335,12 +335,35 @@ myTransformer = FunctionTransformer(my_log10, my_inv_log10)
 By this method, `myTransformer` follows the same call signature as all other sklearn preprocessing scalers and thus interfaces with `scale_cols` seamlessly.
 
 The `datanorm` module also provides pre-configured feature and target scalers that have shown to yield good model performance. These are stored in the globals `FEATURE_SCALERS` and `TARGET_SCALER`, with many based on a quasi log10 scaling transformation (see `log10_map` and `log10_inv_map` for more details).
-
-Notes: 
-* If transformer in place is not desired behavior, first copy the DataFrame
-* `FEATURE_SCALERS` and `TARGET_SCALER` are implemented as optional default params in function calls within `deepfeedforward`
 #### dataload
-In Progress...
+To facilitate use of the dataset within traning and validation of the model, the `dataload` module inherits the `Dataset` and `DataLoader` classes from `torch.utils.data`. These torch data classes provide conveinent methods for automatic batching, dataset iteration, and preprocessing. 
+
+Class `GitStarDataset` provides a dataset object (inherited from torch.utils.data.Dataset) that provides additional functionality for passing scale transformers and storing the target inverse scale transformer. It is important to provide the inverse target scaler in order to convert scaled predictions (e.g. stars) to unscaled predictions. 
+
+Class `WrappedDataLoader` inherits torch.utils.data.DataLoader and incorporates an additional, user defined preprocessing function. In the main application, we use this to cast torch.tensors into GPU device types.
+
+In addition, this module provides functions for splitting a dataframe into train and validation sets, as well as a filtering function to pass a dataset that follows the canonical GitStar criteria (e.g. constraints on features, such as commitnum > 1).
+
+The above classes and functions are wrapped into the two main public functions `form_datasets` and `form_dataloaders`.
+`form_datasets` reads a csv path, filters data to canonical form, splits the data into training/valdiation sets, and passes each set to construct instances of `GitStarDataset`. In addition, the function provides flexibility in imposing scale transformations from `GitStarDataset` kwargs.
+`form_dataloaders` then takes in the `GitStarDataset`s and forms dataloaders according to the user specified batch size and applies the preprocessing function.
+Using the default scaling transforms, we may, for example, construct the datasets and dataloaders as
+```
+# Form datasets from csv path
+train_ds, valid_ds = form_datasets(DATA_PATH / FILE)
+
+# Define GPU casting preprocess function
+def preprocess(x, y):
+    dev = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    return x.to(dev), y.to(dev)
+
+# Form dataloaders based on batch size
+batch_size = 64
+train_dl, valid_dl = form_dataloaders(train_ds, valid_ds, bs=64, preprocess=preprocess)
+```
+
+
+
 #### deepfeedforward
 In Progress...
 #### main_model

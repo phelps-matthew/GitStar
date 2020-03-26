@@ -140,7 +140,7 @@ def form_dataloaders(train_ds, valid_ds, bs, preprocess=lambda x, y: (x, y)):
     return train_dl, valid_dl
 
 
-def form_datasets(path, sample_frac=1):
+def form_datasets(path, sample_frac=1, **kwargs):
     """
     Form training and validation datasets from file
 
@@ -150,6 +150,8 @@ def form_datasets(path, sample_frac=1):
         Filepath to csv data
     sample_frac : float or int, default 1
         sample_size/total_data_size
+    *args
+        passed into GitStarDataset
 
     Returns
     -------
@@ -166,7 +168,7 @@ def form_datasets(path, sample_frac=1):
     # Split DataFrame into training/validation
     train_df, valid_df = split_df(dfc, sample_frac=sample_frac)
     # Form training Dataset object
-    train_ds = GitStarDataset(train_df)
+    train_ds = GitStarDataset(train_df, **kwargs)
     # Form validation Dataset object; use scaling params from training Dataset
     valid_ds = GitStarDataset(
         valid_df,

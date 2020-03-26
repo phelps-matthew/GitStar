@@ -539,10 +539,10 @@ To capture the essence of the actual dataset, and to further explore interesting
 * **Stars vs Closed Issues** : Bimodal distribution of closed issues. The correlation between stars vs closed issues is stronger than stars vs open issues (seen [here](/gitstar/models/features/full_seaborn/improved/canonical_stargazers_openissues.png)), suggesting sheer number of issues is not the only factor at play. Repo owners who are attentive to issues may receive more stars.
 <p align="center"> <img src="/presentation/features/canonical_stargazers_closedissues.png"  width="600"> </p>
 
-* **Stars vs Pull Requests** : Reasonable correlation, stronger drift at high star number. If we consider pull requests to be a proxy for number of users contributing to a repo, we see that collaboration pays!
+* **Stars vs Pull Requests** : Reasonable correlation, stronger drift at high star number. If we consider pull requests to be a proxy for number of users contributing to a repo, we see that collaboration pays! Although it is not strictly necessary for a large star number, as evidenced from bimodal pull request distribution.
 <p align="center"> <img src="/presentation/features/canonical_stargazers_pullRequests.png"  width="600"> </p>
 
-* **Stars vs Commits** : Commits nicely follow normal distribution, with reasonable correlation to star number. The most extremal star numbers exhibit large commit numbers, with these repositories probably being large code-bases serving high counts of users. Average repository in the canonical GitStar category has about 200-300 commits. 
+* **Stars vs Commits** : Commits nicely follow normal distribution, with reasonable correlation to star number. The most extremal star numbers exhibit larger commit numbers, with these repositories probably being large code-bases serving high counts of users. Average repository in the canonical GitStar category has about 200-300 commits. 
 <p align="center"> <img src="/presentation/features/canonical_stargazers_commitnum.png"  width="600"> </p>
 
 * **Fork Count vs Watchers** : Strong correlation, well approximated by linear model. Nearly 1:1 correspondance, with slope of unity. If you watch it, you are more likely to fork it, makes sense.
@@ -551,7 +551,7 @@ To capture the essence of the actual dataset, and to further explore interesting
 * **Commits vs Pull Requests** : Strong correlation, decently served by linear regression model. Bimodal pull request distribution. Interesting outliers with large number of commits but few  pull requests - these are likely repos that see little collaboration.
 <p align="center"> <img src="/presentation/features/canonical_commitnum_pullRequests.png"  width="600"> </p>
 
-* **Closed Issues vs Pull Requests** : Strong correlation, bimodal pull request distribution. 
+* **Closed Issues vs Pull Requests** : Strong correlation, bimodal pull request distribution. Again taking pull requests as a proxy for user collaboration, we see that more issues are likely to be solved for repos with more partipant contriubtion.
 <p align="center"> <img src="/presentation/features/canonical_closedissues_pullRequests.png"  width="600"> </p>
 
 

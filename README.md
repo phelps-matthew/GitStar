@@ -513,7 +513,7 @@ To capture the essence of the actual dataset, and to further explore interesting
 *Note: The colorbar indicates number of repositories within a single hexbin of specified color*
 
 First are the strongest correlations.
-<img src="/presentation/features/canonical_stargazers_forkCount.png"  width="600">
+<p align="center"> <img src="/presentation/features/canonical_stargazers_forkCount.png"  width="600"> </p>
 
 
 ### Considerations

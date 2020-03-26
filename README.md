@@ -359,7 +359,7 @@ def preprocess(x, y):
 
 # Form dataloaders based on batch size
 batch_size = 64
-train_dl, valid_dl = form_dataloaders(train_ds, valid_ds, bs=64, preprocess=preprocess)
+train_dl, valid_dl = form_dataloaders(train_ds, valid_ds, bs=batch_size, preprocess=preprocess)
 ```
 
 

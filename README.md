@@ -342,7 +342,7 @@ Class `GitStarDataset` provides a dataset object (inherited from torch.utils.dat
 
 Class `WrappedDataLoader` inherits torch.utils.data.DataLoader and incorporates an additional, user defined preprocessing function. In the main application, we use this to cast torch.tensors into GPU device types.
 
-In addition, this module provides functions for splitting a dataframe into train and validation sets, as well as a filtering function to pass a dataset that follows the canonical GitStar criteria (e.g. constraints on features, such as commitnum > 1).
+In addition, this module provides functions for splitting a dataframe into train and validation sets (`split_df`), as well as a filtering function (`canonical_data`) to pass a dataset that follows the canonical GitStar criteria (e.g. constraints on features, such as commitnum > 1).
 
 The above classes and functions are wrapped into the two main public functions `form_datasets` and `form_dataloaders`.
 `form_datasets` reads a csv path, filters data to canonical form, splits the data into training/valdiation sets, and passes each set to construct instances of `GitStarDataset`. In addition, the function provides flexibility in imposing scale transformations from `GitStarDataset` kwargs.

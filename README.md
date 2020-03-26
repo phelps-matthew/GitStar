@@ -346,7 +346,7 @@ In addition, this module provides functions for splitting a dataframe into train
 
 The above classes and functions are wrapped into the two main public functions `form_datasets` and `form_dataloaders`.
 `form_datasets` reads a csv path, filters data to canonical form, splits the data into training/valdiation sets, and passes each set to construct instances of `GitStarDataset`. In addition, the function provides flexibility in imposing scale transformations from `GitStarDataset` kwargs.
-`form_dataloaders` then takes in the `GitStarDataset`s and forms dataloaders according to the user specified batch size and applies the preprocessing function.
+`form_dataloaders` then takes in the `GitStarDataset`s and forms dataloaders according to the user specified batch size and preprocessing function.
 Using the default scaling transforms, we may, for example, construct the datasets and dataloaders as
 ```python
 # Form datasets from csv path

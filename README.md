@@ -514,9 +514,9 @@ To capture the essence of the actual dataset, and to further explore interesting
 =======
 To capture the essence of the actual dataset, and to further explore interesting correlations, here we plot the data directly. We perform a linear regression on inter-feature and feature-target variables, plot frequency distributions, and illustrate density with a hexbin plot. Pearson's correlation coefficient and p value statistics are overlayed. (Two sided p-value from <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.pearsonr.html">scipy.stats.pearsonr</a> - roughly indicates probability of uncorrelated data producing the actual dataset (or one that is even more correlated). Assumes normal distributions of features and or target).
 <br>
->>>>>>> 2e1a3c1456e25593fb9746c35602a951f1cac28b
 <br>
 *Note: The colorbar indicates number of repositories within a single hexbin of specified color*
+<br>
 
 * **Stars vs Fork Count** : Strong correlation, as we would probably expect. Note skew in star distribution.
 <p align="center"> <img src="/presentation/features/canonical_stargazers_forkCount.png"  width="600"> </p>
@@ -527,7 +527,12 @@ To capture the essence of the actual dataset, and to further explore interesting
 * **Stars vs Readme Size** : My favorite plot. Drift in hexbin plot and Pearson r-value do indeed point at a correlation (though not a strong one). Lends credit to the idea that the importance of documentation shouldn't be underestimated! Note how closely readme sizes follow a normal distrubtion. Size alone is only a first order approximation to quality of documentation. Would be interesting to investigate the depedence with more features, e.g. comment/code line ratio, pictures, etc.
 <p align="center"> <img src="/presentation/features/canonical_stargazers_readme_bytes.png"  width="600"> </p>
 
+* **Stars vs Disk Usage (kb)** : Weak but non-zero correlation. Disk usage follows fairly normal distribution, high density around 1MB. 
 <p align="center"> <img src="/presentation/features/canonical_stargazers_diskUsage_kb.png"  width="600"> </p>
+
+* **Stars vs Created Date** : 
+
+* **Stars vs Last Push Date** : 
 <p align="center"> <img src="/presentation/features/canonical_forkCount_watchers.png"  width="600"> </p>
 <p align="center"> <img src="/presentation/features/canonical_closedissues_openissues.png"  width="600"> </p>
 <p align="center"> <img src="/presentation/features/canonical_commitnum_pullRequests.png"  width="600"> </p>

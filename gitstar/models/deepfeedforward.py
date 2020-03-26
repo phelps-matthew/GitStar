@@ -1,7 +1,11 @@
 """
-Deep feedforward NN model, with variable activation functions and layer
-size/depth. Inlcudes helper functions for logging, plotting, and storing
-loss data.
+Constructs deep feedforward NN model with backprop
+* Presents NN class with adjustable hidden layer size/depth and act. functions
+* Provides training and validation functions
+* Validation performed on scaled and unscaled data
+* Computes and stores loss function and R^2 model stats
+* Inlcudes many helper functions for logging, plotting, printing, and storing
+  loss and validation data
 """
 
 from pathlib import Path
@@ -25,7 +29,7 @@ LOG_PATH = BASE_DIR / "logs"
 
 class DFF(nn.Module):
     """
-    Construct deep feedfoward net with backprop and arbitrary hidden layers
+    Construct deep feedfoward net with arbitrary hidden layers and act. fn.
 
     Parameters
     ----------
@@ -39,7 +43,7 @@ class DFF(nn.Module):
     Attributes
     ----------
     a_fn : torch.nn.functional
-    layers : list of nn.Module
+    layers : nn.ModuleList
         does not include ouput layer
     out : nn.Module
         output layer
@@ -51,7 +55,7 @@ class DFF(nn.Module):
         super().__init__()
         self.a_fn = a_fn
 
-        # Must be list, cannot be None or other iterable
+        # Check for list or int; cannot be None or other iterable
         assert isinstance(D_hid, (int, list))
 
         # Compose list of DFF dimensions
@@ -91,120 +95,109 @@ class DFF(nn.Module):
         return self.out(x)
 
 
-def print_gpu_status():
-    """Print GPU torch cuda status"""
-    try:
-        cuda_status = [
-            "torch.cuda.device(0): {}".format(torch.cuda.device(0)),
-            "torch.cuda.device_count(): {}".format(torch.cuda.device_count()),
-            "torch.cuda.get_device_name(0): {}".format(
-                torch.cuda.get_device_name(0)
-            ),
-            "torch.cuda_is_available: {}".format(torch.cuda.is_available()),
-            "torch.cuda.current_device: {}".format(torch.cuda.current_device()),
-        ]
-        print(cuda_status, sep="\n")
-    except:
-        print("Some torch.cuda functionality unavailable")
-
-
-def set_logger(filepath):
-    """
-    Intialize basic root logger
-
-    Parameters
-    ----------
-    filepath : str or Path
-
-    Returns
-    -------
-    None
-    """
-    logging.basicConfig(
-        filename=str(filepath),
-        filemode="w",  # will rewrite on each run
-        level=logging.DEBUG,
-        format="[%(asctime)s] %(levelname)s - %(message)s",
-    )
-
-
-def hyper_str(h_layers, lr, opt, a_fn, bs, epochs, prefix=None, suffix=None):
-    """
-    Generate DFF model string for path and plot naming
-
-    Parameters
-    ----------
-    h_layers : int or list of int
-        hidden layer dimensions, e.g. [16,16]
-    lr : float
-        learning rate.
-    opt : torch.optim
-        optimizer, e.g. torch.optim.SGD(..)
-    a_fn : F.functional
-        activation function applied to hidden layers
-    bs, epochs : int
-        batch size.
-    prefix, suffix : str, optional
-        consider appending with '_'
-
-    Returns
-    -------
-    full_str : str
-    """
-    prefix = "" if prefix is None else prefix
-    suffix = "" if suffix is None else suffix
-
-    # e.g. 16x16 hidden dims
-    h_layers_str = "x".join(list(map(str, h_layers)))
-
-    # regex search patterns based on fn str
-    a_fn_sub = re.search("^<\w+\s(\w+)\w.*$", str(a_fn))
-    a_fn_str = a_fn_sub.group(1)
-    opt_sub = re.search("^(\w+)\s.*", str(opt))
-    opt_str = opt_sub.group(1)
-
-    # form the model string
-    param_str = "{}_lr_{}_{}_{}_bs_{}_epochs_{}".format(
-        h_layers_str, lr, opt_str, a_fn_str, bs, epochs
-    )
-
-    # insert any prefixes or suffixes
-    full_str = prefix + param_str + suffix
-    return full_str
-
-
-def plot_loss(
-    loss_array, path=None, title="Loss", ylabel="MSE Loss", ylim=(0, 2)
+def fit(
+    epochs,
+    model,
+    loss_func,
+    opt,
+    train_dl,
+    valid_dl,
+    t_scaler=None,
+    path=LOG_PATH,
+    hyper_str="test_model",
 ):
     """
-    Simple plot of 1d array, defaulted for MSE Loss
+    Iterates training and validation over mulitple epochs
 
     Parameters
     ----------
-    loss_array : list or ndarray
-    path : str or Path, default None
-        Path to store image.
-    ylabel : str
-    ylim : tuple of int or float
+    epochs : int
+    model : DFF
+    loss_func : torch.nn.functional
+    opt : torch.optim
+    train_dl, valid_dl : torch.utils.data.DataLoader
+    t_scaler : sklearn.preprocessing.scaler(), default None
+        Target inverse scale transformer
+    path : str or Path
+        Directory to store loss data
+    hyper_str : str
+        Base filename for logging/storage (do not include filetype)
 
     Returns
     -------
-    None
+    train_losses : list of float
     """
-    # Plot the array; add labels, limits, grid
-    fig, ax = plt.subplots()
-    ax.plot(loss_array)
-    ax.set_ylim(ylim)
-    ax.set(xlabel="batch number", ylabel=ylabel, title=title)
-    ax.grid()
-    # Store as png if path given, otherwise show plot UI
-    if path:
-        fig.savefig(
-            str(path), transparent=False, dpi=300, bbox_inches="tight",
+    fit_list = []
+    train_losses = []
+    for epoch in range(epochs):
+        # Train and validate
+        val_list, train_loss = fit_epoch(
+            model, loss_func, opt, train_dl, valid_dl, t_scaler
         )
-        plt.close()
-    else:
-        plt.show()
+        # Store validation data
+        fit_list.append(val_list)
+        # Store training losses
+        train_losses.append(train_loss)
+        # Print table of validation status
+        print_stats(epoch, *val_list)
+    # Save files
+    store_losses(path, hyper_str, *zip(*fit_list), train_losses)
+    return train_losses
+
+
+def fit_epoch(model, loss_func, opt, train_dl, valid_dl, t_scaler=None):
+    """
+    Train and validate over one epoch
+
+    Parameters
+    ----------
+    model : DFF
+    loss_func : torch.nn.functional
+    opt : torch.optim
+    epoch : int
+    train_dl, valid_dl : torch.utils.data.DataLoader
+    path : str or Path
+        Directory to store loss data
+    t_scaler : sklearn.preprocessing.scaler(), default None
+        Target inverse scale transformer
+
+    Returns
+    _______
+    list of float
+        [val_loss, val_rs, val_inv_loss, val_inv_rs]
+    list of float
+        train losses
+    """
+    # -- Training --
+    model.train()  # good habit; relevant for Dropout, BatchNorm layers
+    train_losses = []
+    for xb, yb in train_dl:
+        train_loss, _ = loss_batch(model, loss_func, xb, yb, opt)
+        train_losses.append(train_loss)
+
+    # -- Validation --
+    model.eval()  # good habit; relevant for Dropout, BatchNorm layers
+
+    # Do not track gradient on validation operations
+    with torch.no_grad():
+        # Create lists of validation loss and batch sizes
+        losses, nums = zip(
+            *[loss_batch(model, loss_func, xb, yb) for xb, yb in valid_dl]
+        )
+        # Create lists of unscaled validation loss and batch sizes
+        inv_losses, inv_nums = zip(
+            *[
+                inv_loss_batch(model, loss_func, xb, yb, t_scaler)
+                for xb, yb in valid_dl
+            ]
+        )
+        # Compute valid. loss and R^2
+        val_loss, val_rs = compute_stats(losses, nums, valid_dl)
+        # Compute unscaled valid. loss and R^2
+        val_inv_loss, val_inv_rs = compute_inv_stats(
+            losses, nums, valid_dl, t_scaler
+        )
+    return [val_loss, val_rs, val_inv_loss, val_inv_rs], train_losses
 
 
 def loss_batch(model, loss_func, xb, yb, opt=None):
@@ -299,106 +292,6 @@ def inv_loss_batch(model, loss_func, xb, yb, t_scaler):
         unorm_loss = 0
         size = 1
     return unorm_loss, size
-
-
-def fit_epoch(
-    model, loss_func, opt, epoch, train_dl, valid_dl, t_scaler=None,
-):
-    """
-    Single iteration of feedforward and validation
-
-    Parameters
-    ----------
-    model : DFF
-    loss_func : torch.nn.functional
-    opt : torch.optim
-    epoch : int
-    train_dl, valid_dl : torch.utils.data.DataLoader
-    path : str or Path
-        Directory to store loss data
-    t_scaler : sklearn.preprocessing.scaler(), default None
-
-    Returns
-    _______
-    list of float or list
-        val_loss, val_rs, val_inv_loss, val_inv_rs, train_losses
-    """
-    # -- Training --
-    model.train()  # good habit; relevant for Dropout, BatchNorm layers
-    train_losses = []
-    for xb, yb in train_dl:
-        train_loss, _ = loss_batch(model, loss_func, xb, yb, opt)
-        train_losses.append(train_loss)
-
-    # -- Validation --
-    model.eval()  # good habit; relevant for Dropout, BatchNorm layers
-
-    # Do not track gradient on validation operations
-    with torch.no_grad():
-        # Create lists of validation loss and batch sizes
-        losses, nums = zip(
-            *[loss_batch(model, loss_func, xb, yb) for xb, yb in valid_dl]
-        )
-        # Create lists of unscaled validation loss and batch sizes
-        inv_losses, inv_nums = zip(
-            *[
-                inv_loss_batch(model, loss_func, xb, yb, t_scaler)
-                for xb, yb in valid_dl
-            ]
-        )
-        # Compute valid. loss and R^2
-        val_loss, val_rs = compute_stats(losses, nums, valid_dl)
-        # Compute unscaled valid. loss and R^2
-        val_inv_loss, val_inv_rs = compute_inv_stats(
-            losses, nums, valid_dl, t_scaler
-        )
-    return [val_loss, val_rs, val_inv_loss, val_inv_rs, train_losses]
-
-
-def fit(
-    epochs,
-    model,
-    loss_func,
-    opt,
-    train_dl,
-    valid_dl,
-    t_scaler=None,
-    path=LOG_PATH,
-    hyper_str="test_model",
-):
-    """
-    Iterates feedforward and validation loops
-
-    Parameters
-    ----------
-    epochs : int
-    model : DFF
-    loss_func : torch.nn.functional
-    opt : torch.optim
-    train_dl, valid_dl : torch.utils.data.DataLoader
-    t_scaler : sklearn.preprocessing.scaler(), default None
-    path : str or Path
-        Directory to store loss data
-    hyper_str : str
-        Output filename (do not include filetype)
-
-    Returns
-    -------
-    train_losses : tuple of float
-    """
-    fit_list = []
-    train_losses = []
-    for epoch in range(epochs):
-        losses = fit_epoch(
-            model, loss_func, opt, epoch, train_dl, valid_dl, t_scaler
-        )
-        fit_epoch
-        fit_list.append(losses[:-1])
-        train_losses.append(losses[-1])
-        print_stats(epoch, *losses[:-1])
-    # Save
-    store_losses(path, hyper_str, *zip(*fit_list), train_losses)
-    return train_losses
 
 
 def compute_stats(losses, batch_sizes, valid_dl):
@@ -501,6 +394,51 @@ def store_losses(
     np.savetxt(path / ("valid_inv_rs_" + filename + ".csv"), valid_inv_rs)
 
 
+def hyper_str(h_layers, lr, opt, a_fn, bs, epochs, prefix=None, suffix=None):
+    """
+    Generate DFF model string for path and plot naming
+
+    Parameters
+    ----------
+    h_layers : int or list of int
+        hidden layer dimensions, e.g. [16,16]
+    lr : float
+        learning rate.
+    opt : torch.optim
+        optimizer, e.g. torch.optim.SGD(..)
+    a_fn : F.functional
+        activation function applied to hidden layers
+    bs, epochs : int
+        batch size.
+    prefix, suffix : str, optional
+        consider appending with '_'
+
+    Returns
+    -------
+    full_str : str
+    """
+    prefix = "" if prefix is None else prefix
+    suffix = "" if suffix is None else suffix
+
+    # e.g. 16x16 hidden dims
+    h_layers_str = "x".join(list(map(str, h_layers)))
+
+    # regex search patterns based on fn str
+    a_fn_sub = re.search("^<\w+\s(\w+)\w.*$", str(a_fn))
+    a_fn_str = a_fn_sub.group(1)
+    opt_sub = re.search("^(\w+)\s.*", str(opt))
+    opt_str = opt_sub.group(1)
+
+    # form the model string
+    param_str = "{}_lr_{}_{}_{}_bs_{}_epochs_{}".format(
+        h_layers_str, lr, opt_str, a_fn_str, bs, epochs
+    )
+
+    # insert any prefixes or suffixes
+    full_str = prefix + param_str + suffix
+    return full_str
+
+
 def print_stats(epoch, *args):
     """Print table validation loss, R^2, and epoch (scaled and unscaled)"""
     table_str = (
@@ -508,3 +446,74 @@ def print_stats(epoch, *args):
         + "uMSE: {:2.7f}  uR^2: {: 2.7f}"
     )
     print(table_str.format(arrow.now(), epoch, *args))
+
+
+def print_gpu_status():
+    """Print GPU torch cuda status"""
+    try:
+        cuda_status = [
+            "torch.cuda.device(0): {}".format(torch.cuda.device(0)),
+            "torch.cuda.device_count(): {}".format(torch.cuda.device_count()),
+            "torch.cuda.get_device_name(0): {}".format(
+                torch.cuda.get_device_name(0)
+            ),
+            "torch.cuda_is_available: {}".format(torch.cuda.is_available()),
+            "torch.cuda.current_device: {}".format(torch.cuda.current_device()),
+        ]
+        print(cuda_status, sep="\n")
+    except:
+        print("Some torch.cuda functionality unavailable")
+
+
+def set_logger(filepath):
+    """
+    Intialize basic root logger
+
+    Parameters
+    ----------
+    filepath : str or Path
+
+    Returns
+    -------
+    None
+    """
+    logging.basicConfig(
+        filename=str(filepath),
+        filemode="w",  # will rewrite on each run
+        level=logging.DEBUG,
+        format="[%(asctime)s] %(levelname)s - %(message)s",
+    )
+
+
+def plot_loss(
+    loss_array, path=None, title="Loss", ylabel="MSE Loss", ylim=(0, 2)
+):
+    """
+    Simple plot of 1d array, defaulted for MSE Loss
+
+    Parameters
+    ----------
+    loss_array : list or ndarray
+    path : str or Path, default None
+        Path to store image.
+    ylabel : str
+    ylim : tuple of int or float
+
+    Returns
+    -------
+    None
+    """
+    # Plot the array; add labels, limits, grid
+    fig, ax = plt.subplots()
+    ax.plot(loss_array)
+    ax.set_ylim(ylim)
+    ax.set(xlabel="batch number", ylabel=ylabel, title=title)
+    ax.grid()
+    # Store as png if path given, otherwise show plot UI
+    if path:
+        fig.savefig(
+            str(path), transparent=False, dpi=300, bbox_inches="tight",
+        )
+        plt.close()
+    else:
+        plt.show()

@@ -301,7 +301,7 @@ LEFT(CAST(? AS NVARCHAR(2000)), 2000),
 """
 ```
 ### models
-Hi
+
 #### datanorm
 In Progress...
 #### dataload

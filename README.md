@@ -514,7 +514,6 @@ To capture the essence of the actual dataset, and to further explore interesting
 
 To capture the essence of the actual dataset, and to further explore interesting correlations, here we plot the data directly. We perform a linear regression on inter-feature and feature-target variables, plot frequency distributions, and illustrate density with a hexbin plot. Pearson's correlation coefficient and p value statistics are overlayed. (Two sided p-value from <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.pearsonr.html">scipy.stats.pearsonr</a> - roughly indicates probability of uncorrelated data producing the actual dataset (or one that is even more correlated). Assumes normal distributions of features and or target).
 <br>
-<br>
 </br>
 *Note: The colorbar indicates number of repositories within a single hexbin of specified color*
 <br>
@@ -531,7 +530,7 @@ To capture the essence of the actual dataset, and to further explore interesting
 * **Stars vs Disk Usage (kb)** : Weak but non-zero correlation. Disk usage follows fairly normal distribution, high density around 1MB. 
 <p align="center"> <img src="/presentation/features/canonical_stargazers_diskUsage_kb.png"  width="600"> </p>
 
-* **Stars vs Created Date** : 
+* **Stars vs Created Date** : Looking at frequency distribution of created repos, we see a steady increase until it begins to decay around 2019. This is likely due to the filtering criteria upon the space of repos that need time to gain adoption (e.g., criteria like stars > 10). Relaxing the 'canonical GitStar' criteria, it was found that number of public repos is growingly exponentially with time - over thousands a day! See [here](/gitstar/ETL/data/repo_star_1.png) and [here](/gitstar/ETL/data/repo_star_0.png). 
 <p align="center"> <img src="/presentation/features/canonical_stargazers_created.png"  width="600"> </p>
 
 * **Stars vs Last Push Date** : 

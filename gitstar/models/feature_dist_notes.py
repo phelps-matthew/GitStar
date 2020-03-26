@@ -14,6 +14,7 @@ from matplotlib.colors import LinearSegmentedColormap
 import seaborn as sns
 from scipy import stats
 from sklearn import linear_model
+import json
 
 from gitstar.models.dataload import GitStarDataset, canonical_data
 
@@ -33,9 +34,19 @@ cmap = LinearSegmentedColormap.from_list("mycmap", ["#6585cc", "#1d2438"])
 def main():
     """Workspace for generating plots."""
 
+    def star_read():
+        with open(BASE_DIR.parent/"ETL/data/repo_star_1") as file:
+            rdict = json.load(file)
+        return rdict
     # Validation loss plots
     #val = pd.read_csv(LOG_PATH/"valid_inv_loss_FINAL_32x16_lr_1e-05_Adam_rel_bs_64_epochs_1000.csv")
     #val_rs = pd.read_csv(LOG_PATH/"valid_inv_rs_FINAL_32x16_lr_1e-05_Adam_rel_bs_64_epochs_1000.csv")
+    mydata = star_read()
+    mydates = mydtat
+    # fmt: off
+    import ipdb,os; ipdb.set_trace(context=5)  # noqa
+    # fmt: on
+
     #plot_valid_loss(val, val_rs, 50)
 
     # Load data, adjust date order of magnitudes for proper histogram display.

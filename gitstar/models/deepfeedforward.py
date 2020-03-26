@@ -16,6 +16,12 @@ import re
 import matplotlib.pyplot as plt
 import arrow
 
+# Path Globals
+BASE_DIR = Path(__file__).resolve().parent
+DATA_PATH = BASE_DIR / "dataset"
+IMG_PATH = BASE_DIR / "hyperparams"
+LOG_PATH = BASE_DIR / "logs"
+
 
 class DFF(nn.Module):
     """
@@ -95,9 +101,7 @@ def print_gpu_status():
                 torch.cuda.get_device_name(0)
             ),
             "torch.cuda_is_available: {}".format(torch.cuda.is_available()),
-            "torch.cuda.current_device: {}".format(
-                torch.cuda.current_device()
-            ),
+            "torch.cuda.current_device: {}".format(torch.cuda.current_device()),
         ]
         print(cuda_status, sep="\n")
     except:
@@ -220,7 +224,7 @@ def loss_batch(model, loss_func, xb, yb, opt=None):
     float
         loss of batch
     int
-        latch size
+        batch size
 
     Notes
     -----
@@ -228,7 +232,7 @@ def loss_batch(model, loss_func, xb, yb, opt=None):
     """
     # Compute batch loss
     loss = loss_func(model(xb), yb)
-    
+
     # Peform backprop if training
     if opt is not None:
         loss.backward()
@@ -246,30 +250,36 @@ def inv_loss_batch(model, loss_func, xb, yb, t_scaler):
 
     Parameters
     ----------
-    model : DFF
+    model : nn.Module
+        E.g. DFF
     loss_func : torch.nn.functional
     xb, yb : torch.tensor
-    t_scaler : tsklearn.preprocessing.scaler()
+    opt : torch.optim
 
     Returns
     -------
     float
-        Loss of batch.
+        loss of batch
     int
-        Batch size.
+        batch size
 
     Notes
     -----
-    If inverse fn not provided, passes dummy returns. See fit().
+    If inverse fn not provided, passes dummy returns of zero loss and unity
+    size
+    Some sklearn scaler functions may diverge on input range; NaNs are omitted
+    from batch loss
     """
-    # Determine unscaled MSE
+    # If an inverse function is provided, use it
     if t_scaler is not None:
         # numpy -> inverse transformation -> torch.tensor
         inv_y_pred = t_scaler.inverse_transform(model(xb).numpy())
         inv_y = t_scaler.inverse_transform(yb.numpy())
 
-        # Delete possible NaNs from sklearn scaler inverse
+        # Delete possible NaNs from divergent scaling transforms
         if np.any(np.isnan(inv_y_pred)):
+            logging.warning("NaNs found in inverting target prediction")
+            # Find all NaNs
             bool_array = np.isnan(inv_y_pred)
             # Pass only True non-NaNs
             inv_y_pred = inv_y_pred[~bool_array]
@@ -280,10 +290,69 @@ def inv_loss_batch(model, loss_func, xb, yb, t_scaler):
         yb_unorm = torch.from_numpy(inv_y)
         unorm_loss = loss_func(model_yb_unorm, yb_unorm).item()
         size = len(yb_unorm)
+
+    # If no inverse function, pass dummy values; log warning
     else:
+        logging.warning(
+            "No target inverse function provided: unscaled loss = scaled loss"
+        )
         unorm_loss = 0
         size = 1
     return unorm_loss, size
+
+
+def fit_epoch(
+    model, loss_func, opt, epoch, train_dl, valid_dl, t_scaler=None,
+):
+    """
+    Single iteration of feedforward and validation
+
+    Parameters
+    ----------
+    model : DFF
+    loss_func : torch.nn.functional
+    opt : torch.optim
+    epoch : int
+    train_dl, valid_dl : torch.utils.data.DataLoader
+    path : str or Path
+        Directory to store loss data
+    t_scaler : sklearn.preprocessing.scaler(), default None
+
+    Returns
+    _______
+    list of float or list
+        val_loss, val_rs, val_inv_loss, val_inv_rs, train_losses
+    """
+    # -- Training --
+    model.train()  # good habit; relevant for Dropout, BatchNorm layers
+    train_losses = []
+    for xb, yb in train_dl:
+        train_loss, _ = loss_batch(model, loss_func, xb, yb, opt)
+        train_losses.append(train_loss)
+
+    # -- Validation --
+    model.eval()  # good habit; relevant for Dropout, BatchNorm layers
+
+    # Do not track gradient on validation operations
+    with torch.no_grad():
+        # Create lists of validation loss and batch sizes
+        losses, nums = zip(
+            *[loss_batch(model, loss_func, xb, yb) for xb, yb in valid_dl]
+        )
+        # Create lists of unscaled validation loss and batch sizes
+        inv_losses, inv_nums = zip(
+            *[
+                inv_loss_batch(model, loss_func, xb, yb, t_scaler)
+                for xb, yb in valid_dl
+            ]
+        )
+        # Compute valid. loss and R^2
+        val_loss, val_rs = compute_stats(losses, nums, valid_dl)
+        # Compute unscaled valid. loss and R^2
+        val_inv_loss, val_inv_rs = compute_inv_stats(
+            losses, nums, valid_dl, t_scaler
+        )
+    return [val_loss, val_rs, val_inv_loss, val_inv_rs, train_losses]
 
 
 def fit(
@@ -293,12 +362,12 @@ def fit(
     opt,
     train_dl,
     valid_dl,
-    path,
-    hyper_str,
     t_scaler=None,
+    path=LOG_PATH,
+    hyper_str="test_model",
 ):
     """
-    Iterates feedforward and validation loops.
+    Iterates feedforward and validation loops
 
     Parameters
     ----------
@@ -307,82 +376,135 @@ def fit(
     loss_func : torch.nn.functional
     opt : torch.optim
     train_dl, valid_dl : torch.utils.data.DataLoader
-    t_scaler : tsklearn.preprocessing.scaler(), optional
+    t_scaler : sklearn.preprocessing.scaler(), default None
+    path : str or Path
+        Directory to store loss data
+    hyper_str : str
+        Output filename (do not include filetype)
 
     Returns
-    _______
-    batch_loss, valid_loss, valid_inv_loss : tuple of float
-        One dimensional.
+    -------
+    train_losses : tuple of float
     """
-    batch_loss, valid_loss, valid_inv_loss, valid_rs, valid_inv_rs = (
-        [],
-        [],
-        [],
-        [],
-        [],
-    )
+    fit_list = []
+    train_losses = []
     for epoch in range(epochs):
-        model.train()  # Good habit. Relevant for Dropout, BatchNorm layers
+        losses = fit_epoch(
+            model, loss_func, opt, epoch, train_dl, valid_dl, t_scaler
+        )
+        fit_epoch
+        fit_list.append(losses[:-1])
+        train_losses.append(losses[-1])
+        print_stats(epoch, *losses[:-1])
+    # Save
+    store_losses(path, hyper_str, *zip(*fit_list), train_losses)
+    return train_losses
 
-        for xb, yb in train_dl:
-            train_loss, _ = loss_batch(model, loss_func, xb, yb, opt)
-            # Store for plotting
-            batch_loss.append(train_loss)
 
-        model.eval()  # Good habit. Relevant for Dropout, BatchNorm layers
+def compute_stats(losses, batch_sizes, valid_dl):
+    """
+    Compute batch scaled validation loss and R^2 per epoch
 
-        with torch.no_grad():
-            losses, nums = zip(
-                *[loss_batch(model, loss_func, xb, yb) for xb, yb in valid_dl]
-            )
-            inv_losses, inv_nums = zip(
-                *[
-                    inv_loss_batch(model, loss_func, xb, yb, t_scaler)
-                    for xb, yb in valid_dl
-                ]
-            )
+    Parameters
+    ----------
+    losses : list of float
+        MSE losses
+    batch_sizes : list of int
+        Not all batches are of identical size
+    valid_dl : WrappedDataLoader or torch.utils.DataLoader
+        Used to compute variance
 
-        # Weighted sum of mean loss per batch. Batches may not be identical.
-        val_loss = np.sum(np.multiply(losses, nums)) / np.sum(nums)
-        valid_loss.append(val_loss)
+    Returns
+    -------
+    val_loss, val_rs : float
+       Weighted average of loss over batches; R^2
+    """
+    # Weighted sum of mean loss per batch; batches may not be identical
+    val_loss = np.sum(np.multiply(losses, batch_sizes)) / np.sum(batch_sizes)
+    # Compute variance
+    val_var = torch.cat([yb for xb, yb in valid_dl]).var().item()
+    # R^2 = valid_loss/var(valid_dl)
+    val_rs = 1 - (val_loss / val_var)
+    return val_loss, val_rs
 
+
+def compute_inv_stats(losses, batch_sizes, valid_dl, t_scaler):
+    """
+    Compute batch scaled validation loss and R^2 for unscaled validation data
+    per epoch
+
+    Parameters
+    ----------
+    losses : list of float
+        MSE losses
+    batch_sizes : list of int
+        Not all batches are of identical size
+    valid_dl : WrappedDataLoader or torch.utils.DataLoader
+        Used to compute variance
+    t_scaler : sklearn.preprocessing.scaler
+        Target inverse scale transformer
+
+    Returns
+    -------
+    val_loss, val_rs : float
+       Weighted average of loss over batches; R^2
+    """
+    # Weighted sum of mean unscaled loss per batch; batches may not be identical
+    val_loss = np.sum(np.multiply(losses, batch_sizes)) / np.sum(batch_sizes)
+
+    # If an inverse transform is provided, use it
+    if t_scaler is not None:
+        # Construct inverse function torch -> np -> torch
+        def to_inv(x):
+            return torch.from_numpy(t_scaler.inverse_transform(x.numpy()))
+
+        # Compute variance
+        val_var = torch.cat([to_inv(yb) for xb, yb in valid_dl]).var().item()
         # R^2 = valid_loss/var(valid_dl)
-        val_var = torch.cat([yb for xb, yb in valid_dl]).var().item()
         val_rs = 1 - (val_loss / val_var)
-        valid_rs.append(val_rs)
 
-        # Weighted sum of mean unscaled loss per batch.
-        # Batches may not be identical.
-        val_inv_loss = np.sum(np.multiply(inv_losses, inv_nums)) / np.sum(
-            inv_nums
-        )
-        valid_inv_loss.append(val_inv_loss)
+    # If no inverse transform, use compute_stats
+    else:
+        _, val_rs = compute_stats(losses, batch_sizes, valid_dl)
+    return val_loss, val_rs
 
-        # Unscaled R^2
-        if t_scaler is not None:
-            to_inv = lambda x: torch.from_numpy(
-                t_scaler.inverse_transform(x.numpy())
-            )
-            val_inv_var = (
-                torch.cat([to_inv(yb) for xb, yb in valid_dl]).var().item()
-            )
-            val_inv_rs = 1 - (val_inv_loss / val_inv_var)
-            valid_inv_rs.append(val_inv_rs)
-        else:
-            val_inv_rs = 0
 
-        print(
-            (
-                "[{}]\n Epoch: {:02d}  MSE: {:8.7f}  R^2: {: 8.7f} "
-                + "uMSE: {:2.7f}  uR^2: {: 2.7f}"
-            ).format(
-                arrow.now(), epoch, val_loss, val_rs, val_inv_loss, val_inv_rs
-            )
-        )
-    # Log losses
-    np.savetxt(path / ("train_bloss_" + hyper_str + ".csv"), batch_loss)
-    np.savetxt(path / ("valid_loss_" + hyper_str + ".csv"), valid_loss)
-    np.savetxt(path / ("valid_rs_" + hyper_str + ".csv"), valid_rs)
-    np.savetxt(path / ("valid_inv_loss_" + hyper_str + ".csv"), valid_inv_loss)
-    np.savetxt(path / ("valid_inv_rs_" + hyper_str + ".csv"), valid_inv_rs)
-    return (batch_loss, valid_loss, valid_inv_loss)
+def store_losses(
+    path,
+    filename,
+    valid_loss,
+    valid_rs,
+    valid_inv_loss,
+    valid_inv_rs,
+    train_loss,
+):
+    """
+    Store csv's of training and validation losses and R^2 values
+
+    Parameters
+    ----------
+    path : str or Path
+        Output directory destination
+    filename : str
+        Output filename (do not include filetype)
+    train_loss : list of float
+    valid_loss, valid_rs, valid_inv_loss, valid_inv_rs : list of float
+
+    Returns
+    -------
+    None
+    """
+    np.savetxt(path / ("train_bloss_" + filename + ".csv"), train_loss)
+    np.savetxt(path / ("valid_loss_" + filename + ".csv"), valid_loss)
+    np.savetxt(path / ("valid_rs_" + filename + ".csv"), valid_rs)
+    np.savetxt(path / ("valid_inv_loss_" + filename + ".csv"), valid_inv_loss)
+    np.savetxt(path / ("valid_inv_rs_" + filename + ".csv"), valid_inv_rs)
+
+
+def print_stats(epoch, *args):
+    """Print table validation loss, R^2, and epoch (scaled and unscaled)"""
+    table_str = (
+        "[{}]\n Epoch: {:02d}  MSE: {:8.7f}  R^2: {: 8.7f} "
+        + "uMSE: {:2.7f}  uR^2: {: 2.7f}"
+    )
+    print(table_str.format(arrow.now(), epoch, *args))

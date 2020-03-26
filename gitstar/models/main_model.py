@@ -40,32 +40,22 @@ def main():
     train_dl, valid_dl = form_dataloaders(train_ds, valid_ds, bs, preprocess)
 
     # Gather target inverse scaler fn
-    target_inv_scaler = train_ds.target_scaler["stargazers"]
-    #-------------------------------------------------------------------------
+    t_inv_scaler = train_ds.target_scaler["stargazers"]
+
     # Intialize model (w/ GPU support), optimization method, and loss function
     model = dff.DFF(D_in=21, D_hid=h_layers, D_out=1, a_fn=a_fn)
     model.to(DEV)
     opt = optim.Adam(model.parameters(), lr=lr)
     loss_func = F.mse_loss
+    fit_args = (model, loss_func, opt, train_dl, valid_dl, t_inv_scaler)
 
     # Generate descriptive parameter string (for pngs and csvs)
-    model_str = dff.hyper_str(
-        h_layers, lr, opt, a_fn, bs, epochs, prefix="log_canonical_"
-    )
+    prefix = "log_canonical_"
+    model_str = dff.hyper_str(h_layers, lr, opt, a_fn, bs, epochs, prefix)
     print(model_str)
 
     # Train, validate, save and plot loss
-    train_loss, _, _ = dff.fit(
-        epochs,
-        model,
-        loss_func,
-        opt,
-        train_dl,
-        valid_dl,
-        LOG_PATH,
-        model_str,
-        t_scaler=target_inv_scaler,
-    )
+    train_loss = dff.fit(epochs, *fit_args, LOG_PATH, model_str)
     dff.plot_loss(
         train_loss, path=IMG_PATH / (model_str + ".png"), title=model_str
     )

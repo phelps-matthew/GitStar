@@ -504,6 +504,7 @@ The model itself is based on a multi-layer feedforward network with backpropogat
   + Pull Requests > 0
 
 To assess model performance, the mean squared error (MSE) and coefficient of determination were calculated with respect to the unormalized target predictions and output. The maximum R^2 reached is 0.79.
+<img src="/presentation/unscaled_validation_err_full_FINAL.png"  width="400"><img src="/presentation/unscaled_validation_err_50.png"  width="400">
 
 ### Feature Correlations
 adsf

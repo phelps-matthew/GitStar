@@ -509,8 +509,9 @@ To assess model performance, the mean squared error (MSE) and coefficient of det
 ### Feature Correlations
 One method to gain insight into how features might affect the star number (like readme size or commit number), is to form a correlation matrix. Here the numbers represent linear correlation coefficients (pearson's). A value of 0 suggests the relationship between x and y is linearly uncorrelated, whereas as +/- 1 implies that the data is perfectly described by a linear relationship.
 <p align="center"><img src="/presentation/correlation_matrix.png"  width="2000"></p>
-To capture the essence of the actual dataset, and to further explore interesting correlations, here we plot the data directly. We perform a linear regression on inter-feature and feature-target variables, plot frequency distributions, and illustrate density with a hexbin plot. Pearson's correlation coefficient and p value statistics are overlayed. (Two sided p-value from [scipy-stats-pearsonr](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.pearsonr.html) - roughly indicates probability of uncorrelated data producing the actual dataset (or one that is even more correlated). Assumes normal distributions of features and or target).
+To capture the essence of the actual dataset, and to further explore interesting correlations, here we plot the data directly. We perform a linear regression on inter-feature and feature-target variables, plot frequency distributions, and illustrate density with a hexbin plot. Pearson's correlation coefficient and p value statistics are overlayed. (Two sided p-value from <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.pearsonr.html">scipy.stats.pearsonr</a> - roughly indicates probability of uncorrelated data producing the actual dataset (or one that is even more correlated). Assumes normal distributions of features and or target).
 <br>
+
 *Note: The colorbar indicates number of repositories within a single hexbin of specified color*
 
 * **Stars vs Fork Count** : Strong correlation, as we would probably expect. Note skew in star distribution.

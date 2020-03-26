@@ -309,9 +309,9 @@ After completing ETL process, the data is used to train the neural network. This
 #### datanorm
 While scaling the data is not strictly necessary, it was found that it immensely improved model convergence and stability; in fact, all models tested with unscaled data failed to converge toward any minimal mean square error.
 
-The scaling of the data is enacted by the function `scale_cols` which scales selected columns (e.g. features or target) within the dataset. (Note: the dataset from the finished ETL process should be cast into the form of a DataFrame at this point). Specifically, a dictionary of column name and scale transformation function is passed to `scale_cols`, allowing one to use different scalers on different features.
+The scaling of the data is enacted by the function `scale_cols` which scales selected columns (e.g. features or target) within the dataset. (Note: the dataset from the finished ETL process should be cast into the form of a DataFrame at this point). Specifically, a dictionary of column names and scale transformers is passed to `scale_cols`, allowing one to use different scalers on different features.
 
-The scalers themselves are taken from [sklearn preprocessing](https://scikit-learn.org/stable/auto_examples/preprocessing/plot_all_scaling.html#sphx-glr-auto-examples-preprocessing-plot-all-scaling-py) module. The sklearn scalers are capable of storing fit parameters and provide convienent inverse transformation methods.
+The scalers themselves are taken from the [sklearn preprocessing](https://scikit-learn.org/stable/auto_examples/preprocessing/plot_all_scaling.html#sphx-glr-auto-examples-preprocessing-plot-all-scaling-py) module. The sklearn scalers are capable of storing fit parameters and provide convienent inverse transformation methods.
 
 To demonstrate the use of `scale_cols` and sklearn, we will transform the "created" and "updated" columns within the dataset using `MinMaxScaler()`.
 ```python
@@ -321,12 +321,12 @@ import pandas as pd
 # Load dataset into DataFrame from specified path
 df = pd.read_csv(DATA_PATH / SAMPLE_FILE)
 
-feature_scalers = {"created":MinMaxScaler(), "updated":MinMaxScaler}
+feature_scalers = {"created":MinMaxScaler(), "updated":MinMaxScaler()}
 
 # scale_cols transforms the DataFrame in place
 scale_cols(df, feature_scalers)
 ```
-If one would like to use a custom scale transformation, the sklearn preprocessing `FunctionTransformer` readily handles this. To make a log10 scale transformer, for example
+If one would like to use a custom scale transformation, the sklearn preprocessing `FunctionTransformer` readily handles this. To make a $log_10$ scale transformer, for example
 ```python
 my_log10 = lambda x: np.log10(x)
 my_inv_log10 = lambda x: 10 ** x

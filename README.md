@@ -538,6 +538,12 @@ To capture the essence of the actual dataset, and to further explore interesting
 
 * **Stars vs Closed Issues** : Bimodal distribution of closed issues. The correlation between stars vs closed issues is stronger than stars vs open issues (seen [here](/gitstar/models/features/full_seaborn/improved/canonical_stargazers_openissues.png)), suggesting sheer number of issues is not the only factor at play. Repo owners who are attentive to issues may receive more stars.
 <p align="center"> <img src="/presentation/features/canonical_stargazers_closedissues.png"  width="600"> </p>
+
+* **Stars vs Commits** : asdkfj
+<p align="center"> <img src="/presentation/features/canonical_stargazers_commitnum.png"  width="600"> </p>
+
+
+
 <p align="center"> <img src="/presentation/features/canonical_forkCount_watchers.png"  width="600"> </p>
 <p align="center"> <img src="/presentation/features/canonical_closedissues_openissues.png"  width="600"> </p>
 <p align="center"> <img src="/presentation/features/canonical_commitnum_pullRequests.png"  width="600"> </p>

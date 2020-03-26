@@ -34,9 +34,9 @@ def main():
     """Workspace for generating plots."""
 
     # Validation loss plots
-    val = pd.read_csv(LOG_PATH/"valid_inv_loss_FINAL_32x16_lr_1e-05_Adam_rel_bs_64_epochs_1000.csv")
-    val_rs = pd.read_csv(LOG_PATH/"valid_inv_rs_FINAL_32x16_lr_1e-05_Adam_rel_bs_64_epochs_1000.csv")
-    plot_valid_loss(val, val_rs, 50)
+    #val = pd.read_csv(LOG_PATH/"valid_inv_loss_FINAL_32x16_lr_1e-05_Adam_rel_bs_64_epochs_1000.csv")
+    #val_rs = pd.read_csv(LOG_PATH/"valid_inv_rs_FINAL_32x16_lr_1e-05_Adam_rel_bs_64_epochs_1000.csv")
+    #plot_valid_loss(val, val_rs, 50)
 
     # Load data, adjust date order of magnitudes for proper histogram display.
     df = pd.read_csv(DATA_PATH / FILE).astype("float64")
@@ -45,14 +45,14 @@ def main():
     data.loc[:, "created"] = 10 ** (-12) * (data.loc[:, "created"].values)
 
     # Pair wise plotting columns. Print statistics
-    x = "created"
+    x = "forkCount"
     y = "stargazers"
     linreg_print(x, y, data)
 
     # Initialize tick formatter, seaborn, and display output
     formatter = FuncFormatter(log_label)
     sns.set()  # sns.set_context("talk")
-    show_plot = True  # save as png if false
+    show_plot = False  # save as png if false
 
     # Plot scatter and histograms
     p = sns.JointGrid(x, y, data)
@@ -69,7 +69,7 @@ def main():
     p.ax_joint.set_ylim(reg_ylim[0], y2max)
 
     # Label axes
-    p.set_axis_labels(xlabel="Created", ylabel="Stars")
+    p.set_axis_labels(xlabel="Fork Count", ylabel="Stars")
 
     # Add colorbar
     plt.subplots_adjust(left=0.2, right=0.8, top=0.8, bottom=0.2)  # shrink fig

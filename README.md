@@ -533,8 +533,10 @@ To capture the essence of the actual dataset, and to further explore interesting
 * **Stars vs Created Date** : Looking at frequency distribution of created repos, we see a steady increase until it begins to decay around 2019. This is likely due to the filtering criteria upon the space of repos that need time to gain adoption (e.g., criteria like stars > 10). Relaxing the 'canonical GitStar' criteria, it was found that number of public repos is growingly exponentially with time - over thousands a day! See [here](/gitstar/ETL/data/repo_star_1.png) and [here](/gitstar/ETL/data/repo_star_0.png). 
 <p align="center"> <img src="/presentation/features/canonical_stargazers_created.png"  width="600"> </p>
 
-* **Stars vs Last Push Date** : 
+* **Stars vs Last Push Date** : While a nonlinear fit would be more appropriate here, we do see the trend of repositories that are more active (i.e. more recent push date) receive larger star number. Note the high skew in the last push distribution as well - the number of active repos dominate the inactive. On its own, not a bad indicator for stars. Should explore nonlinear fits.
 <p align="center"> <img src="/presentation/features/canonical_stargazers_updated.png"  width="600"> </p>
+
+
 <p align="center"> <img src="/presentation/features/canonical_forkCount_watchers.png"  width="600"> </p>
 <p align="center"> <img src="/presentation/features/canonical_closedissues_openissues.png"  width="600"> </p>
 <p align="center"> <img src="/presentation/features/canonical_commitnum_pullRequests.png"  width="600"> </p>

@@ -509,12 +509,13 @@ To assess model performance, the mean squared error (MSE) and coefficient of det
 ### Feature Correlations
 One method to gain insight into how features might affect the star number (like readme size or commit number), is to form a correlation matrix. Here the numbers represent linear correlation coefficients (pearson's). A value of 0 suggests the relationship between x and y is linearly uncorrelated, whereas as +/- 1 implies that the data is perfectly described by a linear relationship.
 <p align="center"><img src="/presentation/correlation_matrix.png"  width="2000"></p>
-<<<<<<< HEAD
+
 To capture the essence of the actual dataset, and to further explore interesting correlations, here we plot the data directly. We perform a linear regression on inter-feature and feature-target variables, plot frequency distributions, and illustrate density with a hexbin plot. Pearson's correlation coefficient and p value statistics are overlayed. (Two sided p-value from [scipy.stats.pearsonr](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.pearsonr.html) - roughly indicates probability of uncorrelated data producing the actual dataset (or one that is even more correlated). Assumes normal distributions of features and or target).
-=======
+
 To capture the essence of the actual dataset, and to further explore interesting correlations, here we plot the data directly. We perform a linear regression on inter-feature and feature-target variables, plot frequency distributions, and illustrate density with a hexbin plot. Pearson's correlation coefficient and p value statistics are overlayed. (Two sided p-value from <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.pearsonr.html">scipy.stats.pearsonr</a> - roughly indicates probability of uncorrelated data producing the actual dataset (or one that is even more correlated). Assumes normal distributions of features and or target).
 <br>
 <br>
+</br>
 *Note: The colorbar indicates number of repositories within a single hexbin of specified color*
 <br>
 
@@ -531,8 +532,10 @@ To capture the essence of the actual dataset, and to further explore interesting
 <p align="center"> <img src="/presentation/features/canonical_stargazers_diskUsage_kb.png"  width="600"> </p>
 
 * **Stars vs Created Date** : 
+<p align="center"> <img src="/presentation/features/canonical_stargazers_created.png"  width="600"> </p>
 
 * **Stars vs Last Push Date** : 
+<p align="center"> <img src="/presentation/features/canonical_stargazers_updated.png"  width="600"> </p>
 <p align="center"> <img src="/presentation/features/canonical_forkCount_watchers.png"  width="600"> </p>
 <p align="center"> <img src="/presentation/features/canonical_closedissues_openissues.png"  width="600"> </p>
 <p align="center"> <img src="/presentation/features/canonical_commitnum_pullRequests.png"  width="600"> </p>

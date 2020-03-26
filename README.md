@@ -454,9 +454,36 @@ Comments:
 * Computing adapative learning rates for each parameter (e.g. Adam) highly suggested due to large feature-target variability
 * Consider methods for parallelizing fit function for faster computation
 ## Results
+The neural network was trained from a dataset spanning over 450k public repositories. For each repository, 21 different features were captured in order to predict its star number.
+Features:
+* Open Issues 
+* Closed Issues
+* Fork Count
+* Pull Requests
+* Commits
+* Watchers
+* Disk Usage (kb)
+* README.md size (bytes)
+* Releases 
+* Projects
+* Milestones
+* Deployments
+* Issue Labels (total number)
+* Repository Topics (total number)
+* Description Length
+* Url (boolean)
+* Liscense (boolean)
+* Wiki (boolean)
+* Issues Enabled (boolean)
+* Created Date
+* Last Push Date
+
+Target:
+* Stars
+
 ### Model Performance
 In Progress...
-### Feature Correlations
-In Progress...
+### Model Performance and Feature Correlations
+To assess model performance, the mean squared error (MSE) and coefficient of determination were calculated with respect to the unormalized target predictions and output. Here is a plot of the MSE and R^2 for the neural network, trained from a dataset comprising over 450k public repositories. 
 ### Considerations
 In Progress...

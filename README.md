@@ -301,9 +301,44 @@ LEFT(CAST(? AS NVARCHAR(2000)), 2000),
 """
 ```
 ### models
-
+After completing ETL process, the data is used to train the neural network. This process goes as follows:
+1) Use scale functions to scale the feature and target variables (`datanorm`)
+2) Form datasets and dataloaders that properly interface with network training and validation (`dataload`)
+3) Design the NN architecture; construct training and validation sequences; create helper functions to store model performance diagnostics (`deepfeedforward`)
+4) Execute training and validation; optimize model based on performance (`main_model`)
 #### datanorm
-In Progress...
+While scaling the data is not strictly necessary, it was found that it immensely improved model convergence and stability; in fact, all models tested with unscaled data failed to converge toward any minimal mean square error.
+
+The scaling of the data is enacted by the function `scale_cols` which scales selected columns (e.g. features or target) within the dataset. (Note: the dataset from the finished ETL process should be cast into the form of a DataFrame at this point). Specifically, a dictionary of column name and scale transformation function is passed to `scale_cols`, allowing one to use different scalers on different features.
+
+The scalers themselves are taken from [sklearn preprocessing](https://scikit-learn.org/stable/auto_examples/preprocessing/plot_all_scaling.html#sphx-glr-auto-examples-preprocessing-plot-all-scaling-py) module. The sklearn scalers are capable of storing fit parameters and provide convienent inverse transformation methods.
+
+To demonstrate the use of `scale_cols` and sklearn, we will transform the "created" and "updated" columns within the dataset using `MinMaxScaler()`.
+```python
+from sklearn.preprocessing import MinMaxScaler
+import pandas as pd
+
+# Load dataset into DataFrame from specified path
+df = pd.read_csv(DATA_PATH / SAMPLE_FILE)
+
+feature_scalers = {"created":MinMaxScaler(), "updated":MinMaxScaler}
+
+# scale_cols transforms the DataFrame in place
+scale_cols(df, feature_scalers)
+```
+If one would like to use a custom scale transformation, the sklearn preprocessing `FunctionTransformer` readily handles this. To make a log10 scale transformer, for example
+```python
+my_log10 = lambda x: np.log10(x)
+my_inv_log10 = lambda x: 10 ** x
+myTransformer = FunctionTransformer(my_log10, my_inv_log10)
+```
+By this method, `myTransformer` follows the same call signature as all other sklearn preprocessing scalers and thus interfaces with `scale_cols` seamlessly.
+
+The `datanorm` module also provides pre-configured feature and target scalers that have shown to yield good model performance. These are stored in the globals `FEATURE_SCALERS` and `TARGET_SCALER`, with many based on a quasi log10 scaling transformation (see `log10_map` and `log10_inv_map` for more details).
+
+Notes: 
+* If transformer in place is not desired behavior, first copy the DataFrame
+* `FEATURE_SCALERS` and `TARGET_SCALER` are implemented as optional default params in function calls within `deepfeedforward`
 #### dataload
 In Progress...
 #### deepfeedforward

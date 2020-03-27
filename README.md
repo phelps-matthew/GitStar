@@ -566,7 +566,7 @@ To capture the essence of the actual dataset, and to further explore interesting
 * Design an automated pipeline that periodically adds new repositories to database and updates NN
 * Consider methods to filter repositories that are used as codebases vs other means
 
-### Interesting Finds
+## Interesting Finds
 Amongst the search through half a million repositories, a couple interesting ones came to my attention. 
 
 The repository with the largest number of stars is one called [996.ICU](https://github.com/996icu/996.ICU). The acronym refer to "Work 9AM - 9PM 6 days a week and you risk going to ICU". At 249k stars, this repo represents an act of protest to the labor system in China, where software developers (and others) risk losing their jobs if they do not take on massive hours of overtime. Though Chinese law does not mandate such hours, tech companies themselves have developed detailed ranking systems based on hours worked, jeopardizing those who do not elect for 'voluntary' overtime. 
@@ -587,4 +587,4 @@ Year by year, day by day.
 
 Enhance yourself to meet challenges.
 
-Again, we see the special place GitHub occupies in our world. Can you see such a statement going viral on Facebook or Twitter? I cannot. But here it has space to exist.. in peace. Finding this one made me pause for a moment of soft reflection. Let's end on that note.
+Again, we see the special place GitHub occupies in our world. Can you see such a statement going viral on Facebook or Twitter? I cannot. But here it has space to exist in peace, decoupled from replies, comments, and retweets. Finding this one in the middle of the night made me pause for a moment of quiet reflection. A good note to end on.

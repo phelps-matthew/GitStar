@@ -549,7 +549,7 @@ To capture the essence of the actual dataset, and to further explore interesting
 * **Commits vs Pull Requests** : Strong correlation, decently served by linear regression model. Bimodal pull request distribution. Interesting set of points with large number of commits but few  pull requests - these are likely repos that see little collaboration.
 <p align="center"> <img src="/presentation/features/canonical_commitnum_pullRequests.png"  width="600"> </p>
 
-* **Closed Issues vs Pull Requests** : Strong correlation, bimodal pull request and closed issues distribution. Again taking pull requests as a proxy for user collaboration, we see that more issues are likely to be solved for repos with more partipant contribution.
+* **Closed Issues vs Pull Requests** : Strong correlation, bimodal pull request and closed issues distribution. Again taking pull requests as a proxy for user collaboration, we see that more issues are likely to be solved for repos with more participant contribution.
 <p align="center"> <img src="/presentation/features/canonical_closedissues_pullRequests.png"  width="600"> </p>
 
 

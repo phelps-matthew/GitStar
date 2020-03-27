@@ -358,7 +358,7 @@ train_dl, valid_dl = form_dataloaders(train_ds, valid_ds, bs=batch_size, preproc
 #### deepfeedforward
 Here we create the deep feedforward NN model and incorporate methods of backpropogation, training and validation. Performance diagnostics are printed and saved for later analysis or plotting.
 
-The NN itself is constructed in the class `DFF` which inherits the `torch.nn.Module`. It provides the user a means to impose the number and dimensionality of the hidden layers as well as the choice of hidden layer activation function. An overridden forward method is provided that executes a foward pass. For example, going from 21 input features to 1 output with 3 hidden layers of size 16, 16, and 8 respectively, we may form the network model as
+The NN itself is constructed in the class `DFF` which inherits the `torch.nn.Module`. It provides the user a means to impose the number and dimensionality of the hidden layers as well as the choice of hidden layer activation function. An overridden `forward` method is provided that executes a foward pass. For example, going from 21 input features to 1 output with 3 hidden layers of size 16, 16, and 8 respectively, we may form the network model as
 ```python
 import torch.nn.functional as F
 
@@ -368,7 +368,7 @@ model = dff.DFF(D_in=21, D_hid=h_layers, D_out=1, a_fn=a_fn)
 ```
 Once a model is constructed, we need methods to execute the training and validation. This is achieved through the `fit` function which loops over a number of epochs, calling `fit_epoch` on each iteration and printing current validation status. Once the training/validation is complete, performance data related to training loss, validation loss (scaled and unscaled), and other statistics are stored as csv's by use of the helper function `store_losses`. 
 
-Representing the complete transfer learning process, the `fit` function is intialized by providing the number of epochs, model (`DFF`), loss function (`torch.nn.Functional`), optimizer (`torch.optim`), dataloaders and path strings for storing performance results.
+Representing the complete transfer learning process, the `fit` function is intialized by providing the number of epochs, model (`DFF`), loss function (`torch.nn.Functional`), optimizer (`torch.optim`), dataloaders, and path strings for storing performance results.
 
 Within each iteration of `fit`, function `fit_epoch` computes the batch loss for scaled and unscaled data via `loss_batch` and `inv_loss_batch`. If batch loss is called within the training phase, weights are backpropogated according to the provided optimization method. In a call to `inv_loss_batch`, the target inverse scaler is utilized to convert scaled loss to unscaled loss. After losses are computed, relevant performance stats are computed for scaled and unscaled data by `compute_stats` and `compute_inv_stats`.
 
@@ -401,7 +401,7 @@ fit_args = (model, loss_func, opt, train_dl, valid_dl)
 dff.fit(epochs, *fit_args, LOG_PATH, model_str)
 ```
 #### main_model
-Putting all the modules together, we may form a main application that implemements the deep feedforward model by constructing GitStar datasets dataloaders, executing model training and validation, and logging loss and validation diagnostics. To facilitate hardware acceleration, all torch tensors and model parameters are cast to Cuda device type for GPU computation.
+Putting all the model modules together, we may form a main application that implements the deep feedforward model by constructing GitStar datasets and dataloaders, executing model training and validation, and logging loss and validation diagnostics. To facilitate hardware acceleration, all torch tensors and model parameters are cast to Cuda device type for GPU computation.
 ```python
 import torch
 import torch.nn.functional as F

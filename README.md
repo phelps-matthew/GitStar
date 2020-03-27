@@ -194,7 +194,7 @@ while True:
 ```
 
 #### gstransform
-Here we perform a round of data cleaning and transformation from the direct output of the GitStarSearchQuery generator (i.e. the GraphQL response). The `transform` function discards extraneous headers and utilizes uses `normalize` to flatten nested dictionaries corresponding to a single node (repo) into dictionaries of depth=1. 
+Here we perform a round of data cleaning and transformation from the direct output of the GitStarSearchQuery generator (i.e. the GraphQL response). The `transform` function discards extraneous headers and uses `normalize` to flatten nested dictionaries corresponding to a single node (repo) into dictionaries of depth=1. 
 
 Next, two key:value pairs are added to each node dictionary that represent the repository creation and last pushed to date in UTC integer timestamp (secs) format.
 
@@ -219,8 +219,8 @@ Some important notes:
 * The Azure MSSQL database chosen is accessed through the `pyodbc` module; different db connections may be necessary if database type differs; for pyodbc usage see [pyodbc](https://github.com/mkleehammer/pyodbc)
 * The database configurations, GitHub PAT, and SQL insertion query are convienently grouped and stored within the module `config.py`. An example `config_sample.py` has been provided as a template; again, db connection implementation may vary
 * Consider using online SQL transformation operations to further clean and process data. See `config_sample.py` for examples of this
-* Consider use of `gqlquery.RepoCountError` to log GQL queries that yield repo counts exceeding 1000; alternatively, use conditional statement to redirect loop over push date slices (see function `special_etl()`)
-* 50 items/(http request) was reasonable fetching param; higher items/request yields more http timeouts
+* Consider use of `gqlquery.RepoCountError` to log GQL queries that yield repo counts exceeding 1000; alternatively, use conditional statements to redirect execution over push date slices (see function `special_etl()`)
+* 50 items/(http request) was reasonable fetching param; higher items/request yield more http timeouts
 
 Omitting detail on logging and pyodbc specifics, the main ETL process can be implemented as
 ```python
@@ -295,7 +295,7 @@ LEFT(CAST(? AS NVARCHAR(2000)), 2000),
 """
 ```
 ### models
-After completing ETL process, the data is used to train the neural network. This process goes as follows:
+After completing the ETL process, the data is used to train the neural network. This process goes as follows:
 1) Use scale functions to scale the feature and target variables (`datanorm`)
 2) Form datasets and dataloaders that properly interface with network training and validation (`dataload`)
 3) Design the NN architecture; construct training and validation sequences; create helper functions to store model performance diagnostics (`deepfeedforward`)
@@ -315,7 +315,7 @@ import pandas as pd
 # Load dataset into DataFrame from specified path
 df = pd.read_csv(DATA_PATH / SAMPLE_FILE)
 
-feature_scalers = {"created":MinMaxScaler(), "updated":MinMaxScaler()}
+feature_scalers = {"created": MinMaxScaler(), "updated": MinMaxScaler()}
 
 # scale_cols transforms the DataFrame in place
 scale_cols(df, feature_scalers)
@@ -332,7 +332,7 @@ The `datanorm` module also provides pre-configured feature and target scalers th
 #### dataload
 To facilitate use of the dataset within traning and validation of the model, the `dataload` module inherits the `Dataset` and `DataLoader` classes from `torch.utils.data`. These torch data classes provide conveinent methods for automatic batching, dataset iteration, and preprocessing. 
 
-Class `GitStarDataset` provides a dataset object (inherited from torch.utils.data.Dataset) that provides additional functionality for passing scale transformers and storing the target inverse scale transformer. It is important to provide the inverse target scaler in order to convert scaled predictions (e.g. stars) to unscaled predictions. 
+Class `GitStarDataset` constructs a dataset object (inherited from torch.utils.data.Dataset) that provides additional functionality for passing scale transformers and storing the target inverse scale transformer. It is important to provide the inverse target scaler in order to convert scaled predictions (e.g. stars) to unscaled predictions. 
 
 Class `WrappedDataLoader` inherits torch.utils.data.DataLoader and incorporates an additional, user defined preprocessing function. In the main application, we use this to cast torch.tensors into GPU device types.
 

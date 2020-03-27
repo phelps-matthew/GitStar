@@ -332,11 +332,11 @@ The `datanorm` module also provides pre-configured feature and target scalers th
 #### dataload
 To facilitate use of the dataset within traning and validation of the model, the `dataload` module inherits the `Dataset` and `DataLoader` classes from `torch.utils.data`. These torch data classes provide conveinent methods for automatic batching, dataset iteration, and preprocessing. 
 
-Class `GitStarDataset` constructs a dataset object (inherited from torch.utils.data.Dataset) that provides additional functionality for passing scale transformers and storing the target inverse scale transformer. It is important to provide the inverse target scaler in order to convert scaled predictions (e.g. stars) to unscaled predictions. 
+Class `GitStarDataset` constructs a dataset object (inherited from `torch.utils.data.Dataset`) that provides additional functionality for passing scale transformers and storing the target inverse scale transformer. It is important to provide the inverse target scaler in order to convert scaled predictions (e.g. stars) to unscaled predictions. 
 
-Class `WrappedDataLoader` inherits torch.utils.data.DataLoader and incorporates an additional, user defined preprocessing function. In the main application, we use this to cast torch.tensors into GPU device types.
+Class `WrappedDataLoader` inherits `torch.utils.data.DataLoader` and incorporates an additional, user defined preprocessing function. In the main application, we use this to cast torch.tensors into GPU device types.
 
-In addition, this module provides functions for splitting a dataframe into train and validation sets (`split_df`), as well as a filtering function (`canonical_data`) to pass a dataset that follows the canonical GitStar criteria (e.g. constraints on features, such as commitnum > 1).
+In addition, this module provides functions for splitting a dataframe into train and validation sets (`split_df`), as well as a filtering function (`canonical_data`) to pass a dataset that follows the canonical GitStar criteria (e.g. constraints on features, such as commitnum > 0).
 
 The above classes and functions are wrapped into the two main public functions `form_datasets` and `form_dataloaders`.
 `form_datasets` reads a csv path, filters data to canonical form, splits the data into training/valdiation sets, and passes each set to construct instances of `GitStarDataset`. In addition, the function provides flexibility in imposing scale transformations from `GitStarDataset` kwargs.
@@ -358,7 +358,7 @@ train_dl, valid_dl = form_dataloaders(train_ds, valid_ds, bs=batch_size, preproc
 #### deepfeedforward
 Here we create the deep feedforward NN model and incorporate methods of backpropogation, training and validation. Performance diagnostics are printed and saved for later analysis or plotting.
 
-The NN itself is constructed in the class `DFF` which inherits the torch.nn.Module. It provides the user a means to impose the number and dimensionality of the hidden layers as well as the choice of hidden layer activation function. An overridden forward method is provided that executes a foward pass. For example, going from 21 input features to 1 output with 3 hidden layers of size 16, 16, and 8 respectively, we may form the network model as
+The NN itself is constructed in the class `DFF` which inherits the `torch.nn.Module`. It provides the user a means to impose the number and dimensionality of the hidden layers as well as the choice of hidden layer activation function. An overridden forward method is provided that executes a foward pass. For example, going from 21 input features to 1 output with 3 hidden layers of size 16, 16, and 8 respectively, we may form the network model as
 ```python
 import torch.nn.functional as F
 
@@ -368,7 +368,7 @@ model = dff.DFF(D_in=21, D_hid=h_layers, D_out=1, a_fn=a_fn)
 ```
 Once a model is constructed, we need methods to execute the training and validation. This is achieved through the `fit` function which loops over a number of epochs, calling `fit_epoch` on each iteration and printing current validation status. Once the training/validation is complete, performance data related to training loss, validation loss (scaled and unscaled), and other statistics are stored as csv's by use of the helper function `store_losses`. 
 
-Representing the complete transfer learning process, the `fit` function is intialized by providing the number of epochs, model (DFF), loss function (torch.nn.Functional), optimizer (torch.optim), dataloaders and path strings for storing performance results.
+Representing the complete transfer learning process, the `fit` function is intialized by providing the number of epochs, model (`DFF`), loss function (`torch.nn.Functional`), optimizer (`torch.optim`), dataloaders and path strings for storing performance results.
 
 Within each iteration of `fit`, function `fit_epoch` computes the batch loss for scaled and unscaled data via `loss_batch` and `inv_loss_batch`. If batch loss is called within the training phase, weights are backpropogated according to the provided optimization method. In a call to `inv_loss_batch`, the target inverse scaler is utilized to convert scaled loss to unscaled loss. After losses are computed, relevant performance stats are computed for scaled and unscaled data by `compute_stats` and `compute_inv_stats`.
 

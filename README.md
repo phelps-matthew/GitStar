@@ -553,5 +553,38 @@ To capture the essence of the actual dataset, and to further explore interesting
 <p align="center"> <img src="/presentation/features/canonical_closedissues_pullRequests.png"  width="600"> </p>
 
 
-### Considerations
-asdf
+### Future Improvements and Ideas
+* Many more interesting features that could be implemented
+  + Repository primary langauge (implement with one hot encoding)
+  + Comment/code ratio within code
+  + Deeper analysis into documentation; measure use of external links, Wiki, diagrams/pictures, table of contents, etc.
+* Sentiment analysis within issue comments (NLP)
+* Construct a quality metric that is better than stars (perhaps similar to stock-indexes)
+* Consider clustering methods (e.g. k-means) to isolate distribution modes and feed into separate models
+* Create web API and present user interface for inputting repository name and showing predicted stars
+* Use star predictor and feature correlations within the design of an individualized GitHub 'suggestion' tool, to help users draw more attention to their repositories
+* Design an automated pipeline that periodically adds new repositories to database and updates NN
+* Consider methods to filter repositories that are used as codebases vs other means
+
+### Interesting Finds
+Amongst the search through half a million repositories, a couple interesting ones came to my attention. 
+
+The repository with the largest number of stars is one called [996.ICU](https://github.com/996icu/996.ICU). The acronym refer to "Work 9AM - 9PM 6 days a week and you risk going to ICU". At 249k stars, this repo represents an act of protest to the labor system in China, where software developers (and others) risk losing their jobs if they do not take on massive hours of overtime. Though Chinese law does not mandate such hours, tech companies themselves have developed detailed ranking systems based on hours worked, jeopardizing those who do not elect for 'voluntary' overtime. 
+
+The 996.ICU repo is a fascinating representation of a modern politcal movement, powered by the open-source nature of GitHub. Fellow users have composed evidence-backed white-lists and black-lists of companies based on work-life balance. It is interesting to consider that while Facebook and Twitter are banned within China, the censorship of GitHub leads to an inability for many tech companies to efficiently continue software development. This illustrates the integral role GitHub plays in the tech community, serving as both a social and technical tool.
+
+Another [repository](https://github.com/erguotou520/bye) that caught my interest was one that only had one file - a README consisting of 6 lines of text. Yet it has over 5000 stars. What could this be? Here are it's entire contents.
+"
+Say goodbye to yesterday.
+
+Say hello to tomorrow.
+
+Remember you can be better.
+
+Be yourself and do yourself.
+
+Year by year, day by day.
+
+Enhance yourself to meet challenges.
+"
+Again, we see the special place GitHub occupies in our world. Can you see such a statement going viral on Facebook or Twitter? I cannot. But here it has space to exist.. in peace. Finding this one made me pause for a moment of soft reflection. Let's end on that note.

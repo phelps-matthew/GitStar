@@ -142,7 +142,7 @@ query {
 """
 PAT = "<A PERSONAL ACCESS TOKEN>"
 
-my_request = GraphQLQuery(PAT, QUERY)
+my_request = GitHubGraphQLQuery(PAT, QUERY)
 my_response = my_request.gql_response()
 ```
 

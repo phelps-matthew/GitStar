@@ -574,7 +574,7 @@ The repository with the largest number of stars is one called [996.ICU](https://
 The 996.ICU repo is a fascinating representation of a modern politcal movement, powered by the open-source nature of GitHub. A network of thousands of contributors have created white-lists and black-lists of companies that offer healthy or miserable work-life balances, backed with supporting evidence and documentation. It is interesting to consider that while Facebook and Twitter are banned within China, the censorship of GitHub leads to an inability for many tech companies to efficiently continue software development. This illustrates the integral role GitHub plays in the tech community, serving as both a social and technical tool.
 
 Another [repository](https://github.com/erguotou520/bye) that caught my interest was one that only had one file - a README consisting of 6 lines of text. Yet it has over 5000 stars. What could this be? Here are it's entire contents.
-"
+
 Say goodbye to yesterday.
 
 Say hello to tomorrow.
@@ -586,5 +586,5 @@ Be yourself and do yourself.
 Year by year, day by day.
 
 Enhance yourself to meet challenges.
-"
+
 Again, we see the special place GitHub occupies in our world. Can you see such a statement going viral on Facebook or Twitter? I cannot. But here it has space to exist.. in peace. Finding this one made me pause for a moment of soft reflection. Let's end on that note.

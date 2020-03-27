@@ -483,7 +483,7 @@ Features:
 Target:
 * Stars
 ### Model Performance
-The model itself is based on a multi-layer feedforward network with backpropogation. Here is a description of its architecture:
+The model itself is based on a multi-layer feedforward network with backpropagation. Here is a description of its architecture:
 
 * Dimensions: 21 (in) x 32 x 16 x 1 (out) 
 * Activation Function: ReLU

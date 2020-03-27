@@ -566,6 +566,7 @@ To capture the essence of the actual dataset, and to further explore interesting
 * Use star predictor and feature correlations within the design of an individualized GitHub 'suggestion' tool, to help users draw more attention to their repositories
 * Design an automated pipeline that periodically adds new repositories to database and updates NN
 * Consider methods to filter repositories that are used as codebases vs other means
+* Explore dropout, batch normalization
 
 ## Interesting Finds
 Amongst the search through half a million repositories, a couple interesting ones came to my attention. 

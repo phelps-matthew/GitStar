@@ -21,7 +21,8 @@ GitStar is a pipeline used to construct a neural network that analyzes a given p
   * [Results](#results)
     + [Model Performance](#model-performance)
     + [Feature Correlations](#feature-correlations)
-    + [Considerations](#considerations)
+  * [Future Improvements and Ideas](#future-improvements-and-ideas)
+  * [Interesting Finds](#interesting-finds)
 
 ## Installation
 
@@ -553,7 +554,7 @@ To capture the essence of the actual dataset, and to further explore interesting
 <p align="center"> <img src="/presentation/features/canonical_closedissues_pullRequests.png"  width="600"> </p>
 
 
-### Future Improvements and Ideas
+## Future Improvements and Ideas
 * Many more interesting features that could be implemented
   + Repository primary langauge (implement with one hot encoding)
   + Comment/code ratio within code

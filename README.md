@@ -129,7 +129,7 @@ my_response = my_request.gql_response()
 ```
 Also of importance, `gql_response` handles GraphQL based response errors. If a timeout from GitHub's API is detected, the function will wait 60 seconds before reattempting. Based on the current state of GitHub's API, timeouts are inevitable.
 
-The class `GitHubGraphQLQuery` simply intializes `GraphQLQuery` with the GitHub API endpoint and passes a supplied OAuthtoken into the header.
+The class `GitHubGraphQLQuery` simply intializes `GraphQLQuery` with the GitHub API endpoint and passes a supplied Personal Access Token into the header.
 
 ```python
 QUERY = """\

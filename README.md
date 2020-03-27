@@ -559,7 +559,7 @@ To capture the essence of the actual dataset, and to further explore interesting
   + Comment/code ratio within code
   + Deeper analysis into documentation; measure use of external links, Wiki, diagrams/pictures, table of contents, etc.
 * Sentiment analysis within issue comments (NLP)
-* Construct a quality metric that is better than stars (perhaps similar to stock-indexes)
+* Construct a quality metric that is better than stars (weighted average of heuristics, at its simplest)
 * Consider clustering methods (e.g. k-means) to isolate distribution modes and feed into separate models
 * Create web API and present user interface for inputting repository name and showing predicted stars
 * Use star predictor and feature correlations within the design of an individualized GitHub 'suggestion' tool, to help users draw more attention to their repositories
@@ -571,9 +571,9 @@ Amongst the search through half a million repositories, a couple interesting one
 
 The repository with the largest number of stars is one called [996.ICU](https://github.com/996icu/996.ICU). The acronym refer to "Work 9AM - 9PM 6 days a week and you risk going to ICU". At 249k stars, this repo represents an act of protest to the labor system in China, where software developers (and others) risk losing their jobs if they do not take on massive hours of overtime. Though Chinese law does not mandate such hours, tech companies themselves have developed detailed ranking systems based on hours worked, jeopardizing those who do not elect for 'voluntary' overtime. 
 
-The 996.ICU repo is a fascinating representation of a modern politcal movement, powered by the open-source nature of GitHub. A network of thousands of contributors have created white-lists and black-lists of companies that offer healthy or miserable work-life balances, backed with supporting evidence and documentation. It is interesting to consider that while Facebook and Twitter are banned within China, the censorship of GitHub leads to an inability for many tech companies to efficiently continue software development. This illustrates the integral role GitHub plays in the tech community, serving as both a social and technical tool.
+The 996.ICU repo is a fascinating representation of a modern social movement, powered by the open-source nature of GitHub. A network of thousands of contributors have created white-lists and black-lists of companies that offer healthy or miserable work-life balances, backed with supporting evidence and documentation. It is interesting to consider that while Facebook and Twitter are banned within China, the censorship of GitHub leads to an inability for many tech companies to efficiently continue software development. This illustrates the integral role GitHub plays in the tech community, serving as both a social and technical tool.
 
-Another [repository](https://github.com/erguotou520/bye) that caught my interest was one that only had one file - a README consisting of 6 lines of text. Yet it has over 5000 stars. What could this be? Here are it's entire contents.
+Another [repository](https://github.com/erguotou520/bye) that caught my interest was one that only had one file - a README consisting of 6 lines of text. Yet it has over 5000 stars. What could this be? Here are it's entire contents:
 
 Say goodbye to yesterday.
 
